@@ -1,0 +1,65 @@
+﻿<Window x:Class="SisApp.Clientes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Clientes" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="75"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid>
+
+            <Label Grid.Row="0" Content="CLIENTE A FACTURAR" HorizontalAlignment="Left" Margin="14,28,0,0" VerticalAlignment="Top" Width="258" Height="37" FontSize="16" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <TextBox HorizontalAlignment="Left" Height="23" Margin="626,35,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="120"/>
+            <Label Content="Buscar:" HorizontalAlignment="Left" Margin="545,30,0,0" VerticalAlignment="Top" FontStyle="Italic" FontSize="16" FontFamily="Sitka Display"/>
+            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" HorizontalAlignment="Left" Margin="745,35,0,0" VerticalAlignment="Top" Width="23" Height="23" Background="#FFEAEAEA"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="14">
+
+            <ListView Grid.Row="1">
+
+                <ListView.View>
+
+                    <GridView>
+
+                        <GridViewColumn Header="  Cedula  " x:Name="list_cedula" Width="100"/>
+                        <GridViewColumn Header="Nombres y Apellidos" x:Name="list_nombre" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Telefono  " x:Name="list_telefono" Width="100"/>
+                        <GridViewColumn Header="  Email  " x:Name="list_email" Width="130"/>
+                        <GridViewColumn Header="  Direccion  " x:Name="list_direccion" Width="188"/>
+
+                    </GridView>
+
+                </ListView.View>
+
+            </ListView>
+            
+        </Grid>
+
+        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Visibility="Hidden" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!--Width is bound to width of the first GridViewColumn -->
+                <ColumnDefinition Width="{Binding ElementName=list_cedula, Path=ActualWidth}"/>
+                <!--Width is set to "Fill"-->
+                <ColumnDefinition Width="*"/>
+                <!--Correction Width-->
+                <ColumnDefinition Width="450"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="1" x:Name="helperField"/>
+        </Grid>
+        
+    </Grid>
+</Window>

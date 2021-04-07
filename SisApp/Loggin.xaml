@@ -1,0 +1,34 @@
+﻿<Window x:Class="SisApp.Loggin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="LOGIN " Height="342.667" Width="292.666" FontSize="14" Background="Transparent" WindowStartupLocation="CenterScreen">
+
+    <Border Background="WhiteSmoke">
+        <StackPanel Margin="20">
+
+            <Label Foreground="Black" FontSize="25" HorizontalAlignment="Center" >
+                <Bold>Login</Bold>
+            </Label>
+
+            <Separator Background="LightGray" Foreground="#FFB8B8B8"></Separator>
+
+            <Label Foreground="#FF8ABFC7" >
+                <Bold>Usuario</Bold>
+            </Label>
+            <TextBox Name="txtUsuario" VerticalContentAlignment="Center" Foreground="Black" FontSize="14"></TextBox>
+
+            <Label Foreground="#FF8ABFC7">
+                <Bold>Contraseña</Bold>
+            </Label>
+            <PasswordBox Name="txtPassword" VerticalContentAlignment="Center" Foreground="Black" FontSize="14"></PasswordBox>
+            <Button x:Name="btnEntrar" Margin="60 50" Background="#FFD6D6D6" Foreground="Black" Height="50" Content="Entrar" BorderThickness="0" Click="btnEntrar_Click"/>
+
+        </StackPanel>
+    </Border>
+
+</Window>
+  
