@@ -13,6 +13,22 @@ namespace SisApp
         public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
 
         DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+
+        public int VentaNum()
+        {
+            try
+            {
+                Venta venta = dataContext.Venta.Last();
+
+                return venta.Id;
+            }
+            catch
+            {
+                int venta = 1;
+
+                return venta;
+            }
+        }
     }
 
     class ClienteFactura
@@ -102,6 +118,7 @@ namespace SisApp
             {
                 Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
 
+                Cantidad = 1;
                 listaProductos.Add(
                     new ArticulosVenta()
                     {
@@ -121,9 +138,9 @@ namespace SisApp
             return listaProductos;
         }
 
-        public List<ArticulosVenta> ActualizaArticulo(List<ArticulosVenta> listaArticulo, int Id)
+        public List<ArticulosVenta> AumentaArticulo(List<ArticulosVenta> listaProductos, int Id)
         {
-            foreach (ArticulosVenta articulo in listaArticulo)
+            foreach (ArticulosVenta articulo in listaProductos)
             {
                 if (articulo.Id == Id)
                 {
@@ -135,9 +152,9 @@ namespace SisApp
 
                         Cantidad = cantidadProvisional;
 
-                        listaArticulo.Remove(articulo);
+                        listaProductos.Remove(articulo);
 
-                        listaArticulo.Add(
+                        listaProductos.Add(
                             new ArticulosVenta()
                             {
                                 Id = Id,
@@ -157,7 +174,72 @@ namespace SisApp
                 }
             }
 
-            return listaArticulo;
+            return listaProductos;
+        }
+
+        public List<ArticulosVenta> ReduceArticulo(ArticulosVenta selectedProducto, List<ArticulosVenta> listaProductos)
+        {
+            foreach (ArticulosVenta articulo in listaProductos)
+            {
+                if (articulo.Id == selectedProducto.Id)
+                {
+                    try
+                    {
+                        Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(articulo.Id));
+
+                        int cantidadProvisional = articulo.Cantidad - 1;
+
+                        Cantidad = cantidadProvisional;
+
+                        if (cantidadProvisional <= 0)
+                        {
+                            listaProductos.Remove(articulo);
+                        }
+                        else
+                        {
+                            listaProductos.Remove(articulo);
+
+                            listaProductos.Add(
+                                new ArticulosVenta()
+                                {
+                                    Id = selectedProducto.Id,
+                                    Cantidad = cantidadProvisional,
+                                    Producto = producto.Producto1,
+                                    ValorUnidad = (float)producto.PrecioVenta,
+                                    ValorTotal = Cantidad * (float)producto.PrecioVenta
+                                }
+                            );
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Producto no encontrado");
+                    }
+
+                    break;
+                }
+            }
+
+            return listaProductos;
+        }
+    }
+
+    public class InfoFactura
+    {
+        public float SubTotal { get; set; }
+
+        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
+
+        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+
+        public float SubtotalFactura(List<ArticulosVenta> articulos)
+        {
+            foreach (ArticulosVenta articulo in articulos)
+            {
+                SubTotal += articulo.ValorTotal;
+            }
+
+            return SubTotal;
         }
     }
 }

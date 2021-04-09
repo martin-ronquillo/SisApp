@@ -40,7 +40,7 @@
 
                 <Label Content="VENTAS" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Width="115" Height="37" FontSize="20" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
                 <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="37" Margin="0,23,16,0" Stroke="Black" VerticalAlignment="Top" Width="159" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
-                <Label Content="Label" VerticalAlignment="Top" HorizontalContentAlignment="Right" Height="36" Width="112" FontSize="22" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" Margin="0,23,26,0"/>
+                <TextBox x:Name="txt_nVenta" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="35" Width="112" FontSize="22" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" Margin="0,28,26,-0.333" BorderThickness="0" Background="{x:Null}"/>
 
             </Grid>
 
@@ -75,7 +75,7 @@
             <!--Lista de productos a facturar -->
             <Grid Grid.Row="3" Margin="14">
 
-                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC" KeyDown="lv_facturar_KeyDown">
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
@@ -87,7 +87,7 @@
 
                         <GridView>
 
-                            <GridViewColumn Header="  Cantidad  " x:Name="list_cantidad" Width="100" DisplayMemberBinding="{Binding Cantidad}"/>
+                            <GridViewColumn Header="  Cantidad  " x:Name="list_cantidad" Width="90" DisplayMemberBinding="{Binding Cantidad}"/>
                             <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
                             <GridViewColumn Header="  V. Unidad  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding ValorUnidad}"/>
                             <GridViewColumn Header="  Total  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding ValorTotal}"/>
@@ -129,7 +129,7 @@
                 <!--Width is set to "Fill"-->
                 <ColumnDefinition Width="*"/>
                 <!--Correction Width-->
-                <ColumnDefinition Width="230"/>
+                <ColumnDefinition Width="240"/>
             </Grid.ColumnDefinitions>
             <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
             <Grid Grid.Column="1" x:Name="helperField"/>

@@ -4,6 +4,8 @@ using System.Windows.Input;
 using System.Configuration;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace SisApp
 {
@@ -42,6 +44,12 @@ namespace SisApp
             date_fecha.DisplayDateEnd = DateTime.Today;
             date_fecha.SelectedDate = DateTime.Today;
 
+            //Numero de Venta
+            InfoVenta infoVenta = new InfoVenta();
+
+            txt_nVenta.Text = infoVenta.VentaNum().ToString();
+
+            //Seleccionar cliente a facturar
             ClienteFactura clienteFactura = new ClienteFactura();
 
             txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
@@ -65,13 +73,44 @@ namespace SisApp
             txt_direccion.Text = clienteFactura.Direccion;
         }
 
-        ArticulosVenta venta = new ArticulosVenta();
+        //Instancia en el archivo InfoVenta
+        ArticulosVenta ArticulosVenta = new ArticulosVenta();
 
+        InfoFactura InfoFactura = new InfoFactura();
+
+        //Crea la lista que contendra los productos a facturar
         List<ArticulosVenta> listaProductos = new List<ArticulosVenta>();
 
+        //Agregar Producto al listView
         private void txt_cod_producto_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
+            {
+                AgregaElemento();
+                InfoFactura.SubtotalFactura(listaProductos);
+            }
+
+            txt_cod_producto.Text = "";
+
+            txt_cod_producto.Focus();
+        }
+
+        //Quitar producto al listView
+        private void lv_facturar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                QuitaElemento();
+            }
+        }
+
+        public void AgregaElemento()
+        {
+            if (Regex.IsMatch(txt_cod_producto.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cod_producto.Text))
+            {
+                MessageBox.Show("Solo numeros");
+            }
+            else
             {
                 int idProducto = int.Parse(txt_cod_producto.Text);
 
@@ -79,7 +118,7 @@ namespace SisApp
                 {
                     lv_facturar.ItemsSource = null;
 
-                    listaProductos = venta.InsertaArticulo(listaProductos, idProducto);
+                    listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, idProducto);
 
                     lv_facturar.ItemsSource = listaProductos;
                 }
@@ -87,13 +126,27 @@ namespace SisApp
                 {
                     lv_facturar.ItemsSource = null;
 
-                    listaProductos = venta.ActualizaArticulo(listaProductos, idProducto);
+                    listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, idProducto);
 
                     lv_facturar.ItemsSource = listaProductos;
                 }
             }
+        }
 
-            txt_cod_producto.Focus();
+        public void QuitaElemento()
+        {
+            ArticulosVenta selectedProducto = (ArticulosVenta)lv_facturar.SelectedItem;
+
+            if (selectedProducto != null)
+            {
+                lv_facturar.ItemsSource = null;
+
+                listaProductos = ArticulosVenta.ReduceArticulo(selectedProducto, listaProductos);
+
+                lv_facturar.ItemsSource = listaProductos;
+
+                lv_facturar.ScrollIntoView(selectedProducto);
+            }
         }
     }
 }
