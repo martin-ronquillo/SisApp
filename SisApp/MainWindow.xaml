@@ -75,7 +75,13 @@
             <!--Lista de productos a facturar -->
             <Grid Grid.Row="3" Margin="14">
 
-                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center">
+                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
 
                     <ListView.View>
 
@@ -84,7 +90,7 @@
                             <GridViewColumn Header="  Cantidad  " x:Name="list_cantidad" Width="100" DisplayMemberBinding="{Binding Cantidad}"/>
                             <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
                             <GridViewColumn Header="  V. Unidad  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding ValorUnidad}"/>
-                            <GridViewColumn Header="  Total  " x:Name="list_val_total" Width="100" DisplayMemberBinding="{Binding ValorTotal}"/>
+                            <GridViewColumn Header="  Total  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding ValorTotal}"/>
 
                         </GridView>
 
@@ -109,7 +115,7 @@
                 <TextBox x:Name="txt_efectivo" IsEnabled="True" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Width="83" Height="22" Margin="0,0,0,93.667"/>
                 <Label Content="Cambio:" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="14" Margin="0,0,103,60.667" Height="31" Width="73"/>
                 <TextBox x:Name="txt_cambio" IsEnabled="False" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="82" Margin="0,0,1,64.667" Height="22"/>
-                <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Facturar" Height="49" Width="176" BorderThickness="0" Background="#FFE6E4E4"/>
+                <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Facturar" Height="49" Width="176" BorderThickness="0" Background="#FFCBCBCB"/>
 
             </Grid>
 

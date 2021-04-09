@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Windows;
 
 namespace SisApp
 {
@@ -90,31 +91,73 @@ namespace SisApp
         DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
 
         public int Id { get; set; }
-        public int Cantidad { get; set; }
+        public int Cantidad { get; set; } = 1;
         public string Producto { get; set; }
-        public int ValorUnidad { get; set; }
-        public int ValorTotal { get; set; }
+        public float ValorUnidad { get; set; }
+        public float ValorTotal { get; set; }
 
-        public List<ArticulosVenta> InsertaArticulo(int productoId)
+        public List<ArticulosVenta> InsertaArticulo(List<ArticulosVenta> listaProductos, int Id)
         {
-            List<VentaProducto> listaProductos = new List<VentaProducto>();
+            try
+            {
+                Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
 
-            List<ArticulosVenta> listaPrueba = new List<ArticulosVenta>();
-
-            listaPrueba.Add(new ArticulosVenta() { Id = 1, Cantidad = 5, Producto = "kk con chocolate xd", ValorUnidad = 12, ValorTotal = 10 });
-
-            return listaPrueba;
-            /*Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(productoId));
-
-            listaProductos.Add(
-                    new VentaProducto()
+                listaProductos.Add(
+                    new ArticulosVenta()
                     {
-                        ProductoId = producto.Id,
+                        Id = Id,
+                        Cantidad = 1,
                         Producto = producto.Producto1,
-                        ValorUnidad = producto.PrecioVenta,
-                        ValorTotal = producto.PrecioVenta
+                        ValorUnidad = (float)producto.PrecioVenta,
+                        ValorTotal = Cantidad * (float)producto.PrecioVenta
                     }
-                );*/
+                );
+            }
+            catch
+            {
+                MessageBox.Show("Producto no encontrado");
+            }
+
+            return listaProductos;
+        }
+
+        public List<ArticulosVenta> ActualizaArticulo(List<ArticulosVenta> listaArticulo, int Id)
+        {
+            foreach (ArticulosVenta articulo in listaArticulo)
+            {
+                if (articulo.Id == Id)
+                {
+                    try
+                    {
+                        Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
+
+                        int cantidadProvisional = articulo.Cantidad + 1;
+
+                        Cantidad = cantidadProvisional;
+
+                        listaArticulo.Remove(articulo);
+
+                        listaArticulo.Add(
+                            new ArticulosVenta()
+                            {
+                                Id = Id,
+                                Cantidad = cantidadProvisional,
+                                Producto = producto.Producto1,
+                                ValorUnidad = (float)producto.PrecioVenta,
+                                ValorTotal = Cantidad * (float)producto.PrecioVenta
+                            }
+                        );
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Producto no encontrado");
+                    }
+
+                    break;
+                }
+            }
+
+            return listaArticulo;
         }
     }
 }

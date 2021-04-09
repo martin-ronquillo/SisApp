@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Configuration;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SisApp
 {
@@ -74,12 +65,35 @@ namespace SisApp
             txt_direccion.Text = clienteFactura.Direccion;
         }
 
+        ArticulosVenta venta = new ArticulosVenta();
+
+        List<ArticulosVenta> listaProductos = new List<ArticulosVenta>();
+
         private void txt_cod_producto_KeyDown(object sender, KeyEventArgs e)
         {
-            ArticulosVenta venta = new ArticulosVenta();
-
             if (e.Key == Key.Enter)
-                lv_facturar.ItemsSource = venta.InsertaArticulo(2);
+            {
+                int idProducto = int.Parse(txt_cod_producto.Text);
+
+                if (listaProductos.FirstOrDefault(pro => pro.Id.Equals(idProducto)) == null)
+                {
+                    lv_facturar.ItemsSource = null;
+
+                    listaProductos = venta.InsertaArticulo(listaProductos, idProducto);
+
+                    lv_facturar.ItemsSource = listaProductos;
+                }
+                else
+                {
+                    lv_facturar.ItemsSource = null;
+
+                    listaProductos = venta.ActualizaArticulo(listaProductos, idProducto);
+
+                    lv_facturar.ItemsSource = listaProductos;
+                }
+            }
+
+            txt_cod_producto.Focus();
         }
     }
 }
