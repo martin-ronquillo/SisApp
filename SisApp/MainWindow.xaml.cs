@@ -27,6 +27,10 @@ namespace SisApp
         {
             InitializeComponent();
 
+            string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
+
+            dataContext = new DataClasses1DataContext(miConexion);
+
             //True: Muestra el loggin
             if (Singleton.Instancia.estado)
             {
@@ -40,10 +44,6 @@ namespace SisApp
             //Devuelve el Mainfocus al formulario
             Application.Current.MainWindow = this;
 
-            string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-            dataContext = new DataClasses1DataContext(miConexion);
-
             LoggedUser userData = new LoggedUser(Singleton.Instancia.idUser);
 
             txt_vendedor.Text = userData.Nombre + " " + userData.Apellido;
@@ -51,19 +51,35 @@ namespace SisApp
             date_fecha.DisplayDateEnd = DateTime.Today;
             date_fecha.SelectedDate = DateTime.Today;
 
-            ClienteFactura listaClientes = new ClienteFactura("martin");
+            ClienteFactura clienteFactura = new ClienteFactura();
 
-            /*foreach (Cliente clientes in listaClientes)
-            {
-                MessageBox.Show(clientes.Nombre);
-            }*/
+            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
+            txt_cedula.Text = clienteFactura.Cedula;
+            txt_email.Text = clienteFactura.Email;
+            txt_direccion.Text = clienteFactura.Direccion;
         }
 
+        //Boton busca el cliente al que se va a facturar
         private void btn_busca_cliente_Click(object sender, RoutedEventArgs e)
         {
-            Clientes clientes = new Clientes(txt_cliente.Text.ToUpper());
-
+            Clientes clientes = new Clientes();
+            
             clientes.ShowDialog();
+
+            ClienteFactura clienteFactura = new ClienteFactura(Singleton.Instancia.selectedCliente);
+
+            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
+            txt_cedula.Text = clienteFactura.Cedula;
+            txt_email.Text = clienteFactura.Email;
+            txt_direccion.Text = clienteFactura.Direccion;
+        }
+
+        private void txt_cod_producto_KeyDown(object sender, KeyEventArgs e)
+        {
+            ArticulosVenta venta = new ArticulosVenta();
+
+            if (e.Key == Key.Enter)
+                lv_facturar.ItemsSource = venta.InsertaArticulo(2);
         }
     }
 }

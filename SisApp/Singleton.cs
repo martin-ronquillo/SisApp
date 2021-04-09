@@ -12,7 +12,11 @@ namespace SisApp
     
         private Singleton() { }
 
+        //Se usan para el loggin
         public bool estado = true;
         public int idUser;
+
+        //Se usan para seleccionar cliente a facturar
+        public int selectedCliente;
     }
 }

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="LOGIN " Height="342.667" Width="292.666" FontSize="14" Background="Transparent" WindowStartupLocation="CenterScreen">
 
-    <Border Background="WhiteSmoke">
+    <Border Background="WhiteSmoke" FocusManager.FocusedElement="{Binding ElementName=txtUsuario}">
         <StackPanel Margin="20">
 
             <Label Foreground="Black" FontSize="25" HorizontalAlignment="Center" >
@@ -24,7 +24,7 @@
             <Label Foreground="#FF8ABFC7">
                 <Bold>Contraseña</Bold>
             </Label>
-            <PasswordBox Name="txtPassword" VerticalContentAlignment="Center" Foreground="Black" FontSize="14"></PasswordBox>
+            <PasswordBox Name="txtPassword" VerticalContentAlignment="Center" Foreground="Black" FontSize="14" KeyDown="txtPassword_KeyDown"/>
             <Button x:Name="btnEntrar" Margin="60 50" Background="#FFD6D6D6" Foreground="Black" Height="50" Content="Entrar" BorderThickness="0" Click="btnEntrar_Click"/>
 
         </StackPanel>

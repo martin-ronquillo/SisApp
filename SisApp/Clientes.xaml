@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SisApp"
-        mc:Ignorable="d"
+        mc:Ignorable="d"    
         Title="Clientes" Height="450" Width="800">
-    <Grid>
+
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txt_buscaCliente}">
 
         <Grid.RowDefinitions>
 
@@ -19,35 +19,43 @@
         <Grid>
 
             <Label Grid.Row="0" Content="CLIENTE A FACTURAR" HorizontalAlignment="Left" Margin="14,28,0,0" VerticalAlignment="Top" Width="258" Height="37" FontSize="16" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="626,35,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="120"/>
-            <Label Content="Buscar:" HorizontalAlignment="Left" Margin="545,30,0,0" VerticalAlignment="Top" FontStyle="Italic" FontSize="16" FontFamily="Sitka Display"/>
-            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" HorizontalAlignment="Left" Margin="745,35,0,0" VerticalAlignment="Top" Width="23" Height="23" Background="#FFEAEAEA"/>
+            <Label Content="Buscar:" HorizontalAlignment="Right" Margin="0,30,170,0" VerticalAlignment="Top" FontStyle="Italic" FontSize="16" FontFamily="Sitka Display"/>
+            <TextBox x:Name="txt_buscaCliente" HorizontalAlignment="Right" Height="23" Margin="0,35,38,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="120" KeyDown="txt_buscaCliente_KeyDown"/>
+            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" HorizontalAlignment="Right" Margin="0,35,16,0" VerticalAlignment="Top" Width="23" Height="23" Background="#FFEAEAEA" Padding="0" BorderThickness="1" Click="Button_Click_3"/>
 
         </Grid>
 
         <Grid Grid.Row="1" Margin="14">
 
-            <ListView Grid.Row="1">
+            <ListView Grid.Row="1" x:Name="lv_clientes" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" KeyDown="lv_clientes_KeyDown">
 
                 <ListView.View>
 
                     <GridView>
 
-                        <GridViewColumn Header="  Cedula  " x:Name="list_cedula" Width="100"/>
-                        <GridViewColumn Header="Nombres y Apellidos" x:Name="list_nombre" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
-                        <GridViewColumn Header="  Telefono  " x:Name="list_telefono" Width="100"/>
-                        <GridViewColumn Header="  Email  " x:Name="list_email" Width="130"/>
-                        <GridViewColumn Header="  Direccion  " x:Name="list_direccion" Width="188"/>
+                        <GridViewColumn Header="  Cedula  " x:Name="list_cedula" Width="100" DisplayMemberBinding="{Binding Cedula}"/>
+                        <GridViewColumn Header=" Nombres y Apellidos " x:Name="list_nombre" DisplayMemberBinding="{Binding Nombre}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Telefono  " x:Name="list_telefono" DisplayMemberBinding="{Binding Telefono}" Width="100"/>
+                        <GridViewColumn Header="  Email  " x:Name="list_email" DisplayMemberBinding="{Binding Email}" Width="190"/>
+                        <GridViewColumn Header="  Direccion  " x:Name="list_direccion" DisplayMemberBinding="{Binding Direccion}" Width="210"/>
 
                     </GridView>
 
                 </ListView.View>
 
             </ListView>
-            
+
         </Grid>
 
-        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Grid.Row="2">
+
+            <Button Content="Seleccionar" HorizontalAlignment="Right" Margin="0,0,234,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click"/>
+            <Button Content="Actualizar" HorizontalAlignment="Right" Margin="0,0,124,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click_2"/>
+            <Button Content="Cancelar" HorizontalAlignment="Right" Margin="0,0,14,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click_1"/>
+
+        </Grid>
+
+        <!--Hacer proporciona ancho automatico al campo "nombre" del listview-->
         <Grid Visibility="Hidden" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <!--Width is bound to width of the first GridViewColumn -->
@@ -55,11 +63,11 @@
                 <!--Width is set to "Fill"-->
                 <ColumnDefinition Width="*"/>
                 <!--Correction Width-->
-                <ColumnDefinition Width="450"/>
+                <ColumnDefinition Width="538"/>
             </Grid.ColumnDefinitions>
             <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
             <Grid Grid.Column="1" x:Name="helperField"/>
         </Grid>
-        
+
     </Grid>
 </Window>

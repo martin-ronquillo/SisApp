@@ -65,6 +65,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClasses1.dbml</DependentUpon>
     </Compile>
+    <Compile Include="LoggedUser.cs" />
     <Compile Include="Loggin.xaml.cs">
       <DependentUpon>Loggin.xaml</DependentUpon>
     </Compile>
@@ -74,7 +75,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SisAppDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Ventas.cs" />
+    <Compile Include="InfoVenta.cs" />
     <Page Include="Clientes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

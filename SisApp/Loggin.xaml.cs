@@ -34,6 +34,19 @@ namespace SisApp
 
         private void btnEntrar_Click(object sender, RoutedEventArgs e)
         {
+            IniciaSesion();
+        }
+
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                IniciaSesion();
+            }
+        }
+
+        public void IniciaSesion()
+        {
             try
             {
                 User user = dataContext.User.First(us => us.usuario.Equals(txtUsuario.Text));
@@ -48,12 +61,17 @@ namespace SisApp
 
                     this.Close();
                 }
+                else
+                {
+                    MessageBox.Show("Usuario o Contraseña incorrectos");
+                    txtUsuario.Focus();
+                }
             }
             catch
             {
                 MessageBox.Show("Usuario o Contraseña incorrectos");
+                txtUsuario.Focus();
             }
         }
-
     }
 }
