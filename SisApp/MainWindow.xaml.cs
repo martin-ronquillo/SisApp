@@ -138,6 +138,15 @@ namespace SisApp
             }
         }
 
+        //Agrega efectivo
+        private void txt_efectivo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter | e.Key == Key.Tab)
+            {
+                AgregaEfectivo();
+            }
+        }
+
         public void AgregaElemento()
         {
             if (Regex.IsMatch(txt_cod_producto.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cod_producto.Text))
@@ -194,6 +203,24 @@ namespace SisApp
             txt_subTotal.Text = InfoFactura.SubTotal.ToString();
             txt_iva.Text = InfoFactura.Iva.ToString();
             txt_val_total.Text = InfoFactura.Total.ToString();
+        }
+
+        public void AgregaEfectivo()
+        {
+            string cadena = txt_efectivo.Text;
+            cadena = cadena.Replace(".", ",");
+            double value;
+            if (!double.TryParse(cadena, out value))
+            {
+                MessageBox.Show("Solo numeros!");
+                txt_efectivo.Focus();
+                txt_efectivo.Text = "0";
+            }
+            else
+            {
+                InfoFactura.PagaEfectivo(double.Parse(cadena));
+                txt_cambio.Text = InfoFactura.Cambio.ToString();
+            }
         }
     }
 }

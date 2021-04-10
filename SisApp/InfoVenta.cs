@@ -231,6 +231,7 @@ namespace SisApp
         public double Descuento { get; set; }
         public double Total { get; set; }
         public double TotalAnterior { get; set; }
+        public double Cambio { get; set; }
 
         public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
 
@@ -261,6 +262,20 @@ namespace SisApp
             Descuento = descuento / aPorcentaje;
 
             Total -= (TotalAnterior * (descuento / aPorcentaje));
+        }
+
+        public void PagaEfectivo(double efectivo)
+        {
+            if (efectivo < Total)
+            {
+                MessageBox.Show("Efectivo insuficiente");
+                Cambio = 0;
+            }
+            else
+            {
+                Cambio = efectivo - Total;
+                Cambio = Math.Round(Cambio, 2);
+            }
         }
     }
 }
