@@ -226,20 +226,41 @@ namespace SisApp
 
     public class InfoFactura
     {
-        public float SubTotal { get; set; }
+        public double SubTotal { get; set; }
+        public double Iva { get; set; }
+        public double Descuento { get; set; }
+        public double Total { get; set; }
+        public double TotalAnterior { get; set; }
 
         public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
 
         DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
 
-        public float SubtotalFactura(List<ArticulosVenta> articulos)
+        public void ValoresFactura(List<ArticulosVenta> articulos)
         {
+            SubTotal = 0;
+            Iva = 0;
+            Total = 0;
+            Descuento = 0;
+
             foreach (ArticulosVenta articulo in articulos)
             {
-                SubTotal += articulo.ValorTotal;
+                SubTotal += (articulo.ValorTotal - (articulo.ValorTotal * 0.12));
+                Iva += articulo.ValorTotal * 0.12;
+                Total += articulo.ValorTotal;
             }
 
-            return SubTotal;
+            TotalAnterior = Total;
+        }
+
+        public void DescuentoFactura(int descuento)
+        {
+            Total = TotalAnterior;
+
+            double aPorcentaje = 100;
+            Descuento = descuento / aPorcentaje;
+
+            Total -= (TotalAnterior * (descuento / aPorcentaje));
         }
     }
 }

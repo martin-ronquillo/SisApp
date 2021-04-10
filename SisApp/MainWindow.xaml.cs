@@ -87,12 +87,14 @@ namespace SisApp
             if (e.Key == Key.Enter)
             {
                 AgregaElemento();
-                InfoFactura.SubtotalFactura(listaProductos);
+                LlenaInfoFactura();
+                //Modifica el total al Agregar un item de la lista si existe un descuento mayor que 0
+                if (txt_descuento.Text != "0" & !string.IsNullOrEmpty(txt_descuento.Text))
+                {
+                    InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
+                    txt_val_total.Text = InfoFactura.Total.ToString();
+                }
             }
-
-            txt_cod_producto.Text = "";
-
-            txt_cod_producto.Focus();
         }
 
         //Quitar producto al listView
@@ -101,6 +103,38 @@ namespace SisApp
             if (e.Key == Key.Delete)
             {
                 QuitaElemento();
+                LlenaInfoFactura();
+                //Modifica el total al Quitar un item de la lista si existe un descuento mayor que 0
+                if (txt_descuento.Text != "0" & !string.IsNullOrEmpty(txt_descuento.Text))
+                {
+                    InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
+                    txt_val_total.Text = InfoFactura.Total.ToString();
+                }
+            }
+        }
+
+        //Agregar un descuento
+        private void txt_descuento_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter | e.Key == Key.Tab)
+            {
+                if (Regex.IsMatch(txt_descuento.Text, "[^0-9]"))
+                {
+                    MessageBox.Show("Solo numeros enteros");
+                    txt_descuento.Text = "0";
+                    txt_val_total.Text = InfoFactura.TotalAnterior.ToString();
+                }
+                if (txt_descuento.Text == "0" | string.IsNullOrEmpty(txt_descuento.Text))
+                {
+                    txt_descuento.Text = "0";
+
+                    txt_val_total.Text = InfoFactura.TotalAnterior.ToString();
+                }
+                else
+                {
+                    InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
+                    txt_val_total.Text = InfoFactura.Total.ToString();
+                }
             }
         }
 
@@ -108,7 +142,7 @@ namespace SisApp
         {
             if (Regex.IsMatch(txt_cod_producto.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cod_producto.Text))
             {
-                MessageBox.Show("Solo numeros");
+                MessageBox.Show("Solo numeros enteros");
             }
             else
             {
@@ -131,6 +165,10 @@ namespace SisApp
                     lv_facturar.ItemsSource = listaProductos;
                 }
             }
+
+            txt_cod_producto.Text = "";
+
+            txt_cod_producto.Focus();
         }
 
         public void QuitaElemento()
@@ -147,6 +185,15 @@ namespace SisApp
 
                 lv_facturar.ScrollIntoView(selectedProducto);
             }
+        }
+
+        public void LlenaInfoFactura()
+        {
+            InfoFactura.ValoresFactura(listaProductos);
+
+            txt_subTotal.Text = InfoFactura.SubTotal.ToString();
+            txt_iva.Text = InfoFactura.Iva.ToString();
+            txt_val_total.Text = InfoFactura.Total.ToString();
         }
     }
 }
