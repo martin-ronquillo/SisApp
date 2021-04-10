@@ -47,13 +47,14 @@ namespace SisApp
             //Numero de Venta
             InfoVenta infoVenta = new InfoVenta();
 
-            txt_nVenta.Text = infoVenta.VentaNum().ToString();
+            txt_nVenta.Text = infoVenta.VentaNum().ToString("D7");
 
             //Seleccionar cliente a facturar
             ClienteFactura clienteFactura = new ClienteFactura();
 
             txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
             txt_cedula.Text = clienteFactura.Cedula;
+            txt_telefono.Text = clienteFactura.Telefono;
             txt_email.Text = clienteFactura.Email;
             txt_direccion.Text = clienteFactura.Direccion;
         }
@@ -69,6 +70,7 @@ namespace SisApp
 
             txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
             txt_cedula.Text = clienteFactura.Cedula;
+            txt_telefono.Text = clienteFactura.Telefono;
             txt_email.Text = clienteFactura.Email;
             txt_direccion.Text = clienteFactura.Direccion;
         }
@@ -94,6 +96,18 @@ namespace SisApp
                     InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
                     txt_val_total.Text = InfoFactura.Total.ToString();
                 }
+                //Modificar el Cambio en caso de que la casilla "Efectivo" este llena
+                if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
+                {
+                    if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                    {
+                        AgregaEfectivo();
+                    }
+                    else
+                    {
+                        txt_efectivo.Text = "0";
+                    }
+                }
             }
         }
 
@@ -109,6 +123,18 @@ namespace SisApp
                 {
                     InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
                     txt_val_total.Text = InfoFactura.Total.ToString();
+                }
+                //Modificar el Cambio en caso de que la casilla "Efectivo" este llena
+                if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
+                {
+                    if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                    {
+                        AgregaEfectivo();
+                    }
+                    else
+                    {
+                        txt_efectivo.Text = "0";
+                    }
                 }
             }
         }
@@ -128,12 +154,39 @@ namespace SisApp
                 {
                     txt_descuento.Text = "0";
 
+                    InfoFactura.Total = InfoFactura.TotalAnterior;
                     txt_val_total.Text = InfoFactura.TotalAnterior.ToString();
+                    
+                    //Modificar el Cambio en caso de que la casilla "Efectivo" este llena
+                    if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
+                    {
+                        if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                        {
+                            AgregaEfectivo();
+                        }
+                        else
+                        {
+                            txt_efectivo.Text = "0";
+                        }
+                    }
                 }
                 else
                 {
                     InfoFactura.DescuentoFactura(int.Parse(txt_descuento.Text));
                     txt_val_total.Text = InfoFactura.Total.ToString();
+
+                    //Modificar el Cambio en caso de que la casilla "Efectivo" este llena
+                    if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
+                    {
+                        if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                        {
+                            AgregaEfectivo();
+                        }
+                        else
+                        {
+                            txt_efectivo.Text = "0";
+                        }
+                    }
                 }
             }
         }

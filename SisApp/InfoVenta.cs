@@ -18,9 +18,11 @@ namespace SisApp
         {
             try
             {
-                Venta venta = dataContext.Venta.Last();
+                Venta venta = dataContext.Venta.OrderByDescending(o => o.Id).FirstOrDefault();
 
-                return venta.Id;
+                int nVenta = venta.Id + 1;
+
+                return nVenta;
             }
             catch
             {
@@ -67,7 +69,6 @@ namespace SisApp
                 Direccion = null;
                 Email = null;
                 Telefono = null;
-
             }
         }
 
@@ -266,6 +267,7 @@ namespace SisApp
 
         public void PagaEfectivo(double efectivo)
         {
+            Cambio = 0;
             if (efectivo < Total)
             {
                 MessageBox.Show("Efectivo insuficiente");
