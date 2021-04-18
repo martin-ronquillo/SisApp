@@ -37,26 +37,7 @@ namespace SisApp
             //Devuelve el Mainfocus al formulario
             Application.Current.MainWindow = this;
 
-            LoggedUser userData = new LoggedUser(Singleton.Instancia.idUser);
-
-            txt_vendedor.Text = userData.Nombre + " " + userData.Apellido;
-
-            date_fecha.DisplayDateEnd = DateTime.Today;
-            date_fecha.SelectedDate = DateTime.Today;
-
-            //Numero de Venta
-            InfoVenta infoVenta = new InfoVenta();
-
-            txt_nVenta.Text = infoVenta.VentaNum().ToString("D7");
-
-            //Seleccionar cliente a facturar
-            ClienteFactura clienteFactura = new ClienteFactura();
-
-            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
-            txt_cedula.Text = clienteFactura.Cedula;
-            txt_telefono.Text = clienteFactura.Telefono;
-            txt_email.Text = clienteFactura.Email;
-            txt_direccion.Text = clienteFactura.Direccion;
+            LimpiaForm();
         }
 
         //Boton busca el cliente al que se va a facturar
@@ -200,6 +181,40 @@ namespace SisApp
             }
         }
 
+        //Boton que genera la factura
+        private void btn_facturar_Click(object sender, RoutedEventArgs e)
+        {
+            if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
+            {
+                if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                {
+                    double[] valoresFactura = new double[] { InfoFactura.SubTotal, InfoFactura.Iva, InfoFactura.Descuento, InfoFactura.Total, InfoFactura.Efectivo, InfoFactura.Cambio };
+
+                    Facturar facturar = new Facturar(Singleton.Instancia.idUser, txt_cedula.Text, date_fecha.Text, listaProductos, valoresFactura);
+
+                    facturar.RegistraVenta();
+
+                    facturar.RegistraFactura();
+
+                    LimpiaForm();
+                }
+                else
+                {
+                    MessageBox.Show("Error, El valor del Efectivo no puede ser menor que el Total a Pagar");
+                }
+            }
+        }
+
+        /*
+         * 
+         * 
+         * 
+         *  METODOS UTILIZADOS PARA EJECUCIONES DE FUNCIONES DESDE LOS BOTONES, TEXTBOX, ETC.
+         * 
+         * 
+         * 
+         */
+
         public void AgregaElemento()
         {
             if (Regex.IsMatch(txt_cod_producto.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cod_producto.Text))
@@ -274,6 +289,41 @@ namespace SisApp
                 InfoFactura.PagaEfectivo(double.Parse(cadena));
                 txt_cambio.Text = InfoFactura.Cambio.ToString();
             }
+        }
+
+        public void LimpiaForm()
+        {
+            LoggedUser userData = new LoggedUser(Singleton.Instancia.idUser);
+
+            txt_vendedor.Text = userData.Nombre + " " + userData.Apellido;
+
+            date_fecha.DisplayDateEnd = DateTime.Today;
+            date_fecha.SelectedDate = DateTime.Today;
+            //Obtener el nombre del equipo en el que se esta ejecutando la venta
+            txt_caja.Text = Environment.MachineName;
+
+            //Numero de Venta
+            InfoVenta infoVenta = new InfoVenta();
+
+            txt_nVenta.Text = infoVenta.VentaNum().ToString("D7");
+
+            //Establece por defecto al cliente "Consumidor Final" paraa facturar
+            ClienteFactura clienteFactura = new ClienteFactura();
+
+            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
+            txt_cedula.Text = clienteFactura.Cedula;
+            txt_telefono.Text = clienteFactura.Telefono;
+            txt_email.Text = clienteFactura.Email;
+            txt_direccion.Text = clienteFactura.Direccion;
+
+            lv_facturar.ItemsSource = null;
+
+            txt_subTotal.Text = null;
+            txt_iva.Text = null;
+            txt_descuento.Text = null;
+            txt_val_total.Text = null;
+            txt_efectivo.Text = null;
+            txt_cambio.Text = null;
         }
     }
 }

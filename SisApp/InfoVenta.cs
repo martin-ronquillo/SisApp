@@ -233,10 +233,7 @@ namespace SisApp
         public double Total { get; set; }
         public double TotalAnterior { get; set; }
         public double Cambio { get; set; }
-
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        public double Efectivo { get; set; }
 
         public void ValoresFactura(List<ArticulosVenta> articulos)
         {
@@ -268,6 +265,8 @@ namespace SisApp
         public void PagaEfectivo(double efectivo)
         {
             Cambio = 0;
+            Efectivo = efectivo;
+
             if (efectivo < Total)
             {
                 MessageBox.Show("Efectivo insuficiente");
@@ -277,6 +276,126 @@ namespace SisApp
             {
                 Cambio = efectivo - Total;
                 Cambio = Math.Round(Cambio, 2);
+            }
+        }
+    }
+
+    public class Facturar
+    {
+        private int Id { get; set; }    //ID de la ultima venta
+        private int User { get; set; }  //Recibe un ID de tipo int
+        private string Cliente { get; set; }    //Recibe la Cedula de tipo string
+        private int Caja { get; set; }   //Recibe el nombre de la caja en la que se genera la venta
+        private string Fecha { get; set; }
+        private double SubTotal { get; set; }
+        private double Iva { get; set; }
+        private double Descuento { get; set; }
+        private double Total { get; set; }
+        private double Efectivo { get; set; }
+        private double Cambio { get; set; }
+        private List<ArticulosVenta> Articulos { get; set; }
+
+        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
+        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+
+        public Facturar(int User, string Cliente, string Fecha, List<ArticulosVenta> Articulos, double[] Valores)
+        {
+            this.User = User;
+            this.Cliente = Cliente;
+            this.Fecha = Fecha;
+            this.Articulos = Articulos;
+            this.SubTotal = Valores[0];
+            this.Iva = Valores[1];
+            this.Descuento = Valores[2];
+            this.Total = Valores[3];
+            this.Efectivo = Valores[4];
+            this.Cambio = Valores[5];
+        }
+
+        public void RegistraVenta()
+        {
+            try
+            {
+                //Encuentra al cliente segun la cedula y obtiene su ID
+                Cliente cliente = dataContext.Cliente.First(cli => cli.Cedula.Equals(Cliente));
+                //Encuentra la caja segun el nombre y obtiene su ID
+                try
+                {
+                    Caja caja = dataContext.Caja.First(caj => caj.NombreCaja.Equals(Environment.MachineName));
+
+                    this.Caja = caja.Id;
+                }
+                catch
+                {
+                    Caja caja = new Caja
+                    {
+                        NombreCaja = Environment.MachineName,
+                        Direccion = "Undefined",
+                        Departamento = "Undefined",
+                        AlmacenId = 1,
+                    };
+
+                    dataContext.Caja.InsertOnSubmit(caja);
+
+                    dataContext.SubmitChanges();
+                    
+                    Caja Caja = dataContext.Caja.First(caj => caj.NombreCaja.Equals(Environment.MachineName));
+
+                    this.Caja = Caja.Id;
+                }
+
+                Venta Venta = new Venta
+                {
+                    UserId = User,
+                    ClienteId = cliente.Id,
+                    FechaId = Convert.ToDateTime(Fecha),
+                    TotalFactura = (decimal)Total,
+                    SubTotal = (decimal)SubTotal,
+                    Iva = (decimal)Iva,
+                    Descuento = (decimal)Descuento,
+                    Efectivo = (decimal)Efectivo,
+                    Cambio = (decimal)Cambio,
+                    CajaId = Caja,
+                };
+
+                dataContext.Venta.InsertOnSubmit(Venta);
+
+                dataContext.SubmitChanges();
+
+                Venta venta = dataContext.Venta.OrderByDescending(vent => vent.Id).FirstOrDefault();
+
+                this.Id = venta.Id;
+            }
+            catch
+            {
+                MessageBox.Show("No se pudo generar la venta");
+            }
+        }
+
+        public void RegistraFactura()
+        {
+            try
+            {
+                foreach (ArticulosVenta articulo in Articulos)
+                {
+                    VentaProducto ventaProducto = new VentaProducto
+                    {
+                        VentaId = this.Id,
+                        ProductoId = articulo.Id,
+                        Cantidad = articulo.Cantidad,
+                        Producto = articulo.Producto,
+                        ValorUnidad = (decimal)articulo.ValorUnidad,
+                        ValorTotal = (decimal)articulo.ValorTotal,
+                    };
+
+                    dataContext.VentaProducto.InsertOnSubmit(ventaProducto);
+
+                    dataContext.SubmitChanges();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("No se pudo generar la factura");
             }
         }
     }

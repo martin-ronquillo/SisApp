@@ -23,17 +23,6 @@
       <Association Name="Cliente_Venta" Member="Venta" ThisKey="Id" OtherKey="ClienteId" Type="Venta" />
     </Type>
   </Table>
-  <Table Name="dbo.Venta" Member="Venta">
-    <Type Name="Venta">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ClienteId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="FechaId" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="Venta_VentaProducto" Member="VentaProducto" ThisKey="Id" OtherKey="VentaId" Type="VentaProducto" />
-      <Association Name="Cliente_Venta" Member="Cliente" ThisKey="ClienteId" OtherKey="Id" Type="Cliente" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="User_Venta" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Categoria" Member="Categoria">
     <Type Name="Categoria">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -64,6 +53,35 @@
       <Column Name="ValorTotal" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Association Name="Producto_VentaProducto" Member="Producto1" ThisKey="ProductoId" OtherKey="Id" Type="Producto" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
       <Association Name="Venta_VentaProducto" Member="Venta" ThisKey="VentaId" OtherKey="Id" Type="Venta" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Venta" Member="Venta">
+    <Type Name="Venta">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ClienteId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaId" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="TotalFactura" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="SubTotal" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="Iva" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="Descuento" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="Efectivo" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="Cambio" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="CajaId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Venta_VentaProducto" Member="VentaProducto" ThisKey="Id" OtherKey="VentaId" Type="VentaProducto" />
+      <Association Name="Cliente_Venta" Member="Cliente" ThisKey="ClienteId" OtherKey="Id" Type="Cliente" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="User_Venta" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="Caja_Venta" Member="Caja" ThisKey="CajaId" OtherKey="Id" Type="Caja" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Caja" Member="Caja">
+    <Type Name="Caja">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NombreCaja" Type="System.String" DbType="NChar(50)" CanBeNull="true" />
+      <Column Name="Direccion" Type="System.String" DbType="NChar(100)" CanBeNull="true" />
+      <Column Name="Departamento" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="AlmacenId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Caja_Venta" Member="Venta" ThisKey="Id" OtherKey="CajaId" Type="Venta" />
     </Type>
   </Table>
 </Database>
