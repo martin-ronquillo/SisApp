@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SisApp"
         mc:Ignorable="d"
-        Title="Realizacion de Ventas" Height="624.001" Width="1092.235">
+        Loaded="UserControl_Loaded"
+        Title="SisApp - Ventas" Height="624.001" Width="1092.235">
 
     <Grid FocusManager.FocusedElement="{Binding ElementName=txt_cod_producto}">
 
@@ -13,11 +14,27 @@
             <DockPanel>
                 <Menu DockPanel.Dock="Top" Height="20">
                     <MenuItem Header="Archivo">
-                        <MenuItem Header="Nuevo" />
-                        <MenuItem Header="Abrir" />
-                        <MenuItem Header="Guardar" />
+                        <MenuItem Header="Nuevo">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Abrir">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Guardar">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Guardar.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator />
-                        <MenuItem Header="Salir" />
+                        <MenuItem Header="Salir">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Cerrar.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                 </Menu>
             </DockPanel>

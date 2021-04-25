@@ -19,12 +19,12 @@
             <Label Foreground="#FF8ABFC7" >
                 <Bold>Usuario</Bold>
             </Label>
-            <TextBox Name="txtUsuario" VerticalContentAlignment="Center" Foreground="Black" FontSize="14"></TextBox>
+            <TextBox Name="txtUsuario" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Black" FontSize="16"></TextBox>
 
             <Label Foreground="#FF8ABFC7">
                 <Bold>Contraseña</Bold>
             </Label>
-            <PasswordBox Name="txtPassword" VerticalContentAlignment="Center" Foreground="Black" FontSize="14" KeyDown="txtPassword_KeyDown"/>
+            <PasswordBox Name="txtPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Black" FontSize="14" KeyDown="txtPassword_KeyDown"/>
             <Button x:Name="btnEntrar" Margin="60 50" Background="#FFD6D6D6" Foreground="Black" Height="50" Content="Entrar" BorderThickness="0" Click="btnEntrar_Click"/>
 
         </StackPanel>

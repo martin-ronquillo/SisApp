@@ -1,16 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SisApp" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-031NGTQ;Initial Catalog=SisApp;Persist Security Info=True;User ID=sa" SettingsObjectName="SisApp.Properties.Settings" SettingsPropertyName="SisAppConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.[User]" Member="User">
-    <Type Name="User">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="nombre" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="apellido" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="cargo" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="usuario" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Association Name="User_Venta" Member="Venta" ThisKey="Id" OtherKey="UserId" Type="Venta" />
-    </Type>
-  </Table>
   <Table Name="dbo.Cliente" Member="Cliente">
     <Type Name="Cliente">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -70,8 +59,8 @@
       <Column Name="CajaId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Venta_VentaProducto" Member="VentaProducto" ThisKey="Id" OtherKey="VentaId" Type="VentaProducto" />
       <Association Name="Cliente_Venta" Member="Cliente" ThisKey="ClienteId" OtherKey="Id" Type="Cliente" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="User_Venta" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
       <Association Name="Caja_Venta" Member="Caja" ThisKey="CajaId" OtherKey="Id" Type="Caja" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="User_Venta" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Caja" Member="Caja">
@@ -82,6 +71,25 @@
       <Column Name="Departamento" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="AlmacenId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Caja_Venta" Member="Venta" ThisKey="Id" OtherKey="CajaId" Type="Venta" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Roles" Member="Roles">
+    <Type Name="Roles">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Rol" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Roles_User" Member="User" ThisKey="Id" OtherKey="RolesId" Type="User" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[User]" Member="User">
+    <Type Name="User">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nombre" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="apellido" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="RolesId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="usuario" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="User_Venta" Member="Venta" ThisKey="Id" OtherKey="UserId" Type="Venta" />
+      <Association Name="Roles_User" Member="Roles" ThisKey="RolesId" OtherKey="Id" Type="Roles" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -30,6 +30,40 @@ namespace SisApp
             InitializeComponent();
 
             LlenaListView();
+
+            //Oculta el boton para agregar Clientes en caso de no ser administrador
+            if (LoggedUser.Rol != "ADMIN")
+            {
+                btn_Agrega_cliente.Visibility = Visibility.Collapsed;
+                btn_Edita_cliente.Visibility = Visibility.Collapsed;
+                btn_Elimina_cliente.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        //Boton Agrega Cliente
+        private void Agrega_cliente_Click(object sender, RoutedEventArgs e)
+        {
+            AgregaCliente agregaCliente = new AgregaCliente();
+
+            agregaCliente.ShowDialog();
+
+            LlenaListView();
+        }
+
+        //Boton Edita Cliente
+        private void btn_Edita_cliente_Click(object sender, RoutedEventArgs e)
+        {
+            EditaCliente();
+
+            LlenaListView();
+        }
+
+        //Boton Elimina Cliente
+        private void btn_Elimina_cliente_Click(object sender, RoutedEventArgs e)
+        {
+            EliminaCliente();
+
+            LlenaListView();
         }
 
         //Boton Seleccionar
@@ -168,6 +202,31 @@ namespace SisApp
             }
 
             this.Close();
+        }
+
+        public void EliminaCliente()
+        {
+            Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
+
+            string nombre = selectedCliente.Nombre + " " + selectedCliente.Apellido;
+
+            Confirmar confirmar = new Confirmar(nombre);
+
+            confirmar.ShowDialog();
+
+
+        }
+
+        public void EditaCliente()
+        {
+            Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
+
+            if (selectedCliente != null)
+            {
+                AgregaCliente agregaCliente = new AgregaCliente(selectedCliente.Id);
+
+                agregaCliente.ShowDialog();
+            }
         }
     }
 }

@@ -40,20 +40,25 @@ namespace SisApp
             LimpiaForm();
         }
 
+        //Controla las teclas que se presionan estando en el formulario
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += HandleKeyPress;
+        }
+
+        private void HandleKeyPress(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F2)
+            {
+                BuscaCliente();
+            }
+        }
+
         //Boton busca el cliente al que se va a facturar
         private void btn_busca_cliente_Click(object sender, RoutedEventArgs e)
         {
-            Clientes clientes = new Clientes();
-            
-            clientes.ShowDialog();
-
-            ClienteFactura clienteFactura = new ClienteFactura(Singleton.Instancia.selectedCliente);
-
-            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
-            txt_cedula.Text = clienteFactura.Cedula;
-            txt_telefono.Text = clienteFactura.Telefono;
-            txt_email.Text = clienteFactura.Email;
-            txt_direccion.Text = clienteFactura.Direccion;
+            BuscaCliente();
         }
 
         //Instancia en el archivo InfoVenta
@@ -186,7 +191,7 @@ namespace SisApp
         {
             if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
             {
-                if (InfoFactura.Total < double.Parse(txt_efectivo.Text))
+                if (InfoFactura.Total <= double.Parse(txt_efectivo.Text))
                 {
                     double[] valoresFactura = new double[] { InfoFactura.SubTotal, InfoFactura.Iva, InfoFactura.Descuento, InfoFactura.Total, InfoFactura.Efectivo, InfoFactura.Cambio };
 
@@ -203,6 +208,10 @@ namespace SisApp
                     MessageBox.Show("Error, El valor del Efectivo no puede ser menor que el Total a Pagar");
                 }
             }
+            else
+            {
+                MessageBox.Show("Error, El valor del Efectivo no puede ser menor que el Total a Pagar");
+            }
         }
 
         /*
@@ -214,6 +223,21 @@ namespace SisApp
          * 
          * 
          */
+
+        public void BuscaCliente()
+        {
+            Clientes clientes = new Clientes();
+
+            clientes.ShowDialog();
+
+            ClienteFactura clienteFactura = new ClienteFactura(Singleton.Instancia.selectedCliente);
+
+            txt_cliente.Text = clienteFactura.Nombre + ' ' + clienteFactura.Apellido;
+            txt_cedula.Text = clienteFactura.Cedula;
+            txt_telefono.Text = clienteFactura.Telefono;
+            txt_email.Text = clienteFactura.Email;
+            txt_direccion.Text = clienteFactura.Direccion;
+        }
 
         public void AgregaElemento()
         {
@@ -232,6 +256,16 @@ namespace SisApp
                     listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, idProducto);
 
                     lv_facturar.ItemsSource = listaProductos;
+
+                    //Si no existen elementos en el listView, desactiva el boton Facturar
+                    if (listaProductos.Count <= 0)
+                    {
+                        btn_facturar.IsEnabled = false;
+                    }
+                    else
+                    {
+                        btn_facturar.IsEnabled = true;
+                    }
                 }
                 else
                 {
@@ -240,6 +274,16 @@ namespace SisApp
                     listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, idProducto);
 
                     lv_facturar.ItemsSource = listaProductos;
+                    
+                    //Si no existen elementos en el listView, desactiva el boton Facturar
+                    if (listaProductos.Count <= 0)
+                    {
+                        btn_facturar.IsEnabled = false;
+                    }
+                    else
+                    {
+                        btn_facturar.IsEnabled = true;
+                    }
                 }
             }
 
@@ -261,6 +305,15 @@ namespace SisApp
                 lv_facturar.ItemsSource = listaProductos;
 
                 lv_facturar.ScrollIntoView(selectedProducto);
+
+                if (listaProductos.Count <= 0)
+                {
+                    btn_facturar.IsEnabled = false;
+                }
+                else
+                {
+                    btn_facturar.IsEnabled = true;
+                }
             }
         }
 
@@ -324,6 +377,7 @@ namespace SisApp
             txt_val_total.Text = null;
             txt_efectivo.Text = null;
             txt_cambio.Text = null;
+            btn_facturar.IsEnabled = false;
         }
     }
 }

@@ -1,0 +1,60 @@
+﻿<Window x:Class="SisApp.AgregaCliente"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Pefil Cliente" Height="459.667" Width="366.334">
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="14,0,14,0">
+
+            <Label Content="PERFIL CLIENTES" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Verdana" FontStyle="Italic" Margin="0,11,0,12" FontSize="14" Width="166"/>
+            <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="30" Stroke="Black" VerticalAlignment="Center" Width="100" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
+            <TextBox x:Name="txt_nCliente" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="25" Width="85" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" Margin="0,13,7,12" BorderThickness="0" Background="{x:Null}"/>
+            <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0.65"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="14,0,14,0">
+
+            <Label Content="Cedula" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,23,177.667,231" Width="60"/>
+            <TextBox x:Name="txt_cedula_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,25,39.667,232" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Label Content="*" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="256,25,40.333,253" FontSize="14" Width="21"/>
+            <Label Content="Nombre" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,63,177.667,191" Width="60"/>
+            <TextBox x:Name="txt_nombre_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,65,39.667,192" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Label Content="*" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="256,65,41.333,213" FontSize="14" Width="20"/>
+            <Label Content="Apellido" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,103,177.667,148" Width="60"/>
+            <TextBox x:Name="txt_apellido_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,105,39.667,152" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Label Content="*" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="256,105,40.333,173" FontSize="14" Width="21"/>
+            <Label Content="Direccion" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,143,173.667,108" Width="64"/>
+            <TextBox x:Name="txt_direccion_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,145,39.667,112" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Label Content="Email" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,183,177.667,70" Width="60"/>
+            <TextBox x:Name="txt_email_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,185,39.667,72" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Label Content="Telefono" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="35,223,177.667,28" Width="60"/>
+            <TextBox x:Name="txt_telefono_cliente" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Height="23" Text="" Width="120" Margin="113,225,39.667,32" BorderThickness="0,0,1,1" Padding="0,0,2,0"/>
+            <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0.65"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="14,0,14,0">
+
+            <Button x:Name="btn_limpiar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,9,235.667,11" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Click="btn_limpiar_Click">
+                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Limpiar.png" OpacityMask="#FFDDDDDD"/>
+            </Button>
+            <Button x:Name="btn_guardar_cliente" Content="Guardar" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Height="29" Margin="0,10,70.667,11" Width="61" Click="btn_guardar_cliente_Click"/>
+            <Button x:Name="btn_cancelar" Content="Cancelar" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Height="29" Width="61" Click="btn_cancelar_Click"/>
+
+        </Grid>
+
+    </Grid>
+</Window>

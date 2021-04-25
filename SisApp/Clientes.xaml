@@ -49,6 +49,15 @@
 
         <Grid Grid.Row="2">
 
+            <Button x:Name="btn_Agrega_cliente" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="14,0,0,22.667" VerticalAlignment="Bottom" Width="39" Height="35" BorderThickness="0" FontSize="14" Panel.ZIndex="-1" Click="Agrega_cliente_Click" Background="{x:Null}" ToolTip="Agregar cliente">
+                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Agrega_usuario.png" OpacityMask="#FFDDDDDD"/>
+            </Button>
+            <Button x:Name="btn_Edita_cliente" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="64,0,0,22.667" VerticalAlignment="Bottom" Width="39" Height="35" BorderThickness="0" FontSize="14" Panel.ZIndex="-1" Click="btn_Edita_cliente_Click" Background="{x:Null}" ToolTip="Editar cliente">
+                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Editar.png" OpacityMask="#FFDDDDDD"/>
+            </Button>
+            <Button x:Name="btn_Elimina_cliente" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="114,0,0,22.667" VerticalAlignment="Bottom" Width="39" Height="35" BorderThickness="0" FontSize="14" Panel.ZIndex="-1" Click="btn_Elimina_cliente_Click" Background="{x:Null}" ToolTip="Eliminar cliente">
+                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Eliminar.png" OpacityMask="#FFDDDDDD"/>
+            </Button>
             <Button Content="Seleccionar" HorizontalAlignment="Right" Margin="0,0,234,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click"/>
             <Button Content="Actualizar" HorizontalAlignment="Right" Margin="0,0,124,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click_2"/>
             <Button Content="Cancelar" HorizontalAlignment="Right" Margin="0,0,14,23" VerticalAlignment="Bottom" Width="98" Height="35" BorderThickness="0" FontSize="14" Click="Button_Click_1"/>

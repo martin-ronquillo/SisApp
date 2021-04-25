@@ -119,17 +119,24 @@ namespace SisApp
             {
                 Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
 
-                Cantidad = 1;
-                listaProductos.Add(
-                    new ArticulosVenta()
-                    {
-                        Id = Id,
-                        Cantidad = 1,
-                        Producto = producto.Producto1,
-                        ValorUnidad = (float)producto.PrecioVenta,
-                        ValorTotal = Cantidad * (float)producto.PrecioVenta
-                    }
-                );
+                if (producto.Stock >= 1)
+                {
+                    Cantidad = 1;
+                    listaProductos.Add(
+                        new ArticulosVenta()
+                        {
+                            Id = Id,
+                            Cantidad = 1,
+                            Producto = producto.Producto1,
+                            ValorUnidad = (float)producto.PrecioVenta,
+                            ValorTotal = Cantidad * (float)producto.PrecioVenta
+                        }
+                    );
+                }
+                else
+                {
+                    MessageBox.Show("Producto sin stock");
+                }
             }
             catch
             {
@@ -151,20 +158,28 @@ namespace SisApp
 
                         int cantidadProvisional = articulo.Cantidad + 1;
 
-                        Cantidad = cantidadProvisional;
+                        if (producto.Stock >= cantidadProvisional)
+                        {
+                            Cantidad = cantidadProvisional;
 
-                        listaProductos.Remove(articulo);
+                            listaProductos.Remove(articulo);
 
-                        listaProductos.Add(
-                            new ArticulosVenta()
-                            {
-                                Id = Id,
-                                Cantidad = cantidadProvisional,
-                                Producto = producto.Producto1,
-                                ValorUnidad = (float)producto.PrecioVenta,
-                                ValorTotal = Cantidad * (float)producto.PrecioVenta
-                            }
-                        );
+                            listaProductos.Add(
+                                new ArticulosVenta()
+                                {
+                                    Id = Id,
+                                    Cantidad = cantidadProvisional,
+                                    Producto = producto.Producto1,
+                                    ValorUnidad = (float)producto.PrecioVenta,
+                                    ValorTotal = Cantidad * (float)producto.PrecioVenta
+                                }
+                            );
+                        }
+                        else
+                        {
+                            MessageBox.Show("Producto sin stock");
+                        }
+
                     }
                     catch
                     {

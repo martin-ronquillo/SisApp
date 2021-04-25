@@ -16,25 +16,26 @@ namespace SisApp
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public int Cargo { get; set; }
+        public static string Rol { get; set; }
 
         public LoggedUser(int id)
         {
             try
             {
                 User user = dataContext.User.First(us => us.Id.Equals(id));
+                Roles roles = dataContext.Roles.First(rol => rol.Id.Equals(user.RolesId));
 
                 Id = user.Id;
                 Nombre = user.nombre;
                 Apellido = user.apellido;
-                Cargo = user.cargo;
+                Rol = roles.Rol;
             }
             catch
             {
                 Id = 0;
                 Nombre = null;
                 Apellido = null;
-                Cargo = 0;
+                Rol = null;
             }
         }
     }
