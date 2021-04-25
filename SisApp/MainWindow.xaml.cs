@@ -32,10 +32,10 @@ namespace SisApp
                 Application.Current.MainWindow = loggin;
 
                 loggin.ShowDialog();
-            }
 
-            //Devuelve el Mainfocus al formulario
-            Application.Current.MainWindow = this;
+                //Devuelve el Mainfocus al formulario
+                Application.Current.MainWindow = this;
+            }
 
             LimpiaForm();
         }
@@ -49,6 +49,13 @@ namespace SisApp
 
         private void HandleKeyPress(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.F1)
+            {
+                MainWindow helperWindow = new MainWindow();
+
+                helperWindow.Show();
+            }
+
             if (e.Key == Key.F2)
             {
                 BuscaCliente();
