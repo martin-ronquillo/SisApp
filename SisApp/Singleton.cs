@@ -16,6 +16,9 @@ namespace SisApp
         public bool estado = true;
         public int idUser;
 
+        //Mantiene el estado del modal "confirmar"
+        public bool confirma = false;
+
         //Se usan para seleccionar cliente a facturar
         public int selectedCliente;
     }

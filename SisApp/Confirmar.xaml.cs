@@ -30,7 +30,9 @@ namespace SisApp
 
         private void btn_confirmar_Click(object sender, RoutedEventArgs e)
         {
+            Singleton.Instancia.confirma = true;
 
+            this.Close();
         }
 
         private void btn_cancelar_Click(object sender, RoutedEventArgs e)

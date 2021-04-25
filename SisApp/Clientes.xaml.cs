@@ -84,7 +84,7 @@ namespace SisApp
         //Boton Actualizar
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            BuscaEmpleado();
+            LlenaListView();
         }
 
         //Boton Cancelar
@@ -96,7 +96,7 @@ namespace SisApp
         //Boton Buscar
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            BuscaEmpleado();
+            BuscaCliente();
             lv_clientes.Focus();
         }
 
@@ -105,7 +105,7 @@ namespace SisApp
         {
             if (e.Key == Key.Enter)
             {
-                BuscaEmpleado();
+                BuscaCliente();
                 lv_clientes.Focus();
             }
         }
@@ -135,7 +135,7 @@ namespace SisApp
             //lv_clientes.ItemsSource = dataContext.Cliente;
         }
 
-        public void BuscaEmpleado()
+        public void BuscaCliente()
         {
             //Rellena una lista con los clientes de la BD
             List<Cliente> listaClientes = new List<Cliente>();
@@ -208,11 +208,23 @@ namespace SisApp
         {
             Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
 
-            string nombre = selectedCliente.Nombre + " " + selectedCliente.Apellido;
+            if (selectedCliente != null)
+            {
+                string nombre = selectedCliente.Nombre + " " + selectedCliente.Apellido;
 
-            Confirmar confirmar = new Confirmar(nombre);
+                Confirmar confirmar = new Confirmar(nombre);
 
-            confirmar.ShowDialog();
+                confirmar.ShowDialog();
+
+                if (Singleton.Instancia.confirma)
+                {
+                    Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(selectedCliente.Id));
+
+                    dataContext.Cliente.DeleteOnSubmit(cliente);
+
+                    dataContext.SubmitChanges();
+                }
+            }
 
 
         }

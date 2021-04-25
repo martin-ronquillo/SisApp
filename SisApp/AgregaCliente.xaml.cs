@@ -142,9 +142,9 @@ namespace SisApp
             validacion = true;
 
             //Valida la cedula
-            if (Regex.IsMatch(txt_cedula_cliente.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cedula_cliente.Text) | txt_cedula_cliente.Text.Length > 10)
+            if (Regex.IsMatch(txt_cedula_cliente.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cedula_cliente.Text) | txt_cedula_cliente.Text.Length != 10 & txt_cedula_cliente.Text.Length != 13)
             {
-                MessageBox.Show("El campo 'Cedula' debe contener 10 numeros");
+                MessageBox.Show("El campo 'Cedula' es invalido");
 
                 validacion = false;
             }
