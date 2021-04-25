@@ -1,0 +1,113 @@
+﻿<Window x:Class="SisApp.Articulos"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Articulos" Height="564.5" Width="1000.333">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Menu Background="#FFC9C9C9" VerticalContentAlignment="Center">
+
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+
+            <MenuItem Header="Articulos" Height="50" FontWeight="Bold" FontFamily="Verdana" FontSize="14">
+                <MenuItem.Icon>
+                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Revista.png" Margin="1,0,0,0" Width="20"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Ingresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
+                <MenuItem.Icon>
+                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png" Margin="1,0,0,0" Width="20"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Egresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
+                <MenuItem.Icon>
+                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png" Margin="1,0,0,0" Width="15"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+        </Menu>
+
+        <Grid Grid.Column="1" Margin="14">
+
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+
+            </Grid.RowDefinitions>
+
+            <Grid>
+
+                <Label Content="ARTICULOS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+
+                <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120">
+                    <ComboBoxItem>asdasdasd</ComboBoxItem>
+                    <ComboBoxItem>asdasdasd</ComboBoxItem>
+                </ComboBox>
+
+            </Grid>
+
+            <Grid Grid.Row="1">
+
+                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.View>
+
+                        <GridView>
+
+                            <GridViewColumn Header="  Cantidad  " x:Name="list_cantidad" Width="90" DisplayMemberBinding="{Binding Cantidad}"/>
+                            <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                            <GridViewColumn Header="  V. Unidad  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding ValorUnidad}"/>
+                            <GridViewColumn Header="  Total  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding ValorTotal}"/>
+
+                        </GridView>
+
+                    </ListView.View>
+
+                </ListView>
+
+            </Grid>
+
+            <Grid Grid.Row="2">
+
+            </Grid>
+
+        </Grid>
+
+        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Visibility="Hidden" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!--Width is bound to width of the first GridViewColumn -->
+                <ColumnDefinition Width="{Binding ElementName=list_cantidad, Path=ActualWidth}"/>
+                <!--Width is set to "Fill"-->
+                <ColumnDefinition Width="*"/>
+                <!--Correction Width-->
+                <ColumnDefinition Width="240"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="1" x:Name="helperField"/>
+        </Grid>
+
+    </Grid>
+</Window>

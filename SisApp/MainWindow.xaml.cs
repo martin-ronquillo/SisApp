@@ -35,6 +35,7 @@ namespace SisApp
 
                 //Devuelve el Mainfocus al formulario
                 Application.Current.MainWindow = this;
+                Application.Current.MainWindow.WindowState = WindowState.Maximized;
             }
 
             LimpiaForm();
@@ -59,6 +60,13 @@ namespace SisApp
             if (e.Key == Key.F2)
             {
                 BuscaCliente();
+            }
+
+            if (e.Key == Key.F6)
+            {
+                Articulos articulos = new Articulos();
+
+                articulos.Show();
             }
         }
 

@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -44,12 +44,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>7CFE468FDCA607CD38D42D79BD921B076FC20351</ManifestCertificateThumbprint>
@@ -91,6 +92,9 @@
     <Compile Include="AgregaCliente.xaml.cs">
       <DependentUpon>AgregaCliente.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Articulos.xaml.cs">
+      <DependentUpon>Articulos.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Clientes.xaml.cs">
       <DependentUpon>Clientes.xaml</DependentUpon>
     </Compile>
@@ -115,6 +119,10 @@
     </Compile>
     <Compile Include="InfoVenta.cs" />
     <Page Include="AgregaCliente.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Articulos.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
