@@ -54,6 +54,12 @@ namespace SisApp
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
+    partial void InsertAlmacenProducto(AlmacenProducto instance);
+    partial void UpdateAlmacenProducto(AlmacenProducto instance);
+    partial void DeleteAlmacenProducto(AlmacenProducto instance);
+    partial void InsertAlmacen(Almacen instance);
+    partial void UpdateAlmacen(Almacen instance);
+    partial void DeleteAlmacen(Almacen instance);
     #endregion
 		
 		public DataClasses1DataContext() : 
@@ -147,6 +153,22 @@ namespace SisApp
 			get
 			{
 				return this.GetTable<User>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AlmacenProducto> AlmacenProducto
+		{
+			get
+			{
+				return this.GetTable<AlmacenProducto>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Almacen> Almacen
+		{
+			get
+			{
+				return this.GetTable<Almacen>();
 			}
 		}
 	}
@@ -519,6 +541,8 @@ namespace SisApp
 		
 		private EntitySet<VentaProducto> _VentaProducto;
 		
+		private EntitySet<AlmacenProducto> _AlmacenProducto;
+		
 		private EntityRef<Categoria> _Categoria;
 		
     #region Definiciones de métodos de extensibilidad
@@ -542,6 +566,7 @@ namespace SisApp
 		public Producto()
 		{
 			this._VentaProducto = new EntitySet<VentaProducto>(new Action<VentaProducto>(this.attach_VentaProducto), new Action<VentaProducto>(this.detach_VentaProducto));
+			this._AlmacenProducto = new EntitySet<AlmacenProducto>(new Action<AlmacenProducto>(this.attach_AlmacenProducto), new Action<AlmacenProducto>(this.detach_AlmacenProducto));
 			this._Categoria = default(EntityRef<Categoria>);
 			OnCreated();
 		}
@@ -683,6 +708,19 @@ namespace SisApp
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Producto_AlmacenProducto", Storage="_AlmacenProducto", ThisKey="Id", OtherKey="ProductoId")]
+		public EntitySet<AlmacenProducto> AlmacenProducto
+		{
+			get
+			{
+				return this._AlmacenProducto;
+			}
+			set
+			{
+				this._AlmacenProducto.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Categoria_Producto", Storage="_Categoria", ThisKey="CategoriaId", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Categoria Categoria
 		{
@@ -747,6 +785,18 @@ namespace SisApp
 		{
 			this.SendPropertyChanging();
 			entity.Producto1 = null;
+		}
+		
+		private void attach_AlmacenProducto(AlmacenProducto entity)
+		{
+			this.SendPropertyChanging();
+			entity.Producto = this;
+		}
+		
+		private void detach_AlmacenProducto(AlmacenProducto entity)
+		{
+			this.SendPropertyChanging();
+			entity.Producto = null;
 		}
 	}
 	
@@ -1509,6 +1559,8 @@ namespace SisApp
 		
 		private EntitySet<Venta> _Venta;
 		
+		private EntityRef<Almacen> _Almacen;
+		
     #region Definiciones de métodos de extensibilidad
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1528,6 +1580,7 @@ namespace SisApp
 		public Caja()
 		{
 			this._Venta = new EntitySet<Venta>(new Action<Venta>(this.attach_Venta), new Action<Venta>(this.detach_Venta));
+			this._Almacen = default(EntityRef<Almacen>);
 			OnCreated();
 		}
 		
@@ -1622,6 +1675,10 @@ namespace SisApp
 			{
 				if ((this._AlmacenId != value))
 				{
+					if (this._Almacen.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnAlmacenIdChanging(value);
 					this.SendPropertyChanging();
 					this._AlmacenId = value;
@@ -1641,6 +1698,40 @@ namespace SisApp
 			set
 			{
 				this._Venta.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Almacen_Caja", Storage="_Almacen", ThisKey="AlmacenId", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Almacen Almacen
+		{
+			get
+			{
+				return this._Almacen.Entity;
+			}
+			set
+			{
+				Almacen previousValue = this._Almacen.Entity;
+				if (((previousValue != value) 
+							|| (this._Almacen.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Almacen.Entity = null;
+						previousValue.Caja.Remove(this);
+					}
+					this._Almacen.Entity = value;
+					if ((value != null))
+					{
+						value.Caja.Add(this);
+						this._AlmacenId = value.Id;
+					}
+					else
+					{
+						this._AlmacenId = default(int);
+					}
+					this.SendPropertyChanged("Almacen");
+				}
 			}
 		}
 		
@@ -2039,6 +2130,508 @@ namespace SisApp
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AlmacenProducto")]
+	public partial class AlmacenProducto : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private int _AlmacenId;
+		
+		private int _ProductoId;
+		
+		private decimal _Stock;
+		
+		private string _ValorUnidad;
+		
+		private EntityRef<Producto> _Producto;
+		
+		private EntityRef<Almacen> _Almacen;
+		
+    #region Definiciones de métodos de extensibilidad
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnAlmacenIdChanging(int value);
+    partial void OnAlmacenIdChanged();
+    partial void OnProductoIdChanging(int value);
+    partial void OnProductoIdChanged();
+    partial void OnStockChanging(decimal value);
+    partial void OnStockChanged();
+    partial void OnValorUnidadChanging(string value);
+    partial void OnValorUnidadChanged();
+    #endregion
+		
+		public AlmacenProducto()
+		{
+			this._Producto = default(EntityRef<Producto>);
+			this._Almacen = default(EntityRef<Almacen>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AlmacenId", DbType="Int NOT NULL")]
+		public int AlmacenId
+		{
+			get
+			{
+				return this._AlmacenId;
+			}
+			set
+			{
+				if ((this._AlmacenId != value))
+				{
+					if (this._Almacen.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAlmacenIdChanging(value);
+					this.SendPropertyChanging();
+					this._AlmacenId = value;
+					this.SendPropertyChanged("AlmacenId");
+					this.OnAlmacenIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProductoId", DbType="Int NOT NULL")]
+		public int ProductoId
+		{
+			get
+			{
+				return this._ProductoId;
+			}
+			set
+			{
+				if ((this._ProductoId != value))
+				{
+					if (this._Producto.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProductoIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductoId = value;
+					this.SendPropertyChanged("ProductoId");
+					this.OnProductoIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Stock", DbType="Decimal(18,0) NOT NULL")]
+		public decimal Stock
+		{
+			get
+			{
+				return this._Stock;
+			}
+			set
+			{
+				if ((this._Stock != value))
+				{
+					this.OnStockChanging(value);
+					this.SendPropertyChanging();
+					this._Stock = value;
+					this.SendPropertyChanged("Stock");
+					this.OnStockChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValorUnidad", DbType="NChar(10) NOT NULL", CanBeNull=false)]
+		public string ValorUnidad
+		{
+			get
+			{
+				return this._ValorUnidad;
+			}
+			set
+			{
+				if ((this._ValorUnidad != value))
+				{
+					this.OnValorUnidadChanging(value);
+					this.SendPropertyChanging();
+					this._ValorUnidad = value;
+					this.SendPropertyChanged("ValorUnidad");
+					this.OnValorUnidadChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Producto_AlmacenProducto", Storage="_Producto", ThisKey="ProductoId", OtherKey="Id", IsForeignKey=true)]
+		public Producto Producto
+		{
+			get
+			{
+				return this._Producto.Entity;
+			}
+			set
+			{
+				Producto previousValue = this._Producto.Entity;
+				if (((previousValue != value) 
+							|| (this._Producto.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Producto.Entity = null;
+						previousValue.AlmacenProducto.Remove(this);
+					}
+					this._Producto.Entity = value;
+					if ((value != null))
+					{
+						value.AlmacenProducto.Add(this);
+						this._ProductoId = value.Id;
+					}
+					else
+					{
+						this._ProductoId = default(int);
+					}
+					this.SendPropertyChanged("Producto");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Almacen_AlmacenProducto", Storage="_Almacen", ThisKey="AlmacenId", OtherKey="Id", IsForeignKey=true)]
+		public Almacen Almacen
+		{
+			get
+			{
+				return this._Almacen.Entity;
+			}
+			set
+			{
+				Almacen previousValue = this._Almacen.Entity;
+				if (((previousValue != value) 
+							|| (this._Almacen.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Almacen.Entity = null;
+						previousValue.AlmacenProducto.Remove(this);
+					}
+					this._Almacen.Entity = value;
+					if ((value != null))
+					{
+						value.AlmacenProducto.Add(this);
+						this._AlmacenId = value.Id;
+					}
+					else
+					{
+						this._AlmacenId = default(int);
+					}
+					this.SendPropertyChanged("Almacen");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Almacen")]
+	public partial class Almacen : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Almacen1;
+		
+		private string _Direccion;
+		
+		private string _Ruc;
+		
+		private string _Telefono;
+		
+		private string _TelefonoDos;
+		
+		private string _Email;
+		
+		private EntitySet<Caja> _Caja;
+		
+		private EntitySet<AlmacenProducto> _AlmacenProducto;
+		
+    #region Definiciones de métodos de extensibilidad
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnAlmacen1Changing(string value);
+    partial void OnAlmacen1Changed();
+    partial void OnDireccionChanging(string value);
+    partial void OnDireccionChanged();
+    partial void OnRucChanging(string value);
+    partial void OnRucChanged();
+    partial void OnTelefonoChanging(string value);
+    partial void OnTelefonoChanged();
+    partial void OnTelefonoDosChanging(string value);
+    partial void OnTelefonoDosChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    #endregion
+		
+		public Almacen()
+		{
+			this._Caja = new EntitySet<Caja>(new Action<Caja>(this.attach_Caja), new Action<Caja>(this.detach_Caja));
+			this._AlmacenProducto = new EntitySet<AlmacenProducto>(new Action<AlmacenProducto>(this.attach_AlmacenProducto), new Action<AlmacenProducto>(this.detach_AlmacenProducto));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Almacen", Storage="_Almacen1", DbType="NVarChar(100)")]
+		public string Almacen1
+		{
+			get
+			{
+				return this._Almacen1;
+			}
+			set
+			{
+				if ((this._Almacen1 != value))
+				{
+					this.OnAlmacen1Changing(value);
+					this.SendPropertyChanging();
+					this._Almacen1 = value;
+					this.SendPropertyChanged("Almacen1");
+					this.OnAlmacen1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Direccion", DbType="NVarChar(150)")]
+		public string Direccion
+		{
+			get
+			{
+				return this._Direccion;
+			}
+			set
+			{
+				if ((this._Direccion != value))
+				{
+					this.OnDireccionChanging(value);
+					this.SendPropertyChanging();
+					this._Direccion = value;
+					this.SendPropertyChanged("Direccion");
+					this.OnDireccionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ruc", DbType="NVarChar(13) NOT NULL", CanBeNull=false)]
+		public string Ruc
+		{
+			get
+			{
+				return this._Ruc;
+			}
+			set
+			{
+				if ((this._Ruc != value))
+				{
+					this.OnRucChanging(value);
+					this.SendPropertyChanging();
+					this._Ruc = value;
+					this.SendPropertyChanged("Ruc");
+					this.OnRucChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Telefono", DbType="NVarChar(10)")]
+		public string Telefono
+		{
+			get
+			{
+				return this._Telefono;
+			}
+			set
+			{
+				if ((this._Telefono != value))
+				{
+					this.OnTelefonoChanging(value);
+					this.SendPropertyChanging();
+					this._Telefono = value;
+					this.SendPropertyChanged("Telefono");
+					this.OnTelefonoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TelefonoDos", DbType="NVarChar(10)")]
+		public string TelefonoDos
+		{
+			get
+			{
+				return this._TelefonoDos;
+			}
+			set
+			{
+				if ((this._TelefonoDos != value))
+				{
+					this.OnTelefonoDosChanging(value);
+					this.SendPropertyChanging();
+					this._TelefonoDos = value;
+					this.SendPropertyChanged("TelefonoDos");
+					this.OnTelefonoDosChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="NVarChar(50)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Almacen_Caja", Storage="_Caja", ThisKey="Id", OtherKey="AlmacenId")]
+		public EntitySet<Caja> Caja
+		{
+			get
+			{
+				return this._Caja;
+			}
+			set
+			{
+				this._Caja.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Almacen_AlmacenProducto", Storage="_AlmacenProducto", ThisKey="Id", OtherKey="AlmacenId")]
+		public EntitySet<AlmacenProducto> AlmacenProducto
+		{
+			get
+			{
+				return this._AlmacenProducto;
+			}
+			set
+			{
+				this._AlmacenProducto.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Caja(Caja entity)
+		{
+			this.SendPropertyChanging();
+			entity.Almacen = this;
+		}
+		
+		private void detach_Caja(Caja entity)
+		{
+			this.SendPropertyChanging();
+			entity.Almacen = null;
+		}
+		
+		private void attach_AlmacenProducto(AlmacenProducto entity)
+		{
+			this.SendPropertyChanging();
+			entity.Almacen = this;
+		}
+		
+		private void detach_AlmacenProducto(AlmacenProducto entity)
+		{
+			this.SendPropertyChanging();
+			entity.Almacen = null;
 		}
 	}
 }

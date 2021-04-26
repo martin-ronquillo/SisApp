@@ -28,6 +28,7 @@
       <Column Name="PrecioCompra" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="PrecioVenta" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Association Name="Producto_VentaProducto" Member="VentaProducto" ThisKey="Id" OtherKey="ProductoId" Type="VentaProducto" />
+      <Association Name="Producto_AlmacenProducto" Member="AlmacenProducto" ThisKey="Id" OtherKey="ProductoId" Type="AlmacenProducto" />
       <Association Name="Categoria_Producto" Member="Categoria" ThisKey="CategoriaId" OtherKey="Id" Type="Categoria" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
@@ -71,6 +72,7 @@
       <Column Name="Departamento" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="AlmacenId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Caja_Venta" Member="Venta" ThisKey="Id" OtherKey="CajaId" Type="Venta" />
+      <Association Name="Almacen_Caja" Member="Almacen" ThisKey="AlmacenId" OtherKey="Id" Type="Almacen" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Roles" Member="Roles">
@@ -90,6 +92,30 @@
       <Column Name="password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="User_Venta" Member="Venta" ThisKey="Id" OtherKey="UserId" Type="Venta" />
       <Association Name="Roles_User" Member="Roles" ThisKey="RolesId" OtherKey="Id" Type="Roles" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AlmacenProducto" Member="AlmacenProducto">
+    <Type Name="AlmacenProducto">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AlmacenId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ProductoId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="ValorUnidad" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="Producto_AlmacenProducto" Member="Producto" ThisKey="ProductoId" OtherKey="Id" Type="Producto" IsForeignKey="true" />
+      <Association Name="Almacen_AlmacenProducto" Member="Almacen" ThisKey="AlmacenId" OtherKey="Id" Type="Almacen" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Almacen" Member="Almacen">
+    <Type Name="Almacen">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Almacen" Member="Almacen1" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Direccion" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ruc" Type="System.String" DbType="NVarChar(13) NOT NULL" CanBeNull="false" />
+      <Column Name="Telefono" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="TelefonoDos" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Almacen_Caja" Member="Caja" ThisKey="Id" OtherKey="AlmacenId" Type="Caja" />
+      <Association Name="Almacen_AlmacenProducto" Member="AlmacenProducto" ThisKey="Id" OtherKey="AlmacenId" Type="AlmacenProducto" />
     </Type>
   </Table>
 </Database>
