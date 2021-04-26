@@ -54,17 +54,33 @@
             <Grid>
 
                 <Label Content="ARTICULOS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+                <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120"/>
 
-                <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120">
-                    <ComboBoxItem>asdasdasd</ComboBoxItem>
-                    <ComboBoxItem>asdasdasd</ComboBoxItem>
-                </ComboBox>
+                <Label Content="Codigo de Barras:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="Existencias:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,75,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="Producto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,110,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+
+                <Label Content="Categoria:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,558,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="En Bodega:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,550,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+
+                <Label Content="Precio de Compra:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,185,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="Precio de venta:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,200,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+
+                <TextBox x:Name="txt_codigoBarra" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0"/>
+                <TextBox x:Name="txt_existencias" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0"/>
+                <TextBox x:Name="txt_producto" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="380" Margin="186,114,0,0"/>
+
+                <TextBox x:Name="txt_categoria" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,380,0"/>
+                <TextBox x:Name="txt_enBodega" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,380,0"/>
+                
+                <TextBox x:Name="txt_precioCompra" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,0,0"/>
+                <TextBox x:Name="txt_precioVenta" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,0,0"/>
 
             </Grid>
 
             <Grid Grid.Row="1">
 
-                <ListView x:Name="lv_facturar" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+                <ListView x:Name="lv_productos" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC" MouseDoubleClick="lv_productos_MouseLeftButtonDown" KeyDown="lv_productos_KeyDown">
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
@@ -76,10 +92,11 @@
 
                         <GridView>
 
-                            <GridViewColumn Header="  Cantidad  " x:Name="list_cantidad" Width="90" DisplayMemberBinding="{Binding Cantidad}"/>
-                            <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
-                            <GridViewColumn Header="  V. Unidad  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding ValorUnidad}"/>
-                            <GridViewColumn Header="  Total  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding ValorTotal}"/>
+                            <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="90" DisplayMemberBinding="{Binding CodigoBarra}"/>
+                            <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto1}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                            <GridViewColumn Header="  Stock  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Stock}"/>
+                            <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding PrecioVenta}"/>
+                            <GridViewColumn Header="  Pre. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PrecioCompra}"/>
 
                         </GridView>
 
@@ -103,7 +120,7 @@
                 <!--Width is set to "Fill"-->
                 <ColumnDefinition Width="*"/>
                 <!--Correction Width-->
-                <ColumnDefinition Width="240"/>
+                <ColumnDefinition Width="510"/>
             </Grid.ColumnDefinitions>
             <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
             <Grid Grid.Column="1" x:Name="helperField"/>

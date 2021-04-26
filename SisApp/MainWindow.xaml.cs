@@ -14,15 +14,13 @@ namespace SisApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        DataClasses1DataContext dataContext;
-
         public MainWindow()
         {
             InitializeComponent();
 
             string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
 
-            dataContext = new DataClasses1DataContext(miConexion);
+            DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
 
             //True: Muestra el loggin
             if (Singleton.Instancia.estado)

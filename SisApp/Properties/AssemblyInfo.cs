@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("SisApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Quarantine Games")]
 [assembly: AssemblyProduct("SisApp")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
