@@ -28,14 +28,27 @@
                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Revista.png" Margin="1,0,0,0" Width="20"/>
                 </MenuItem.Icon>
             </MenuItem>
+            
             <MenuItem Header="Ingresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
                 <MenuItem.Icon>
                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png" Margin="1,0,0,0" Width="20"/>
                 </MenuItem.Icon>
+                <MenuItem Header="Ingresar Articulos" Height="30" FontWeight="Normal" FontSize="12"/>
+                <Separator/>
+                <MenuItem Header="Consultar Ingresos" Height="30" FontWeight="Normal" FontSize="12"/>
             </MenuItem>
+            
             <MenuItem Header="Egresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
                 <MenuItem.Icon>
                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png" Margin="1,0,0,0" Width="15"/>
+                </MenuItem.Icon>
+                <MenuItem Header="Egresar Articulos" Height="30" FontWeight="Normal" FontSize="12"/>
+                <MenuItem Header="Consultar Egresos" Height="30" FontWeight="Normal" FontSize="12"/>
+            </MenuItem>
+            
+            <MenuItem Header="Traspaso" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
+                <MenuItem.Icon>
+                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Transferir.png" Margin="1,0,0,0" Width="20"/>
                 </MenuItem.Icon>
             </MenuItem>
 
@@ -54,6 +67,7 @@
             <Grid>
 
                 <Label Content="ARTICULOS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+                <CheckBox x:Name="chckB_stock" Content="Dispone Stock" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,167.333,0" FontFamily="verdana" FontWeight="Bold" FontSize="12" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FlowDirection="RightToLeft" Checked="chckB_stock_Checked" Unchecked="chckB_stock_Checked"/>
                 <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="cb_almacen_SelectionChanged"/>
 
                 <Label Content="Codigo de Barras:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>

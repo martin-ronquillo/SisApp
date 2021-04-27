@@ -34,6 +34,11 @@ namespace SisApp
             LlenaListView();
         }
 
+        private void chckB_stock_Checked(object sender, RoutedEventArgs e)
+        {
+            LlenaListView();
+        }
+
         private void cb_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LlenaListView();
@@ -69,18 +74,40 @@ namespace SisApp
             {
                 foreach (Producto producto in dataContext.Producto)
                 {
-                    listaProducto.Add(
-                        new Producto()
+                    //Si el checkBox "dispone stock" esta activo
+                    if(chckB_stock.IsChecked == true)
+                    {
+                        if (producto.Stock != 0)
                         {
-                            Id = producto.Id,
-                            Categoria = producto.Categoria,
-                            CodigoBarra = producto.CodigoBarra,
-                            Producto1 = producto.Producto1,
-                            Stock = producto.Stock,
-                            PrecioVenta = producto.PrecioVenta,
-                            PrecioCompra = producto.PrecioCompra
+                            listaProducto.Add(
+                                new Producto()
+                                {
+                                    Id = producto.Id,
+                                    Categoria = producto.Categoria,
+                                    CodigoBarra = producto.CodigoBarra,
+                                    Producto1 = producto.Producto1,
+                                    Stock = producto.Stock,
+                                    PrecioVenta = producto.PrecioVenta,
+                                    PrecioCompra = producto.PrecioCompra
+                                }
+                            );
                         }
-                    );
+                    }
+                    else
+                    {
+                        listaProducto.Add(
+                            new Producto()
+                            {
+                                Id = producto.Id,
+                                Categoria = producto.Categoria,
+                                CodigoBarra = producto.CodigoBarra,
+                                Producto1 = producto.Producto1,
+                                Stock = producto.Stock,
+                                PrecioVenta = producto.PrecioVenta,
+                                PrecioCompra = producto.PrecioCompra
+                            }
+                        );
+                    }
                 }
             }
             else
@@ -94,18 +121,40 @@ namespace SisApp
                 {
                     Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(ap.ProductoId));
 
-                    listaProducto.Add(
-                        new Producto()
+                    //Si el checkBox "dispone stock" esta activo
+                    if (chckB_stock.IsChecked == true)
+                    {
+                        if (producto.Stock != 0)
                         {
-                            Id = producto.Id,
-                            Categoria = producto.Categoria,
-                            CodigoBarra = producto.CodigoBarra,
-                            Producto1 = producto.Producto1,
-                            Stock = producto.Stock,
-                            PrecioVenta = producto.PrecioVenta,
-                            PrecioCompra = producto.PrecioCompra
+                            listaProducto.Add(
+                                new Producto()
+                                {
+                                    Id = producto.Id,
+                                    Categoria = producto.Categoria,
+                                    CodigoBarra = producto.CodigoBarra,
+                                    Producto1 = producto.Producto1,
+                                    Stock = producto.Stock,
+                                    PrecioVenta = producto.PrecioVenta,
+                                    PrecioCompra = producto.PrecioCompra
+                                }
+                            );
                         }
-                    );
+                    }
+                    else
+                    {
+                        listaProducto.Add(
+                            new Producto()
+                            {
+                                Id = producto.Id,
+                                Categoria = producto.Categoria,
+                                CodigoBarra = producto.CodigoBarra,
+                                Producto1 = producto.Producto1,
+                                Stock = producto.Stock,
+                                PrecioVenta = producto.PrecioVenta,
+                                PrecioCompra = producto.PrecioCompra
+                            }
+                        );
+                    }
                 }
             }
 
