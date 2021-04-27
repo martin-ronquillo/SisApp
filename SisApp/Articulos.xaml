@@ -54,7 +54,7 @@
             <Grid>
 
                 <Label Content="ARTICULOS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
-                <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120"/>
+                <ComboBox Name="cb_almacen" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="cb_almacen_SelectionChanged"/>
 
                 <Label Content="Codigo de Barras:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="Existencias:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,75,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
@@ -66,15 +66,15 @@
                 <Label Content="Precio de Compra:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,185,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="Precio de venta:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,200,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
 
-                <TextBox x:Name="txt_codigoBarra" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0"/>
-                <TextBox x:Name="txt_existencias" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0"/>
-                <TextBox x:Name="txt_producto" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="380" Margin="186,114,0,0"/>
+                <TextBox x:Name="txt_codigoBarra" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_existencias" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_producto" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="380" Margin="186,114,0,0" FontWeight="Bold"/>
 
-                <TextBox x:Name="txt_categoria" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,380,0"/>
-                <TextBox x:Name="txt_enBodega" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,380,0"/>
+                <TextBox x:Name="txt_categoria" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,380,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_enBodega" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,380,0" FontWeight="Bold"/>
                 
-                <TextBox x:Name="txt_precioCompra" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,0,0"/>
-                <TextBox x:Name="txt_precioVenta" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,0,0"/>
+                <TextBox x:Name="txt_precioCompra" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_precioVenta" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,0,0" FontWeight="Bold"/>
 
             </Grid>
 
@@ -92,7 +92,7 @@
 
                         <GridView>
 
-                            <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="90" DisplayMemberBinding="{Binding CodigoBarra}"/>
+                            <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="150" DisplayMemberBinding="{Binding CodigoBarra}"/>
                             <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto1}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
                             <GridViewColumn Header="  Stock  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Stock}"/>
                             <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding PrecioVenta}"/>

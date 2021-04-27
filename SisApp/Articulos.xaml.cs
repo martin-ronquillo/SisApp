@@ -34,35 +34,79 @@ namespace SisApp
             LlenaListView();
         }
 
+        private void cb_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LlenaListView();
+        }
+
+        private void lv_productos_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DatosProducto();
+        }
+
+        private void lv_productos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                DatosProducto();
+            }
+        }
+
+        /*
+         * 
+         * 
+         * METODOS DE LA VENTANA
+         * 
+         * 
+         */
+
         public void LlenaListView()
         {
-            /*var dt = new DataTable();
-
-            dt.Columns.Add("CodigoBarra", typeof(string));
-            dt.Columns.Add("Producto1", typeof(string));
-            dt.Columns.Add("Stock", typeof(int));
-            dt.Columns.Add("PrecioVenta", typeof(decimal));
-            dt.Columns.Add("PrecioCompra", typeof(decimal));*/
-
             //Crea una lista y la rellena con los datos de la tabla Articulos
             List<Producto> listaProducto = new List<Producto>();
 
-            foreach (Producto producto in dataContext.Producto)
+            if (cb_almacen.SelectedItem.ToString() == "Todos")
             {
-                //dt.Rows.Add(new object[] { producto.CodigoBarra, producto.Producto1, producto.Stock, producto.PrecioVenta, producto.PrecioCompra });
-                
-                listaProducto.Add(
-                    new Producto()
-                    {
-                        Id = producto.Id,
-                        Categoria = producto.Categoria,
-                        CodigoBarra = producto.CodigoBarra,
-                        Producto1 = producto.Producto1,
-                        Stock = producto.Stock,
-                        PrecioVenta = producto.PrecioVenta,
-                        PrecioCompra = producto.PrecioCompra
-                    }
-                );
+                foreach (Producto producto in dataContext.Producto)
+                {
+                    listaProducto.Add(
+                        new Producto()
+                        {
+                            Id = producto.Id,
+                            Categoria = producto.Categoria,
+                            CodigoBarra = producto.CodigoBarra,
+                            Producto1 = producto.Producto1,
+                            Stock = producto.Stock,
+                            PrecioVenta = producto.PrecioVenta,
+                            PrecioCompra = producto.PrecioCompra
+                        }
+                    );
+                }
+            }
+            else
+            {
+                //Almacen almacen = dataContext.Almacen.First(alm => alm.Almacen1.Equals(cb_almacen.SelectedItem.ToString()));
+                List<AlmacenProducto> listaAP = new List<AlmacenProducto>();
+
+                listaAP = dataContext.AlmacenProducto.Where(ap => ap.Almacen.Almacen1.Equals(cb_almacen.SelectedItem.ToString())).ToList();
+
+                foreach (AlmacenProducto ap in listaAP)
+                {
+                    Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(ap.ProductoId));
+
+                    listaProducto.Add(
+                        new Producto()
+                        {
+                            Id = producto.Id,
+                            Categoria = producto.Categoria,
+                            CodigoBarra = producto.CodigoBarra,
+                            Producto1 = producto.Producto1,
+                            Stock = producto.Stock,
+                            PrecioVenta = producto.PrecioVenta,
+                            PrecioCompra = producto.PrecioCompra
+                        }
+                    );
+                }
             }
 
             lv_productos.ItemsSource = listaProducto;
@@ -79,44 +123,43 @@ namespace SisApp
             }
         }
 
-        private void lv_productos_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void DatosProducto()
         {
             Producto selectedProducto = (Producto)lv_productos.SelectedItem;
 
-            try
-            {
-                Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(selectedProducto.Id));
-
-                Categoria categoria = dataContext.Categoria.First(cat => cat.Id.Equals(producto.CategoriaId));
-
-                txt_categoria.Text = categoria.Nombre;
-
-                AlmacenProducto almacenProducto = dataContext.AlmacenProducto.Join();
-            }
-            catch
-            {
-
-            }
-
-
             if (selectedProducto != null)
             {
+
+                try
+                {
+                    Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(selectedProducto.Id));
+
+                    Categoria categoria = dataContext.Categoria.First(cat => cat.Id.Equals(producto.CategoriaId));
+
+                    //Llena la categoria del producto
+                    txt_categoria.Text = categoria.Nombre;
+
+                    //Hace una consulta a la tabla relacional entre Almacen y Producto para poder acceder a sus datos (Tabla AlmacenProducto)
+                    var query =
+                        from almacenProducto in dataContext.AlmacenProducto
+                        where almacenProducto.AlmacenId == 8
+                        where almacenProducto.ProductoId == producto.Id
+                        select new { AlmacenProducto = almacenProducto };
+
+                    txt_enBodega.Text = query.First().AlmacenProducto.Stock.ToString();
+                }
+                catch
+                {
+                    txt_categoria.Text = "N/A";
+
+                    txt_enBodega.Text = "N/A";
+                }
+
                 txt_codigoBarra.Text = selectedProducto.CodigoBarra;
                 txt_existencias.Text = selectedProducto.Stock.ToString();
                 txt_producto.Text = selectedProducto.Producto1;
-            }
-        }
-
-        private void lv_productos_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Producto selectedProducto = (Producto)lv_productos.SelectedItem;
-
-                if (selectedProducto != null)
-                {
-                    txt_producto.Text = selectedProducto.Producto1;
-                }
+                txt_precioCompra.Text = selectedProducto.PrecioCompra.ToString();
+                txt_precioVenta.Text = selectedProducto.PrecioVenta.ToString();
             }
         }
     }
