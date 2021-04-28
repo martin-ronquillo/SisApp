@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Configuration;
 using System.Threading;
+using System.Data.SQLite;
+using System.Data;
+using System.IO;
 
 namespace SisApp
 {
@@ -23,6 +26,12 @@ namespace SisApp
     {
         DataClasses1DataContext dataContext;
 
+        string connectionString;
+        SQLiteConnection conn;
+        SQLiteDataAdapter adapter;
+        DataSet ds = new DataSet();
+        string sql;
+
         public Loggin()
         {
             InitializeComponent();
@@ -30,6 +39,7 @@ namespace SisApp
             string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
 
             dataContext = new DataClasses1DataContext(miConexion);
+
         }
 
         private void btnEntrar_Click(object sender, RoutedEventArgs e)
