@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using DataModels;
 
 namespace SisApp
 {
@@ -18,9 +19,7 @@ namespace SisApp
         {
             InitializeComponent();
 
-            string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-            DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+            SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
             //True: Muestra el loggin
             if (Singleton.Instancia.estado)
@@ -314,7 +313,7 @@ namespace SisApp
             {
                 lv_facturar.ItemsSource = null;
 
-                listaProductos = ArticulosVenta.ReduceArticulo(selectedProducto, listaProductos);
+                listaProductos = ArticulosVenta.ReduceArticulo(selectedProducto.Id, listaProductos);
 
                 lv_facturar.ItemsSource = listaProductos;
 

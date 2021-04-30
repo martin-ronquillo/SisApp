@@ -5,22 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Windows;
+using DataModels;
+using LinqToDB;
 
 namespace SisApp
 {
     class InfoVenta
     {
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public int VentaNum()
         {
             try
             {
-                Venta venta = dataContext.Venta.OrderByDescending(o => o.Id).FirstOrDefault();
+                var venta = db.Sales.OrderByDescending(sa => sa.Id).FirstOrDefault();
 
-                int nVenta = venta.Id + 1;
+                int nVenta = (int)venta.Id + 1;
 
                 return nVenta;
             }
@@ -35,9 +35,7 @@ namespace SisApp
 
     class ClienteFactura
     {
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public int Id { get; set; }
         public string Cedula { get; set; }
@@ -51,15 +49,15 @@ namespace SisApp
         {
             try
             {
-                Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(2));
+                var cliente = db.Customers.First(cli => cli.Id.Equals(1));
 
-                Id = cliente.Id;
-                Cedula = cliente.Cedula;
-                Nombre = cliente.Nombre;
-                Apellido = cliente.Apellido;
-                Direccion = cliente.Direccion;
+                Id = (int)cliente.Id;
+                Cedula = cliente.Ci;
+                Nombre = cliente.Name;
+                Apellido = cliente.LastName;
+                Direccion = cliente.HomeAddress;
                 Email = cliente.Email;
-                Telefono = cliente.Telefono;
+                Telefono = cliente.Telephone;
             }
             catch
             {
@@ -76,36 +74,34 @@ namespace SisApp
         {
             try
             {
-                Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(id));
+                var cliente = db.Customers.First(cli => cli.Id.Equals(id));
 
-                Id = cliente.Id;
-                Cedula = cliente.Cedula;
-                Nombre = cliente.Nombre;
-                Apellido = cliente.Apellido;
-                Direccion = cliente.Direccion;
+                Id = (int)cliente.Id;
+                Cedula = cliente.Ci;
+                Nombre = cliente.Name;
+                Apellido = cliente.LastName;
+                Direccion = cliente.HomeAddress;
                 Email = cliente.Email;
-                Telefono = cliente.Telefono;
+                Telefono = cliente.Telephone;
             }
             catch
             {
-                Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(2));
+                var cliente = db.Customers.First(cli => cli.Id.Equals(1));
 
-                Id = cliente.Id;
-                Cedula = cliente.Cedula;
-                Nombre = cliente.Nombre;
-                Apellido = cliente.Apellido;
-                Direccion = cliente.Direccion;
+                Id = (int)cliente.Id;
+                Cedula = cliente.Ci;
+                Nombre = cliente.Name;
+                Apellido = cliente.LastName;
+                Direccion = cliente.HomeAddress;
                 Email = cliente.Email;
-                Telefono = cliente.Telefono;
+                Telefono = cliente.Telephone;
             }
         }
     }
 
     public class ArticulosVenta
     {
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public int Id { get; set; }
         public int Cantidad { get; set; } = 1;
@@ -117,7 +113,7 @@ namespace SisApp
         {
             try
             {
-                Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
+                var producto = db.Products.First(pro => pro.Id.Equals(Id));
 
                 if (producto.Stock >= 1)
                 {
@@ -127,9 +123,9 @@ namespace SisApp
                         {
                             Id = Id,
                             Cantidad = 1,
-                            Producto = producto.Producto1,
-                            ValorUnidad = (float)producto.PrecioVenta,
-                            ValorTotal = Cantidad * (float)producto.PrecioVenta
+                            Producto = producto.ProductName,
+                            ValorUnidad = (float)producto.SalePrice,
+                            ValorTotal = Cantidad * (float)producto.SalePrice
                         }
                     );
                 }
@@ -154,7 +150,7 @@ namespace SisApp
                 {
                     try
                     {
-                        Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(Id));
+                        var producto = db.Products.First(pro => pro.Id.Equals(Id));
 
                         int cantidadProvisional = articulo.Cantidad + 1;
 
@@ -169,9 +165,9 @@ namespace SisApp
                                 {
                                     Id = Id,
                                     Cantidad = cantidadProvisional,
-                                    Producto = producto.Producto1,
-                                    ValorUnidad = (float)producto.PrecioVenta,
-                                    ValorTotal = Cantidad * (float)producto.PrecioVenta
+                                    Producto = producto.ProductName,
+                                    ValorUnidad = (float)producto.SalePrice,
+                                    ValorTotal = Cantidad * (float)producto.SalePrice
                                 }
                             );
                         }
@@ -193,15 +189,15 @@ namespace SisApp
             return listaProductos;
         }
 
-        public List<ArticulosVenta> ReduceArticulo(ArticulosVenta selectedProducto, List<ArticulosVenta> listaProductos)
+        public List<ArticulosVenta> ReduceArticulo(int selectedProducto, List<ArticulosVenta> listaProductos)
         {
             foreach (ArticulosVenta articulo in listaProductos)
             {
-                if (articulo.Id == selectedProducto.Id)
+                if (articulo.Id == selectedProducto)
                 {
                     try
                     {
-                        Producto producto = dataContext.Producto.First(pro => pro.Id.Equals(articulo.Id));
+                        var producto = db.Products.First(pro => pro.Id.Equals(selectedProducto));
 
                         int cantidadProvisional = articulo.Cantidad - 1;
 
@@ -218,11 +214,11 @@ namespace SisApp
                             listaProductos.Add(
                                 new ArticulosVenta()
                                 {
-                                    Id = selectedProducto.Id,
+                                    Id = selectedProducto,
                                     Cantidad = cantidadProvisional,
-                                    Producto = producto.Producto1,
-                                    ValorUnidad = (float)producto.PrecioVenta,
-                                    ValorTotal = Cantidad * (float)producto.PrecioVenta
+                                    Producto = producto.ProductName,
+                                    ValorUnidad = (float)producto.SalePrice,
+                                    ValorTotal = Cantidad * (float)producto.SalePrice
                                 }
                             );
                         }
@@ -310,8 +306,7 @@ namespace SisApp
         private double Cambio { get; set; }
         private List<ArticulosVenta> Articulos { get; set; }
 
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public Facturar(int User, string Cliente, string Fecha, List<ArticulosVenta> Articulos, double[] Valores)
         {
@@ -331,55 +326,51 @@ namespace SisApp
         {
             try
             {
-                //Encuentra al cliente segun la cedula y obtiene su ID
-                Cliente cliente = dataContext.Cliente.First(cli => cli.Cedula.Equals(Cliente));
-                //Encuentra la caja segun el nombre y obtiene su ID
+                //Encuentra al cliente segun la ID
+                var cliente = db.Customers.First(cli => cli.Id.Equals(Singleton.Instancia.selectedCliente));
+
+                //Encuentra la caja segun el nombre y obtiene su ID. Si no existe, se crea
                 try
                 {
-                    Caja caja = dataContext.Caja.First(caj => caj.NombreCaja.Equals(Environment.MachineName));
+                    var caja = db.Cashiers.First(caj => caj.CheckerName.Equals(Environment.MachineName));
 
-                    this.Caja = caja.Id;
+                    this.Caja = (int)caja.Id;
                 }
                 catch
                 {
-                    Caja caja = new Caja
+                    Cashier caja = new Cashier
                     {
-                        NombreCaja = Environment.MachineName,
-                        Direccion = "Undefined",
-                        Departamento = "Undefined",
-                        AlmacenId = 1,
+                        CheckerName = Environment.MachineName,
+                        Direction = "Undefined",
+                        StoreId = 0,
                     };
 
-                    dataContext.Caja.InsertOnSubmit(caja);
+                    db.Insert(caja);
 
-                    dataContext.SubmitChanges();
-                    
-                    Caja Caja = dataContext.Caja.First(caj => caj.NombreCaja.Equals(Environment.MachineName));
+                    var Caja = db.Cashiers.First(caj => caj.CheckerName.Equals(Environment.MachineName));
 
-                    this.Caja = Caja.Id;
+                    this.Caja = (int)Caja.Id;
                 }
 
-                Venta Venta = new Venta
+                Sale Venta = new Sale
                 {
                     UserId = User,
-                    ClienteId = cliente.Id,
-                    FechaId = Convert.ToDateTime(Fecha),
-                    TotalFactura = (decimal)Total,
-                    SubTotal = (decimal)SubTotal,
-                    Iva = (decimal)Iva,
-                    Descuento = (decimal)Descuento,
-                    Efectivo = (decimal)Efectivo,
-                    Cambio = (decimal)Cambio,
-                    CajaId = Caja,
+                    CustomerId = cliente.Id,
+                    SaleDate = Fecha,
+                    TotalPrice = Total,
+                    SubPrice = SubTotal,
+                    Tax = Iva,
+                    Discount = Descuento,
+                    Cash = Efectivo,
+                    RemainingCash = Cambio,
+                    CashierId = Caja,
                 };
 
-                dataContext.Venta.InsertOnSubmit(Venta);
+                db.Insert(Venta);
 
-                dataContext.SubmitChanges();
+                var venta = db.Sales.OrderByDescending(vent => vent.Id).FirstOrDefault();
 
-                Venta venta = dataContext.Venta.OrderByDescending(vent => vent.Id).FirstOrDefault();
-
-                this.Id = venta.Id;
+                this.Id = (int)venta.Id;
             }
             catch
             {
@@ -393,19 +384,34 @@ namespace SisApp
             {
                 foreach (ArticulosVenta articulo in Articulos)
                 {
-                    VentaProducto ventaProducto = new VentaProducto
+                    var producto = db.Products.First(pro => pro.Id.Equals(articulo.Id));
+
+                    if (producto.Stock >= articulo.Cantidad)
                     {
-                        VentaId = this.Id,
-                        ProductoId = articulo.Id,
-                        Cantidad = articulo.Cantidad,
-                        Producto = articulo.Producto,
-                        ValorUnidad = (decimal)articulo.ValorUnidad,
-                        ValorTotal = (decimal)articulo.ValorTotal,
-                    };
+                        ProductsSale ventaProducto = new ProductsSale
+                        {
+                            SaleId = this.Id,
+                            ProductId = articulo.Id,
+                            Amount = articulo.Cantidad,
+                            SalePrice = articulo.ValorUnidad,
+                            TotalPrice = articulo.ValorTotal,
+                        };
 
-                    dataContext.VentaProducto.InsertOnSubmit(ventaProducto);
+                        db.Insert(ventaProducto);
 
-                    dataContext.SubmitChanges();
+                        //Reduce el stock total del producto en la tabla "Products"
+                        producto.Stock = producto.Stock - articulo.Cantidad;
+
+                        db.Update(producto);
+                    }
+                    else
+                    {
+                        MessageBox.Show(String.Format("El articulo: {0}, solo dispone de {1} cantidades en el inventario y usted esta intentando vender {2}", articulo.Producto, producto.Stock, articulo.Cantidad));
+
+                        var venta = db.Sales.OrderByDescending(vent => vent.Id).FirstOrDefault();
+
+                        db.Delete(venta);
+                    }
                 }
             }
             catch

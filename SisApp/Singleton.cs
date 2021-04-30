@@ -20,6 +20,6 @@ namespace SisApp
         public bool confirma = false;
 
         //Se usan para seleccionar cliente a facturar
-        public int selectedCliente;
+        public int selectedCliente = 1;
     }
 }

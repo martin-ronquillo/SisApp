@@ -33,11 +33,11 @@
 
                     <GridView>
 
-                        <GridViewColumn Header="  Cedula  " x:Name="list_cedula" Width="100" DisplayMemberBinding="{Binding Cedula}"/>
-                        <GridViewColumn Header=" Nombres y Apellidos " x:Name="list_nombre" DisplayMemberBinding="{Binding Nombre}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
-                        <GridViewColumn Header="  Telefono  " x:Name="list_telefono" DisplayMemberBinding="{Binding Telefono}" Width="100"/>
+                        <GridViewColumn Header="  Cedula  " x:Name="list_cedula" Width="100" DisplayMemberBinding="{Binding Ci}"/>
+                        <GridViewColumn Header=" Nombres y Apellidos " x:Name="list_nombre" DisplayMemberBinding="{Binding Name}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Telefono  " x:Name="list_telefono" DisplayMemberBinding="{Binding Telephone}" Width="100"/>
                         <GridViewColumn Header="  Email  " x:Name="list_email" DisplayMemberBinding="{Binding Email}" Width="190"/>
-                        <GridViewColumn Header="  Direccion  " x:Name="list_direccion" DisplayMemberBinding="{Binding Direccion}" Width="210"/>
+                        <GridViewColumn Header="  Direccion  " x:Name="list_direccion" DisplayMemberBinding="{Binding Direction}" Width="210"/>
 
                     </GridView>
 

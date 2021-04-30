@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using DataModels;
+using LinqToDB;
 
 namespace SisApp
 {
@@ -24,9 +26,7 @@ namespace SisApp
         bool editClient = false;
         int clienteId = 0;
 
-        public static string miConexion = System.Configuration.ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public AgregaCliente()
         {
@@ -36,9 +36,9 @@ namespace SisApp
 
             try
             {
-                Cliente cliente = dataContext.Cliente.OrderByDescending(cli => cli.Id).FirstOrDefault();
+                var cliente = db.Customers.OrderByDescending(cli => cli.Id).FirstOrDefault();
 
-                int nCliente = cliente.Id + 1;
+                int nCliente = (int)cliente.Id + 1;
 
                 txt_nCliente.Text = nCliente.ToString("D7");
             }
@@ -46,7 +46,6 @@ namespace SisApp
             {
                 int nCliente = 1;
                 txt_nCliente.Text = nCliente.ToString("D7");
-
             }
         }
 
@@ -58,17 +57,17 @@ namespace SisApp
 
             editClient = true;
 
-            Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(id));
+            var cliente = db.Customers.First(cli => cli.Id.Equals(id));
 
             txt_nCliente.Text = "Editando";
 
-            clienteId = cliente.Id;
-            txt_cedula_cliente.Text = cliente.Cedula;
-            txt_nombre_cliente.Text = cliente.Nombre;
-            txt_apellido_cliente.Text = cliente.Apellido;
-            txt_direccion_cliente.Text = cliente.Direccion;
+            clienteId = (int)cliente.Id;
+            txt_cedula_cliente.Text = cliente.Ci;
+            txt_nombre_cliente.Text = cliente.Name;
+            txt_apellido_cliente.Text = cliente.LastName;
+            txt_direccion_cliente.Text = cliente.HomeAddress;
             txt_email_cliente.Text = cliente.Email;
-            txt_telefono_cliente.Text = cliente.Telefono;
+            txt_telefono_cliente.Text = cliente.Telephone;
         }
 
         private void btn_guardar_cliente_Click(object sender, RoutedEventArgs e)
@@ -79,34 +78,32 @@ namespace SisApp
             {
                 if (editClient)
                 {
-                    Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(clienteId));
+                    var cliente = db.Customers.First(cli => cli.Id.Equals(clienteId));
 
-                    cliente.Cedula = txt_cedula_cliente.Text;
-                    cliente.Nombre = txt_nombre_cliente.Text.ToUpper();
-                    cliente.Apellido = txt_apellido_cliente.Text.ToUpper();
-                    cliente.Direccion = txt_direccion_cliente.Text.ToUpper();
+                    cliente.Ci = txt_cedula_cliente.Text;
+                    cliente.Name = txt_nombre_cliente.Text.ToUpper();
+                    cliente.LastName = txt_apellido_cliente.Text.ToUpper();
+                    cliente.HomeAddress = txt_direccion_cliente.Text.ToUpper();
                     cliente.Email = txt_email_cliente.Text.ToUpper();
-                    cliente.Telefono = txt_telefono_cliente.Text;
+                    cliente.Telephone = txt_telefono_cliente.Text;
 
-                    dataContext.SubmitChanges();
+                    db.Update(cliente);
 
                     this.Close();
                 }
                 else
                 {
-                    Cliente cliente = new Cliente
+                    Customer cliente = new Customer
                     {
-                        Cedula = txt_cedula_cliente.Text,
-                        Nombre = txt_nombre_cliente.Text.ToUpper(),
-                        Apellido = txt_apellido_cliente.Text.ToUpper(),
-                        Direccion = txt_direccion_cliente.Text.ToUpper(),
+                        Ci = txt_cedula_cliente.Text,
+                        Name = txt_nombre_cliente.Text.ToUpper(),
+                        LastName = txt_apellido_cliente.Text.ToUpper(),
+                        HomeAddress = txt_direccion_cliente.Text.ToUpper(),
                         Email = txt_email_cliente.Text.ToUpper(),
-                        Telefono = txt_telefono_cliente.Text
+                        Telephone = txt_telefono_cliente.Text
                     };
 
-                    dataContext.Cliente.InsertOnSubmit(cliente);
-
-                    dataContext.SubmitChanges();
+                    db.Insert(cliente);
 
                     this.Close();
                 }

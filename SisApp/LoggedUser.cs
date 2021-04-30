@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Data.SQLite;
+using DataModels;
 
 namespace SisApp
 {
     class LoggedUser
     {
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public int Id { get; set; }
         public string Nombre { get; set; }
@@ -22,13 +22,13 @@ namespace SisApp
         {
             try
             {
-                User user = dataContext.User.First(us => us.Id.Equals(id));
-                Roles roles = dataContext.Roles.First(rol => rol.Id.Equals(user.RolesId));
-
-                Id = user.Id;
-                Nombre = user.nombre;
-                Apellido = user.apellido;
-                Rol = roles.Rol;
+                var user = db.Users.First(us => us.Id.Equals(id));
+                var roles = db.Rols.First(rol => rol.Id.Equals(user.RoleId));
+                
+                Id = (int)user.Id;
+                Nombre = user.Name;
+                Apellido = user.LastName;
+                Rol = roles.RolColumn;
             }
             catch
             {

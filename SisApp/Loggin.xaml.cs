@@ -16,6 +16,9 @@ using System.Threading;
 using System.Data.SQLite;
 using System.Data;
 using System.IO;
+using System.Data.SQLite.Linq;
+using DataModels;
+using LinqToDB;
 
 namespace SisApp
 {
@@ -24,22 +27,11 @@ namespace SisApp
     /// </summary>
     public partial class Loggin : Window
     {
-        DataClasses1DataContext dataContext;
-
-        string connectionString;
-        SQLiteConnection conn;
-        SQLiteDataAdapter adapter;
-        DataSet ds = new DataSet();
-        string sql;
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public Loggin()
         {
             InitializeComponent();
-
-            string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-            dataContext = new DataClasses1DataContext(miConexion);
-
         }
 
         private void btnEntrar_Click(object sender, RoutedEventArgs e)
@@ -59,12 +51,12 @@ namespace SisApp
         {
             try
             {
-                User user = dataContext.User.First(us => us.usuario.Equals(txtUsuario.Text));
+                var user = db.Users.First(us => us.LogUser.Equals(txtUsuario.Text));
 
-                if (user.usuario == txtUsuario.Text & user.password == txtPassword.Password)
+                if (user.LogUser == txtUsuario.Text & user.Password == txtPassword.Password)
                 {
                     Singleton.Instancia.estado = false;
-                    Singleton.Instancia.idUser = user.Id;
+                    Singleton.Instancia.idUser = (int)user.Id;
 
                     MainWindow mainWindow = new MainWindow();
                     Application.Current.MainWindow = mainWindow;

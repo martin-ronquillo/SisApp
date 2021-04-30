@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Configuration;
 using System.Globalization;
+using DataModels;
+using LinqToDB;
 
 namespace SisApp
 {
@@ -21,9 +23,7 @@ namespace SisApp
     /// </summary>
     public partial class Clientes : Window
     {
-        public static string miConexion = ConfigurationManager.ConnectionStrings["SisApp.Properties.Settings.SisAppConnectionString"].ConnectionString;
-
-        DataClasses1DataContext dataContext = new DataClasses1DataContext(miConexion);
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
         public Clientes()
         {
@@ -113,19 +113,19 @@ namespace SisApp
         public void LlenaListView()
         {
             //Crea una lista y la rellena con los datos de la tabla Cliente, combina el nombre y el apellido en una sola casilla
-            List<Cliente> listaClientes = new List<Cliente>();
+            List<Customer> listaClientes = new List<Customer>();
 
-            foreach (Cliente cliente in dataContext.Cliente)
+            foreach (Customer cliente in db.Customers)
             {
                 listaClientes.Add(
-                    new Cliente()
+                    new Customer()
                     {
                         Id = cliente.Id,
-                        Cedula = cliente.Cedula,
-                        Nombre = cliente.Nombre + ' ' + cliente.Apellido,
-                        Direccion = cliente.Direccion,
+                        Ci = cliente.Ci,
+                        Name = cliente.Name + ' ' + cliente.LastName,
+                        HomeAddress = cliente.HomeAddress,
                         Email = cliente.Email,
-                        Telefono = cliente.Telefono
+                        Telephone = cliente.Telephone
                     }
                 );
             }
@@ -138,42 +138,42 @@ namespace SisApp
         public void BuscaCliente()
         {
             //Rellena una lista con los clientes de la BD
-            List<Cliente> listaClientes = new List<Cliente>();
+            List<Customer> listaClientes = new List<Customer>();
 
-            foreach (Cliente cliente in dataContext.Cliente)
+            foreach (Customer cliente in db.Customers)
             {
                 listaClientes.Add(
-                    new Cliente()
+                    new Customer()
                     {
                         Id = cliente.Id,
-                        Cedula = cliente.Cedula,
-                        Nombre = cliente.Nombre + ' ' + cliente.Apellido,
-                        Direccion = cliente.Direccion,
+                        Ci = cliente.Ci,
+                        Name = cliente.Name + ' ' + cliente.LastName,
+                        HomeAddress = cliente.HomeAddress,
                         Email = cliente.Email,
-                        Telefono = cliente.Telefono
+                        Telephone = cliente.Telephone
                     }
                 );
             }
 
             //Filtra en el campo "nombre" de la lista segun el parametro de busqueda
-            listaClientes = listaClientes.Where(cli => cli.Nombre.Contains(txt_buscaCliente.Text.ToUpper())).ToList();
+            listaClientes = listaClientes.Where(cli => cli.Name.Contains(txt_buscaCliente.Text.ToUpper())).ToList();
             txt_buscaCliente.Text = "";
 
             if (listaClientes.Count() != 0)
             {
-                List<Cliente> listaClientes2 = new List<Cliente>();
+                List<Customer> listaClientes2 = new List<Customer>();
 
-                foreach (Cliente cliente in listaClientes)
+                foreach (Customer cliente in listaClientes)
                 {
                     listaClientes2.Add(
-                        new Cliente()
+                        new Customer()
                         {
                             Id = cliente.Id,
-                            Cedula = cliente.Cedula,
-                            Nombre = cliente.Nombre + ' ' + cliente.Apellido,
-                            Direccion = cliente.Direccion,
+                            Ci = cliente.Ci,
+                            Name = cliente.Name + ' ' + cliente.LastName,
+                            HomeAddress = cliente.HomeAddress,
                             Email = cliente.Email,
-                            Telefono = cliente.Telefono
+                            Telephone = cliente.Telephone
                         }
                     );
                 }
@@ -188,17 +188,17 @@ namespace SisApp
 
         public void SeleccionarCliente()
         {
-            Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
+            Customer selectedCliente = (Customer)lv_clientes.SelectedItem;
 
             if (selectedCliente != null)
             {
-                Singleton.Instancia.selectedCliente = selectedCliente.Id;
+                Singleton.Instancia.selectedCliente = (int)selectedCliente.Id;
             }
             else
             {
                 MessageBox.Show("No se ha seleccionado ningun cliente, Consumidor Final establecido por defecto");
 
-                Singleton.Instancia.selectedCliente = 2;
+                Singleton.Instancia.selectedCliente = 1;
             }
 
             this.Close();
@@ -206,11 +206,11 @@ namespace SisApp
 
         public void EliminaCliente()
         {
-            Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
+            Customer selectedCliente = (Customer)lv_clientes.SelectedItem;
 
             if (selectedCliente != null)
             {
-                string nombre = selectedCliente.Nombre + " " + selectedCliente.Apellido;
+                string nombre = selectedCliente.Name + " " + selectedCliente.LastName;
 
                 Confirmar confirmar = new Confirmar(nombre);
 
@@ -218,11 +218,9 @@ namespace SisApp
 
                 if (Singleton.Instancia.confirma)
                 {
-                    Cliente cliente = dataContext.Cliente.First(cli => cli.Id.Equals(selectedCliente.Id));
+                    var cliente = db.Customers.First(cli => cli.Id.Equals(selectedCliente.Id));
 
-                    dataContext.Cliente.DeleteOnSubmit(cliente);
-
-                    dataContext.SubmitChanges();
+                    db.Delete(cliente);
                 }
             }
 
@@ -231,11 +229,11 @@ namespace SisApp
 
         public void EditaCliente()
         {
-            Cliente selectedCliente = (Cliente)lv_clientes.SelectedItem;
+            Customer selectedCliente = (Customer)lv_clientes.SelectedItem;
 
             if (selectedCliente != null)
             {
-                AgregaCliente agregaCliente = new AgregaCliente(selectedCliente.Id);
+                AgregaCliente agregaCliente = new AgregaCliente((int)selectedCliente.Id);
 
                 agregaCliente.ShowDialog();
             }
