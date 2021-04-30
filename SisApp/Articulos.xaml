@@ -79,6 +79,7 @@
 
                 <Label Content="Precio de Compra:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,185,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="Precio de venta:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,200,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="Buscar:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,107,263,0" FontSize="16" FontFamily="Verdana" FontStyle="Italic"/>
 
                 <TextBox x:Name="txt_codigoBarra" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_existencias" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0" FontWeight="Bold"/>
@@ -89,6 +90,7 @@
                 
                 <TextBox x:Name="txt_precioCompra" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_precioVenta" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_busca_producto" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="230" Margin="0,114,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" KeyDown="txt_busca_producto_KeyDown"/>
 
             </Grid>
 
@@ -106,11 +108,11 @@
 
                         <GridView>
 
-                            <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="150" DisplayMemberBinding="{Binding CodigoBarra}"/>
-                            <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Producto1}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                            <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="150" DisplayMemberBinding="{Binding BarCode}"/>
+                            <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding ProductName}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
                             <GridViewColumn Header="  Stock  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Stock}"/>
-                            <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding PrecioVenta}"/>
-                            <GridViewColumn Header="  Pre. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PrecioCompra}"/>
+                            <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding SalePrice}"/>
+                            <GridViewColumn Header="  P. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PucharsePrice}"/>
 
                         </GridView>
 
@@ -121,6 +123,12 @@
             </Grid>
 
             <Grid Grid.Row="2">
+
+                <Label Name="lbl_busquedaInfo" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontStyle="Italic"/>
+
+                <Button x:Name="btn_Recargar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" ToolTip="Actualizar tabla" Click="btn_Recargar_Click">
+                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Actualizar.png"/>
+                </Button>
 
             </Grid>
 

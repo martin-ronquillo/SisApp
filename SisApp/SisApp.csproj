@@ -181,6 +181,7 @@
       <DependentUpon>DataClassesCompact.Context.tt</DependentUpon>
     </Compile>
     <Compile Include="ImprimeFactura.cs" />
+    <Compile Include="InventarioArticulos.cs" />
     <Compile Include="LinqToDB.Templates\CopyMe.SQLite.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

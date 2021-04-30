@@ -108,12 +108,13 @@ namespace SisApp
         public string Producto { get; set; }
         public float ValorUnidad { get; set; }
         public float ValorTotal { get; set; }
+        public double CodigoBarras { get; set; }
 
-        public List<ArticulosVenta> InsertaArticulo(List<ArticulosVenta> listaProductos, int Id)
+        public List<ArticulosVenta> InsertaArticulo(List<ArticulosVenta> listaProductos, string BarCode)
         {
             try
             {
-                var producto = db.Products.First(pro => pro.Id.Equals(Id));
+                var producto = db.Products.First(pro => pro.BarCode.Equals(BarCode));
 
                 if (producto.Stock >= 1)
                 {
@@ -121,11 +122,12 @@ namespace SisApp
                     listaProductos.Add(
                         new ArticulosVenta()
                         {
-                            Id = Id,
+                            Id = (int)producto.Id,
                             Cantidad = 1,
                             Producto = producto.ProductName,
                             ValorUnidad = (float)producto.SalePrice,
-                            ValorTotal = Cantidad * (float)producto.SalePrice
+                            ValorTotal = Cantidad * (float)producto.SalePrice,
+                            CodigoBarras = double.Parse(producto.BarCode)
                         }
                     );
                 }
@@ -142,15 +144,15 @@ namespace SisApp
             return listaProductos;
         }
 
-        public List<ArticulosVenta> AumentaArticulo(List<ArticulosVenta> listaProductos, int Id)
+        public List<ArticulosVenta> AumentaArticulo(List<ArticulosVenta> listaProductos, string BarCode)
         {
             foreach (ArticulosVenta articulo in listaProductos)
             {
-                if (articulo.Id == Id)
+                if (articulo.CodigoBarras == double.Parse(BarCode))
                 {
                     try
                     {
-                        var producto = db.Products.First(pro => pro.Id.Equals(Id));
+                        var producto = db.Products.First(pro => pro.BarCode.Equals(BarCode));
 
                         int cantidadProvisional = articulo.Cantidad + 1;
 
@@ -158,18 +160,10 @@ namespace SisApp
                         {
                             Cantidad = cantidadProvisional;
 
-                            listaProductos.Remove(articulo);
+                            var found = listaProductos.FirstOrDefault(fo => fo.Id == producto.Id);
 
-                            listaProductos.Add(
-                                new ArticulosVenta()
-                                {
-                                    Id = Id,
-                                    Cantidad = cantidadProvisional,
-                                    Producto = producto.ProductName,
-                                    ValorUnidad = (float)producto.SalePrice,
-                                    ValorTotal = Cantidad * (float)producto.SalePrice
-                                }
-                            );
+                            found.Cantidad = cantidadProvisional;
+                            found.ValorTotal = Cantidad * (float)producto.SalePrice;
                         }
                         else
                         {
@@ -209,18 +203,10 @@ namespace SisApp
                         }
                         else
                         {
-                            listaProductos.Remove(articulo);
+                            var found = listaProductos.FirstOrDefault(fo => fo.Id == producto.Id);
 
-                            listaProductos.Add(
-                                new ArticulosVenta()
-                                {
-                                    Id = selectedProducto,
-                                    Cantidad = cantidadProvisional,
-                                    Producto = producto.ProductName,
-                                    ValorUnidad = (float)producto.SalePrice,
-                                    ValorTotal = Cantidad * (float)producto.SalePrice
-                                }
-                            );
+                            found.Cantidad = cantidadProvisional;
+                            found.ValorTotal = Cantidad * (float)producto.SalePrice;
                         }
                     }
                     catch

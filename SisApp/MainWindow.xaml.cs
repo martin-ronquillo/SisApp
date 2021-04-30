@@ -260,13 +260,13 @@ namespace SisApp
             }
             else
             {
-                int idProducto = int.Parse(txt_cod_producto.Text);
+                double idProducto = double.Parse(txt_cod_producto.Text);
 
-                if (listaProductos.FirstOrDefault(pro => pro.Id.Equals(idProducto)) == null)
+                if (listaProductos.FirstOrDefault(pro => pro.CodigoBarras.Equals(idProducto)) == null)
                 {
                     lv_facturar.ItemsSource = null;
 
-                    listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, idProducto);
+                    listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, txt_cod_producto.Text);
 
                     lv_facturar.ItemsSource = listaProductos;
 
@@ -284,7 +284,7 @@ namespace SisApp
                 {
                     lv_facturar.ItemsSource = null;
 
-                    listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, idProducto);
+                    listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, txt_cod_producto.Text);
 
                     lv_facturar.ItemsSource = listaProductos;
                     
