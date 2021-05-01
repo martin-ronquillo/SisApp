@@ -1,12 +1,10 @@
-﻿using System;
+﻿using DataModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using System.Configuration;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using DataModels;
 
 namespace SisApp
 {
@@ -155,7 +153,7 @@ namespace SisApp
 
                     InfoFactura.Total = InfoFactura.TotalAnterior;
                     txt_val_total.Text = InfoFactura.TotalAnterior.ToString();
-                    
+
                     //Modificar el Cambio en caso de que la casilla "Efectivo" este llena
                     if (txt_efectivo.Text != "0" & !string.IsNullOrEmpty(txt_efectivo.Text))
                     {
@@ -287,7 +285,7 @@ namespace SisApp
                     listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, txt_cod_producto.Text);
 
                     lv_facturar.ItemsSource = listaProductos;
-                    
+
                     //Si no existen elementos en el listView, desactiva el boton Facturar
                     if (listaProductos.Count <= 0)
                     {

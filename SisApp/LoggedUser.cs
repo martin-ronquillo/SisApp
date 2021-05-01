@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataModels;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Data.SQLite;
-using DataModels;
 
 namespace SisApp
 {
@@ -24,7 +18,7 @@ namespace SisApp
             {
                 var user = db.Users.First(us => us.Id.Equals(id));
                 var roles = db.Rols.First(rol => rol.Id.Equals(user.RoleId));
-                
+
                 Id = (int)user.Id;
                 Nombre = user.Name;
                 Apellido = user.LastName;

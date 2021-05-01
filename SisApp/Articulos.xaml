@@ -8,53 +8,167 @@
         Title="Articulos" Height="673.667" Width="1309.5">
     <Grid>
 
-        <Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
 
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
-
-        </Grid.ColumnDefinitions>
-
-        <Menu Background="#FFC9C9C9" VerticalContentAlignment="Center">
-
-            <Menu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </Menu.ItemsPanel>
-
-            <MenuItem Header="Articulos" Height="50" FontWeight="Bold" FontFamily="Verdana" FontSize="14">
-                <MenuItem.Icon>
-                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Revista.png" Margin="1,0,0,0" Width="20"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
             
-            <MenuItem Header="Ingresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
-                <MenuItem.Icon>
-                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png" Margin="1,0,0,0" Width="20"/>
-                </MenuItem.Icon>
-                <MenuItem Header="Ingresar Articulos" Height="30" FontWeight="Normal" FontSize="12"/>
-                <Separator/>
-                <MenuItem Header="Consultar Ingresos" Height="30" FontWeight="Normal" FontSize="12"/>
-            </MenuItem>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Column="1" Grid.Row="0">
             
-            <MenuItem Header="Egresos" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
-                <MenuItem.Icon>
-                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png" Margin="1,0,0,0" Width="15"/>
-                </MenuItem.Icon>
-                <MenuItem Header="Egresar Articulos" Height="30" FontWeight="Normal" FontSize="12"/>
-                <MenuItem Header="Consultar Egresos" Height="30" FontWeight="Normal" FontSize="12"/>
-            </MenuItem>
+            <DockPanel>
+                
+                <Menu DockPanel.Dock="Top" Height="25" VerticalAlignment="Center" FontSize="14" FontStyle="Italic">
+
+                    <MenuItem Header="Mantenimiento">
+
+                        <MenuItem Header="Nuevo Articulo">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Categorias">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        
+                        <MenuItem Header="Marcas">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        
+                    </MenuItem>
+                    
+                    <MenuItem Header="Inventario">
+                        
+                        <MenuItem Header="Ingresos">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png"/>
+                            </MenuItem.Icon>
+                            
+                            <MenuItem Header="Ingresar Articulos">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            
+                            <MenuItem Header="Consultar Ingresos">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+
+                        <MenuItem Header="Egresos">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png"/>
+                            </MenuItem.Icon>
+
+                            <MenuItem Header="Egresar Articulos">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <MenuItem Header="Consultar Egresos">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+
+                        <Separator/>
+
+                        <MenuItem Header="Traspaso de Articulos">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="Administracion">
+                        <MenuItem Header="Proveedores">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Compras">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png"/>
+                            </MenuItem.Icon>
+
+                            <MenuItem Header="Ingresar Compra">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <MenuItem Header="Consultar Compras">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <Separator/>
+
+                            <MenuItem Header="Devoluciones">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <MenuItem Header="Consultar Devoluciones">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+
+                        <MenuItem Header="Ventas">
+                            <MenuItem.Icon>
+                                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png"/>
+                            </MenuItem.Icon>
+
+                            <MenuItem Header="Ingresar Ventas">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <MenuItem Header="Consultar Ventas">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <Separator/>
+
+                            <MenuItem Header="Devoluciones">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <MenuItem Header="Consultar Devoluciones">
+                                <MenuItem.Icon>
+                                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </MenuItem>
+
+                </Menu>
+                
+            </DockPanel>
             
-            <MenuItem Header="Traspaso" Height="50" FontFamily="Verdana" FontWeight="Bold" FontSize="14">
-                <MenuItem.Icon>
-                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Transferir.png" Margin="1,0,0,0" Width="20"/>
-                </MenuItem.Icon>
-            </MenuItem>
+        </StackPanel>
 
-        </Menu>
-
-        <Grid Grid.Column="1" Margin="14">
+        <Grid Grid.Column="1" Grid.Row="1" Margin="14">
 
             <Grid.RowDefinitions>
 
@@ -74,6 +188,9 @@
                 <Label Content="Existencias:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,75,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="Producto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,110,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
 
+                <Label Content="Marca:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,40,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+                <Label Content="Proveedor:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,75,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
+
                 <Label Content="Categoria:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,558,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="En Bodega:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,550,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
 
@@ -84,6 +201,9 @@
                 <TextBox x:Name="txt_codigoBarra" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_existencias" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_producto" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="380" Margin="186,114,0,0" FontWeight="Bold"/>
+
+                <TextBox x:Name="txt_marca" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="447,80,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_proveedor" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="447,46,0,0" FontWeight="Bold"/>
 
                 <TextBox x:Name="txt_categoria" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,380,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_enBodega" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,380,0" FontWeight="Bold"/>
@@ -113,6 +233,7 @@
                             <GridViewColumn Header="  Stock  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Stock}"/>
                             <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding SalePrice}"/>
                             <GridViewColumn Header="  P. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PucharsePrice}"/>
+                            <GridViewColumn Header="  Marca  " x:Name="list_val_marca" Width="145" DisplayMemberBinding="{Binding TradeMark}"/>
 
                         </GridView>
 

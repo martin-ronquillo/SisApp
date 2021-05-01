@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
 // se agrega la siguiente referencia para enviar texto a impresora
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 
 namespace SisApp
