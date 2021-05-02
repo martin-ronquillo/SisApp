@@ -8,12 +8,13 @@ namespace SisApp
     public partial class Confirmar : Window
     {
 
-        public Confirmar(string nombre)
+        public Confirmar(string item)
         {
             InitializeComponent();
 
-            txt_eliminar.Text = "¿Esta seguro de eliminar el elemento: " + nombre + "?";
+            txt_eliminar.Text = "¿Esta seguro de eliminar el elemento: " + item + "?";
 
+            Singleton.Instancia.confirma = false;
         }
 
         private void btn_confirmar_Click(object sender, RoutedEventArgs e)

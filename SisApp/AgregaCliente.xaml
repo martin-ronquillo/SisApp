@@ -49,7 +49,7 @@
         <Grid Grid.Row="2" Margin="14,0,14,0">
 
             <Button x:Name="btn_limpiar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,9,235.667,11" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Click="btn_limpiar_Click" ToolTip="Limpiar formulario">
-                <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Limpiar.png" OpacityMask="#FFDDDDDD"/>
+                <Image Source="Limpiar.png" OpacityMask="#FFDDDDDD"/>
             </Button>
             <Button x:Name="btn_guardar_cliente" Content="Guardar" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Height="29" Margin="0,10,70.667,11" Width="61" Click="btn_guardar_cliente_Click"/>
             <Button x:Name="btn_cancelar" Content="Cancelar" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Height="29" Width="61" Click="btn_cancelar_Click"/>

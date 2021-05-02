@@ -164,6 +164,9 @@
     <Compile Include="Articulos.xaml.cs">
       <DependentUpon>Articulos.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ArticulosCRUD.xaml.cs">
+      <DependentUpon>ArticulosCRUD.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Clientes.xaml.cs">
       <DependentUpon>Clientes.xaml</DependentUpon>
     </Compile>
@@ -203,6 +206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Articulos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ArticulosCRUD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,16 +318,23 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Eliminar.png" />
     <Resource Include="SisApp.ico" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Añadir.png" />
+    <Resource Include="Actualizar.png" />
+    <Resource Include="Agrega_usuario.png" />
+    <Resource Include="Basura.png" />
     <Content Include="DataClassesCompact.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DataClassesCompact.Context.cs</LastGenOutput>
     </Content>
+    <Resource Include="Editar.png" />
+    <Resource Include="Limpiar.png" />
     <Content Include="LinqToDB.Templates\CopyMe.SQLite.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CopyMe.SQLite.generated.cs</LastGenOutput>

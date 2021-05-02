@@ -15,19 +15,30 @@ namespace SisApp
     /// </summary>
     public partial class Articulos : Window
     {
+        public bool checkBox = false;
+
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+
+        InventarioArticulos inventarioArticulos = new InventarioArticulos();
+
+        List<InventarioArticulos> listaTodosProducto = new List<InventarioArticulos>();
+        List<InventarioArticulos> listaProductoFiltrado = new List<InventarioArticulos>();
 
         public Articulos()
         {
             InitializeComponent();
 
-            LlenaComboBox();
+            if (LoggedUser.Rol != "ADMIN")
+            {
+                btn_EliminaArticulo.Visibility = Visibility.Collapsed;
+            }
 
-            LlenaListView();
+            LlenaComboBox();
         }
 
         private void chckB_stock_Checked(object sender, RoutedEventArgs e)
         {
+            checkBox = !checkBox;
             LlenaListView();
         }
 
@@ -68,6 +79,31 @@ namespace SisApp
             lbl_busquedaInfo.Content = "";
         }
 
+        //Boton Agregar Producto
+        private void btn_NuevoArticulo_Click(object sender, RoutedEventArgs e)
+        {
+            ArticulosCRUD articulosCRUD = new ArticulosCRUD();
+
+            articulosCRUD.ShowDialog();
+
+            LlenaListView();
+        }
+
+        //Boton Editar Producto
+        private void btn_EditaArticulo_Click(object sender, RoutedEventArgs e)
+        {
+            EditaProducto();
+
+            LlenaListView();
+        }
+
+        private void btn_EliminaArticulo_Click(object sender, RoutedEventArgs e)
+        {
+            EliminaProducto();
+
+            LlenaListView();
+        }
+
         /*
          * 
          * 
@@ -75,103 +111,79 @@ namespace SisApp
          * 
          * 
          */
+        public void EditaProducto()
+        {
+            InventarioArticulos selectedProducto = (InventarioArticulos)lv_productos.SelectedItem;
+
+            if (selectedProducto != null)
+            {
+                ArticulosCRUD articulosCRUD = new ArticulosCRUD(selectedProducto.Id);
+
+                articulosCRUD.ShowDialog();
+            }
+        }
+
+        public void EliminaProducto()
+        {
+            InventarioArticulos selectedProducto = (InventarioArticulos)lv_productos.SelectedItem;
+
+            if (selectedProducto != null)
+            {
+                Confirmar confirmar = new Confirmar(selectedProducto.ProductName);
+
+                confirmar.ShowDialog();
+
+                if (Singleton.Instancia.confirma)
+                {
+                    var producto = db.Products.First(pro => pro.Id.Equals(selectedProducto.Id));
+
+                    db.Delete(producto);
+                }
+            }
+        }
 
         public void LlenaListView()
         {
-            //Crea una lista y la rellena con los datos de la tabla Articulos
-            List<Product> listaProducto = new List<Product>();
+            lv_productos.ItemsSource = null;
 
-            if (cb_almacen.SelectedItem.ToString() == "TODOS")
+            listaTodosProducto.Clear();
+
+            listaTodosProducto = inventarioArticulos.LlenaArticulos(cb_almacen.SelectedItem.ToString(), checkBox);
+
+            lv_productos.ItemsSource = listaTodosProducto;
+        }
+
+        public void BuscaProductos()
+        {
+            lv_productos.ItemsSource = null;
+
+            listaTodosProducto.Clear();
+
+            listaTodosProducto = inventarioArticulos.BuscaArticulos(cb_almacen.SelectedItem.ToString(), checkBox, txt_busca_producto.Text.ToUpper());
+
+            lv_productos.ItemsSource = listaTodosProducto;
+
+            if (chckB_stock.IsChecked == true & cb_almacen.SelectedItem.ToString() == "TODOS")
             {
-                foreach (Product producto in db.Products)
-                {
-                    //Si el checkBox "dispone stock" esta activo
-                    if (chckB_stock.IsChecked == true)
-                    {
-                        if (producto.Stock != 0)
-                        {
-                            listaProducto.Add(
-                                new Product()
-                                {
-                                    Id = (int)producto.Id,
-                                    BarCode = producto.BarCode,
-                                    ProductName = producto.ProductName,
-                                    Stock = producto.Stock,
-                                    SalePrice = (float)producto.SalePrice,
-                                    PucharsePrice = producto.PucharsePrice,
-                                }
-                            );
-                        }
-                    }
-                    else
-                    {
-                        listaProducto.Add(
-                            new Product()
-                            {
-                                Id = (int)producto.Id,
-                                BarCode = producto.BarCode,
-                                ProductName = producto.ProductName,
-                                Stock = producto.Stock,
-                                SalePrice = (float)producto.SalePrice,
-                                PucharsePrice = producto.PucharsePrice
-                            }
-                        );
-                    }
-                }
-            }
-            else
-            {
-                try
-                {
-                    List<ProductsStore> listaPs = new List<ProductsStore>();
-
-                    listaPs = db.ProductsStores.Where(ps => ps.Store.StoreName.Equals(cb_almacen.SelectedItem.ToString())).ToList();
-
-                    foreach (ProductsStore ps in listaPs)
-                    {
-                        Product producto = db.Products.First(pro => pro.Id.Equals(ps.ProductId));
-
-                        //Si el checkBox "dispone stock" esta activo
-                        if (chckB_stock.IsChecked == true)
-                        {
-                            if (producto.Stock != 0)
-                            {
-                                listaProducto.Add(
-                                    new Product()
-                                    {
-                                        Id = (int)producto.Id,
-                                        BarCode = producto.BarCode,
-                                        ProductName = producto.ProductName,
-                                        Stock = producto.Stock,
-                                        SalePrice = (float)producto.SalePrice,
-                                        PucharsePrice = producto.PucharsePrice
-                                    }
-                                );
-                            }
-                        }
-                        else
-                        {
-                            listaProducto.Add(
-                                new Product()
-                                {
-                                    Id = (int)producto.Id,
-                                    BarCode = producto.BarCode,
-                                    ProductName = producto.ProductName,
-                                    Stock = producto.Stock,
-                                    SalePrice = (float)producto.SalePrice,
-                                    PucharsePrice = producto.PucharsePrice,
-                                }
-                            );
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Error al llenar la vista \n Exception: \n" + e);
-                }
+                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en Todos los almacenes con Stock";
             }
 
-            lv_productos.ItemsSource = listaProducto;
+            if (chckB_stock.IsChecked == false & cb_almacen.SelectedItem.ToString() == "TODOS")
+            {
+                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en Todos los almacenes";
+            }
+
+            if (chckB_stock.IsChecked == true & cb_almacen.SelectedItem.ToString() != "TODOS")
+            {
+                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en el almacen " + cb_almacen.SelectedItem.ToString() + " con stock disponible";
+            }
+
+            if (chckB_stock.IsChecked == false & cb_almacen.SelectedItem.ToString() != "TODOS")
+            {
+                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en el almacen " + cb_almacen.SelectedItem.ToString();
+            }
+
+            txt_busca_producto.Text = "";
         }
 
         public void LlenaComboBox()
@@ -187,7 +199,7 @@ namespace SisApp
 
         public void DatosProducto()
         {
-            Product selectedProducto = (Product)lv_productos.SelectedItem;
+            InventarioArticulos selectedProducto = (InventarioArticulos)lv_productos.SelectedItem;
 
             if (selectedProducto != null)
             {
@@ -195,9 +207,16 @@ namespace SisApp
                 {
                     Product producto = db.Products.First(pro => pro.Id.Equals(selectedProducto.Id));
 
-                    Category categoria = db.Categories.First(cat => cat.Id.Equals(producto.CategoryId));
+                    try
+                    {
+                        Category categoria = db.Categories.First(cat => cat.Id.Equals(producto.CategoryId));
 
-                    txt_categoria.Text = categoria.CategoryName;
+                        txt_categoria.Text = categoria.CategoryName;
+                    }
+                    catch
+                    {
+                        txt_categoria.Text = "N/A";
+                    }
 
                     try
                     {
@@ -214,150 +233,30 @@ namespace SisApp
                     {
                         txt_enBodega.Text = "N/A";
                     }
+
+                    try
+                    {
+                        TradeMark tradeMark = db.TradeMarks.First(tm => tm.Id.Equals(producto.TradeMarkId));
+
+                        txt_marca.Text = tradeMark.MarkName;
+                    }
+                    catch
+                    {
+                        txt_marca.Text = "N/A";
+                    }
                 }
                 catch
                 {
                     txt_categoria.Text = "N/A";
+                    txt_enBodega.Text = "N/A";
+                    txt_marca.Text = "N/A";
                 }
 
                 txt_codigoBarra.Text = selectedProducto.BarCode;
                 txt_existencias.Text = selectedProducto.Stock.ToString();
                 txt_producto.Text = selectedProducto.ProductName;
-                txt_precioCompra.Text = selectedProducto.PucharsePrice.ToString();
+                txt_precioCompra.Text = selectedProducto.PurchasePrice.ToString();
                 txt_precioVenta.Text = selectedProducto.SalePrice.ToString();
-            }
-        }
-
-        public void BuscaProductos()
-        {
-            List<Product> listaProducto = new List<Product>();
-
-            try
-            {
-                var productos = db.Products.Where(pro => pro.ProductName.Contains(txt_busca_producto.Text.ToUpper()));
-
-                if (productos.Count() != 0)
-                {
-                    if (cb_almacen.SelectedItem.ToString() == "TODOS")
-                    {
-                        foreach (Product producto in productos)
-                        {
-                            //Si el checkBox "dispone stock" esta activo
-                            if (chckB_stock.IsChecked == true)
-                            {
-                                if (producto.Stock != 0)
-                                {
-                                    listaProducto.Add(
-                                        new Product()
-                                        {
-                                            Id = (int)producto.Id,
-                                            BarCode = producto.BarCode,
-                                            ProductName = producto.ProductName,
-                                            Stock = producto.Stock,
-                                            SalePrice = (float)producto.SalePrice,
-                                            PucharsePrice = producto.PucharsePrice,
-                                        }
-                                    );
-                                }
-
-                                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en Todos los almacenes con stock disponible";
-                            }
-                            else
-                            {
-                                listaProducto.Add(
-                                    new Product()
-                                    {
-                                        Id = (int)producto.Id,
-                                        BarCode = producto.BarCode,
-                                        ProductName = producto.ProductName,
-                                        Stock = producto.Stock,
-                                        SalePrice = (float)producto.SalePrice,
-                                        PucharsePrice = producto.PucharsePrice
-                                    }
-                                );
-
-                                lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en Todos los almacenes";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            List<ProductsStore> listaPs = new List<ProductsStore>();
-                            Store almacen = db.Stores.First(alm => alm.StoreName.Equals(cb_almacen.SelectedItem.ToString()));
-
-                            //Busca en los productos y los almacenes relacionados en la tabla ProductsStores
-                            /*var query =
-                            from almacenProducto in db.ProductsStores
-                            where almacenProducto.StoreId == almacen.Id
-                            select new { AlmacenProducto = almacenProducto };*/
-
-                            listaPs = db.ProductsStores.Where(ps => ps.StoreId.Equals(almacen.Id)).ToList();
-
-                            foreach (Product product in productos)
-                            {
-                                foreach (ProductsStore productsStore in listaPs)
-                                {
-                                    if (product.Id == productsStore.ProductId)
-                                    {
-                                        //Si el checkBox "dispone stock" esta activo
-                                        if (chckB_stock.IsChecked == true)
-                                        {
-                                            if (product.Stock != 0)
-                                            {
-                                                listaProducto.Add(
-                                                    new Product()
-                                                    {
-                                                        Id = (int)product.Id,
-                                                        BarCode = product.BarCode,
-                                                        ProductName = product.ProductName,
-                                                        Stock = product.Stock,
-                                                        SalePrice = (float)product.SalePrice,
-                                                        PucharsePrice = product.PucharsePrice
-                                                    }
-                                                );
-                                            }
-
-                                            lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en el almacen " + cb_almacen.SelectedItem.ToString() + " con stock disponible";
-                                        }
-                                        else
-                                        {
-                                            listaProducto.Add(
-                                                new Product()
-                                                {
-                                                    Id = (int)product.Id,
-                                                    BarCode = product.BarCode,
-                                                    ProductName = product.ProductName,
-                                                    Stock = product.Stock,
-                                                    SalePrice = (float)product.SalePrice,
-                                                    PucharsePrice = product.PucharsePrice,
-                                                }
-                                            );
-
-                                            lbl_busquedaInfo.Content = "Buscando '" + txt_busca_producto.Text + "' en el almacen " + cb_almacen.SelectedItem.ToString();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show("Error al llenar la vista \n Exception: \n" + e);
-                        }
-                    }
-                    txt_busca_producto.Text = "";
-
-                    lv_productos.ItemsSource = listaProducto;
-                }
-                else
-                {
-                    lv_productos.ItemsSource = null;
-                }
-            }
-            catch
-            {
-                MessageBox.Show("No se ha encontrado ninguna coincidencia");
             }
         }
     }

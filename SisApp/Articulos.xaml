@@ -12,10 +12,11 @@
 
             <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
-            
+            <RowDefinition Height="50"/>
+
         </Grid.RowDefinitions>
         
-        <StackPanel Grid.Column="1" Grid.Row="0">
+        <StackPanel>
             
             <DockPanel>
                 
@@ -168,13 +169,12 @@
             
         </StackPanel>
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="14">
+        <Grid Grid.Row="1" Margin="14,10,14,0">
 
             <Grid.RowDefinitions>
 
                 <RowDefinition Height="150"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="50"/>
 
             </Grid.RowDefinitions>
 
@@ -189,7 +189,6 @@
                 <Label Content="Producto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,110,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
 
                 <Label Content="Marca:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,40,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
-                <Label Content="Proveedor:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,75,0,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
 
                 <Label Content="Categoria:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,40,558,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
                 <Label Content="En Bodega:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,75,550,0" FontSize="14" FontFamily="Verdana" FontWeight="Bold"/>
@@ -200,14 +199,13 @@
 
                 <TextBox x:Name="txt_codigoBarra" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,46,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_existencias" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="186,80,0,0" FontWeight="Bold"/>
-                <TextBox x:Name="txt_producto" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="380" Margin="186,114,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_producto" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="334" Margin="186,114,0,0" FontWeight="Bold"/>
 
-                <TextBox x:Name="txt_marca" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="447,80,0,0" FontWeight="Bold"/>
-                <TextBox x:Name="txt_proveedor" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="447,46,0,0" FontWeight="Bold"/>
+                <TextBox x:Name="txt_marca" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="120" Margin="400,46,0,0" FontWeight="Bold"/>
 
                 <TextBox x:Name="txt_categoria" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,380,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_enBodega" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,380,0" FontWeight="Bold"/>
-                
+
                 <TextBox x:Name="txt_precioCompra" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,46,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_precioVenta" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="120" Margin="0,80,0,0" FontWeight="Bold"/>
                 <TextBox x:Name="txt_busca_producto" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="230" Margin="0,114,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" KeyDown="txt_busca_producto_KeyDown"/>
@@ -232,7 +230,7 @@
                             <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding ProductName}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
                             <GridViewColumn Header="  Stock  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Stock}"/>
                             <GridViewColumn Header="  P.V.P  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding SalePrice}"/>
-                            <GridViewColumn Header="  P. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PucharsePrice}"/>
+                            <GridViewColumn Header="  P. Compra  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding PurchasePrice}"/>
                             <GridViewColumn Header="  Marca  " x:Name="list_val_marca" Width="145" DisplayMemberBinding="{Binding TradeMark}"/>
 
                         </GridView>
@@ -243,14 +241,34 @@
 
             </Grid>
 
-            <Grid Grid.Row="2">
+        </Grid>
 
-                <Label Name="lbl_busquedaInfo" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontStyle="Italic"/>
+        <Grid Grid.Row="2" Margin="14,0">
 
-                <Button x:Name="btn_Recargar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" ToolTip="Actualizar tabla" Click="btn_Recargar_Click">
-                    <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Actualizar.png"/>
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                
+            </Grid.ColumnDefinitions>
+            
+            <Label Name="lbl_busquedaInfo" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontStyle="Italic"/>
+
+            <Grid Grid.Column="1">
+
+                <Button x:Name="btn_NuevoArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_NuevoArticulo_Click" ToolTip="Nuevo Articulo" BorderThickness="0" Background="WhiteSmoke">
+                    <Image Source="Añadir.png"/>
                 </Button>
-
+                <Button x:Name="btn_EditaArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EditaArticulo_Click" ToolTip="Editar Articulo" BorderThickness="0" Background="WhiteSmoke" Margin="50,0">
+                    <Image Source="Editar.png"/>
+                </Button>
+                <Button x:Name="btn_EliminaArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EliminaArticulo_Click" ToolTip="Eliminar Articulo" BorderThickness="0" Background="WhiteSmoke" Margin="100,0">
+                    <Image Source="Basura.png"/>
+                </Button>
+                <Button x:Name="btn_Recargar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="35" Width="35" ToolTip="Actualizar tabla" Click="btn_Recargar_Click">
+                    <Image Source="Actualizar.png"/>
+                </Button>
+                
             </Grid>
 
         </Grid>

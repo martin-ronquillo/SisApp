@@ -212,8 +212,6 @@ namespace SisApp
                     db.Delete(cliente);
                 }
             }
-
-
         }
 
         public void EditaCliente()
