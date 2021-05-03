@@ -45,6 +45,13 @@ namespace SisApp
                 }
 
                 cbBox_categoria.SelectedItem = "N/A";
+
+                foreach (TradeMark tradeMark in db.TradeMarks)
+                {
+                    cbBox_marca.Items.Add(tradeMark.MarkName);
+                }
+
+                cbBox_marca.SelectedItem = "N/A";
             }
             catch
             {
@@ -72,6 +79,12 @@ namespace SisApp
                     cbBox_categoria.Items.Add(category.CategoryName);
                 }
 
+                foreach (TradeMark tradeMark in db.TradeMarks)
+                {
+                    cbBox_marca.Items.Add(tradeMark.MarkName);
+                }
+
+                cbBox_marca.SelectedItem = db.TradeMarks.FirstOrDefault(tm => tm.Id.Equals(Producto.TradeMarkId)).MarkName;
                 cbBox_categoria.SelectedItem = db.Categories.FirstOrDefault(cat => cat.Id.Equals(Producto.CategoryId)).CategoryName;
                 txt_codigoBarras.Text = Producto.BarCode;
                 txt_descripcionArticulo.Text = Producto.ProductName;
@@ -122,6 +135,7 @@ namespace SisApp
             txt_codigoBarras.Text = "";
             txt_descripcionArticulo.Text = "";
             cbBox_categoria.SelectedItem = "N/A";
+            cbBox_marca.SelectedItem = "N/A";
         }
 
         public void GuardaInfo()
@@ -131,6 +145,7 @@ namespace SisApp
                 Producto.BarCode = txt_codigoBarras.Text.ToUpper();
                 Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
                 Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
+                Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
 
                 db.Update(Producto);
             }
@@ -141,10 +156,10 @@ namespace SisApp
                     ProductName = txt_descripcionArticulo.Text.ToUpper(),
                     BarCode = txt_codigoBarras.Text.ToUpper(),
                     CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id,
+                    TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id,
                     Stock = 0,
                     SalePrice = 0,
                     PucharsePrice = 0,
-                    TradeMarkId = 1
                 };
 
                 db.Insert(product);

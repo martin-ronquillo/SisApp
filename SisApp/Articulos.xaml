@@ -24,19 +24,19 @@
 
                     <MenuItem Header="Mantenimiento">
 
-                        <MenuItem Header="Nuevo Articulo">
+                        <MenuItem Header="Nuevo Articulo" Click="btn_NuevoArticulo_Click">
                             <MenuItem.Icon>
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
 
-                        <MenuItem Header="Categorias">
+                        <MenuItem Header="Categorias" Name="creaCategoria" Click="creaCategoria_Click">
                             <MenuItem.Icon>
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         
-                        <MenuItem Header="Marcas">
+                        <MenuItem Header="Marcas" Name="creaMarca" Click="creaMarca_Click">
                             <MenuItem.Icon>
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
                             </MenuItem.Icon>
@@ -51,13 +51,13 @@
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png"/>
                             </MenuItem.Icon>
                             
-                            <MenuItem Header="Ingresar Articulos">
+                            <MenuItem Header="Ingresar Articulos" Name="ingresaArticulos" Click="ingresaArticulos_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             
-                            <MenuItem Header="Consultar Ingresos">
+                            <MenuItem Header="Consultar Ingresos" Name="consultaIngresos" Click="consultaIngresos_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
@@ -69,13 +69,13 @@
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png"/>
                             </MenuItem.Icon>
 
-                            <MenuItem Header="Egresar Articulos">
+                            <MenuItem Header="Egresar Articulos" Name="egresaArticulos" Click="egresaArticulos_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Egresos">
+                            <MenuItem Header="Consultar Egresos" Name="consultaEgresos" Click="consultaEgresos_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
@@ -84,7 +84,7 @@
 
                         <Separator/>
 
-                        <MenuItem Header="Traspaso de Articulos">
+                        <MenuItem Header="Traspaso de Articulos" Name="traspasoArticulos" Click="traspasoArticulos_Click">
                             <MenuItem.Icon>
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
                             </MenuItem.Icon>
@@ -92,7 +92,7 @@
                     </MenuItem>
 
                     <MenuItem Header="Administracion">
-                        <MenuItem Header="Proveedores">
+                        <MenuItem Header="Proveedores" Name="consultaProveedores" Click="consultaProveedores_Click">
                             <MenuItem.Icon>
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Nuevo.png"/>
                             </MenuItem.Icon>
@@ -103,13 +103,13 @@
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Añadir.png"/>
                             </MenuItem.Icon>
 
-                            <MenuItem Header="Ingresar Compra">
+                            <MenuItem Header="Ingresar Compra" Name="ingresaCompras" Click="ingresaCompras_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Compras">
+                            <MenuItem Header="Consultar Compras" Name="consultaCompras" Click="consultaCompras_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
@@ -117,13 +117,13 @@
 
                             <Separator/>
 
-                            <MenuItem Header="Devoluciones">
+                            <MenuItem Header="Devoluciones" Name="realizaDevolucion" Click="realizaDevolucion_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Devoluciones">
+                            <MenuItem Header="Consultar Devoluciones" Name="consultaDevolucion" Click="consultaDevolucion_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
@@ -135,13 +135,13 @@
                                 <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Menos.png"/>
                             </MenuItem.Icon>
 
-                            <MenuItem Header="Ingresar Ventas">
+                            <MenuItem Header="Ingresar Ventas" Name="ingresaVenta" Click="ingresaVenta_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Ventas">
+                            <MenuItem Header="Consultar Ventas" Name="consultaVenta" Click="consultaVenta_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
@@ -149,13 +149,13 @@
 
                             <Separator/>
 
-                            <MenuItem Header="Devoluciones">
+                            <MenuItem Header="Devoluciones" Name="realizaDevolucionVenta" Click="realizaDevolucionVenta_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Devoluciones">
+                            <MenuItem Header="Consultar Devoluciones" Name="consultaDevolucionVenta" Click="consultaDevolucionVenta_Click">
                                 <MenuItem.Icon>
                                     <Image Source="D:\scaffold\C#\SisApp\SisApp\resources\Icons\Abrir.png"/>
                                 </MenuItem.Icon>

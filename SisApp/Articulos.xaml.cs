@@ -22,11 +22,12 @@ namespace SisApp
         InventarioArticulos inventarioArticulos = new InventarioArticulos();
 
         List<InventarioArticulos> listaTodosProducto = new List<InventarioArticulos>();
-        List<InventarioArticulos> listaProductoFiltrado = new List<InventarioArticulos>();
 
         public Articulos()
         {
             InitializeComponent();
+
+            this.WindowState = WindowState.Maximized;
 
             if (LoggedUser.Rol != "ADMIN")
             {
@@ -45,6 +46,7 @@ namespace SisApp
         private void cb_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LlenaListView();
+            lbl_busquedaInfo.Content = "";
         }
 
         private void lv_productos_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -258,6 +260,97 @@ namespace SisApp
                 txt_precioCompra.Text = selectedProducto.PurchasePrice.ToString();
                 txt_precioVenta.Text = selectedProducto.SalePrice.ToString();
             }
+        }
+
+        /*
+         * 
+         * 
+         * Menu Actions
+         * 
+         * 
+         */
+
+        private void creaCategoria_Click(object sender, RoutedEventArgs e)
+        {
+            Categorias categorias = new Categorias();
+            categorias.Show();
+        }
+
+        private void creaMarca_Click(object sender, RoutedEventArgs e)
+        {
+            Marcas marcas = new Marcas();
+            marcas.Show();
+        }
+
+        private void ingresaArticulos_Click(object sender, RoutedEventArgs e)
+        {
+            IngresoArticulos ingresoArticulos = new IngresoArticulos();
+            ingresoArticulos.Show();
+        }
+
+        private void consultaIngresos_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void egresaArticulos_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaEgresos_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void traspasoArticulos_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaProveedores_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ingresaCompras_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaCompras_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void realizaDevolucion_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaDevolucion_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ingresaVenta_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaVenta_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void realizaDevolucionVenta_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void consultaDevolucionVenta_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

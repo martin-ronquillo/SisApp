@@ -167,6 +167,9 @@
     <Compile Include="ArticulosCRUD.xaml.cs">
       <DependentUpon>ArticulosCRUD.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Categorias.xaml.cs">
+      <DependentUpon>Categorias.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Clientes.xaml.cs">
       <DependentUpon>Clientes.xaml</DependentUpon>
     </Compile>
@@ -183,7 +186,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClassesCompact.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="ImprimeFactura.cs" />
+    <Compile Include="IngresoArticulos.xaml.cs">
+      <DependentUpon>IngresoArticulos.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InventarioArticulos.cs" />
     <Compile Include="LinqToDB.Templates\CopyMe.SQLite.generated.cs">
       <AutoGen>True</AutoGen>
@@ -193,6 +198,12 @@
     <Compile Include="LoggedUser.cs" />
     <Compile Include="Loggin.xaml.cs">
       <DependentUpon>Loggin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Marcas.xaml.cs">
+      <DependentUpon>Marcas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SeleccionaIngreso.xaml.cs">
+      <DependentUpon>SeleccionaIngreso.xaml</DependentUpon>
     </Compile>
     <Compile Include="Singleton.cs" />
     <Compile Include="SisAppDataSet.Designer.cs">
@@ -213,11 +224,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Categorias.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Clientes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Confirmar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IngresoArticulos.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -237,6 +256,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Marcas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SeleccionaIngreso.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -325,10 +352,12 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Subir.png" />
     <Resource Include="Añadir.png" />
     <Resource Include="Actualizar.png" />
     <Resource Include="Agrega_usuario.png" />
     <Resource Include="Basura.png" />
+    <Resource Include="Check.png" />
     <Content Include="DataClassesCompact.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DataClassesCompact.Context.cs</LastGenOutput>

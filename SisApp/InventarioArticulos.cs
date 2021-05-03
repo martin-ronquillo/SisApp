@@ -15,6 +15,7 @@ namespace SisApp
         public float Stock { get; set; }
         public string Category { get; set; }
         public float StockBodega { get; set; }
+        public float SalePricePercent { get; set; }
         public float SalePrice { get; set; }
         public float PurchasePrice { get; set; }
         public string TradeMark { get; set; }
@@ -42,6 +43,7 @@ namespace SisApp
                                         BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                         ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
                                         Stock = (float)producto.Stock,
+                                        SalePricePercent = (float)producto.SalePricePercent,
                                         SalePrice = (float)producto.SalePrice,
                                         PurchasePrice = (float)producto.PucharsePrice,
                                         TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
@@ -65,6 +67,7 @@ namespace SisApp
                                     BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                     ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
                                     Stock = (float)producto.Stock,
+                                    SalePricePercent = (float)producto.SalePricePercent,
                                     SalePrice = (float)producto.SalePrice,
                                     PurchasePrice = (float)producto.PucharsePrice,
                                     TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
@@ -88,12 +91,12 @@ namespace SisApp
 
                     foreach (ProductsStore ps in listaPs)
                     {
-                        Product producto = db.Products.LoadWith(t => t.TradeMark).First(pro => pro.Id.Equals(ps.ProductId));
+                        Product producto = db.Products.LoadWith(t => t.TradeMark).LoadWith(proSto => proSto.ProductsStores).First(pro => pro.Id.Equals(ps.ProductId));
 
                         //Si el checkBox "dispone stock" esta activo
                         if (checkBox)
                         {
-                            if (producto.Stock != 0)
+                            if (producto.ProductsStores.FirstOrDefault().Stock != 0)
                             {
                                 try
                                 {
@@ -103,9 +106,10 @@ namespace SisApp
                                             Id = (int)producto.Id,
                                             BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                             ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
-                                            Stock = (float)producto.Stock,
-                                            SalePrice = (float)producto.SalePrice,
-                                            PurchasePrice = (float)producto.PucharsePrice,
+                                            Stock = (float)producto.ProductsStores.FirstOrDefault().Stock,
+                                            SalePricePercent = (float)producto.ProductsStores.FirstOrDefault().SalePricePercent,
+                                            SalePrice = (float)producto.ProductsStores.FirstOrDefault().PriceByUnit,
+                                            PurchasePrice = (float)producto.ProductsStores.FirstOrDefault().PurchasePrice,
                                             TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
                                         }
                                     );
@@ -126,9 +130,10 @@ namespace SisApp
                                         Id = (int)producto.Id,
                                         BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                         ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
-                                        Stock = (float)producto.Stock,
-                                        SalePrice = (float)producto.SalePrice,
-                                        PurchasePrice = (float)producto.PucharsePrice,
+                                        Stock = (float)producto.ProductsStores.FirstOrDefault().Stock,
+                                        SalePricePercent = (float)producto.ProductsStores.FirstOrDefault().SalePricePercent,
+                                        SalePrice = (float)producto.ProductsStores.FirstOrDefault().PriceByUnit,
+                                        PurchasePrice = (float)producto.ProductsStores.FirstOrDefault().PurchasePrice,
                                         TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
                                     }
                                 );
@@ -171,6 +176,7 @@ namespace SisApp
                                             BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                             ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
                                             Stock = (float)producto.Stock,
+                                            SalePricePercent = (float)producto.SalePricePercent,
                                             SalePrice = (float)producto.SalePrice,
                                             PurchasePrice = (float)producto.PucharsePrice,
                                             TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
@@ -194,6 +200,7 @@ namespace SisApp
                                         BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                         ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
                                         Stock = (float)producto.Stock,
+                                        SalePricePercent = (float)producto.SalePricePercent,
                                         SalePrice = (float)producto.SalePrice,
                                         PurchasePrice = (float)producto.PucharsePrice,
                                         TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
@@ -217,14 +224,14 @@ namespace SisApp
 
                         foreach (ProductsStore ps in listaPs)
                         {
-                            foreach (Product producto in db.Products.LoadWith(t => t.TradeMark).Where(pro => pro.ProductName.Contains(busqueda)))
+                            foreach (Product producto in db.Products.LoadWith(t => t.TradeMark).LoadWith(proSto => proSto.ProductsStores).Where(pro => pro.ProductName.Contains(busqueda)))
                             {
                                 if (producto.Id == ps.ProductId)
                                 {
                                     //Si el checkBox "dispone stock" esta activo
                                     if (checkBox)
                                     {
-                                        if (producto.Stock != 0)
+                                        if (producto.ProductsStores.FirstOrDefault().Stock != 0)
                                         {
                                             try
                                             {
@@ -234,9 +241,10 @@ namespace SisApp
                                                         Id = (int)producto.Id,
                                                         BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                                         ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
-                                                        Stock = (float)producto.Stock,
-                                                        SalePrice = (float)producto.SalePrice,
-                                                        PurchasePrice = (float)producto.PucharsePrice,
+                                                        Stock = (float)producto.ProductsStores.FirstOrDefault().Stock,
+                                                        SalePricePercent = (float)producto.ProductsStores.FirstOrDefault().SalePricePercent,
+                                                        SalePrice = (float)producto.ProductsStores.FirstOrDefault().PriceByUnit,
+                                                        PurchasePrice = (float)producto.ProductsStores.FirstOrDefault().PurchasePrice,
                                                         TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
                                                     }
                                                 );
@@ -257,9 +265,10 @@ namespace SisApp
                                                     Id = (int)producto.Id,
                                                     BarCode = producto.BarCode != null ? producto.BarCode : "N/A",
                                                     ProductName = producto.ProductName != null ? producto.ProductName : "N/A",
-                                                    Stock = (float)producto.Stock,
-                                                    SalePrice = (float)producto.SalePrice,
-                                                    PurchasePrice = (float)producto.PucharsePrice,
+                                                    Stock = (float)producto.ProductsStores.FirstOrDefault().Stock,
+                                                    SalePricePercent = (float)producto.ProductsStores.FirstOrDefault().SalePricePercent,
+                                                    SalePrice = (float)producto.ProductsStores.FirstOrDefault().PriceByUnit,
+                                                    PurchasePrice = (float)producto.ProductsStores.FirstOrDefault().PurchasePrice,
                                                     TradeMark = producto.TradeMark.MarkName != null ? producto.TradeMark.MarkName : "N/A"
                                                 }
                                             );
@@ -287,6 +296,56 @@ namespace SisApp
 
                 return listaArticulos;
             }
+        }
+    }
+
+    class ProductosSeleccionados
+    {
+        public int Id { get; set; }
+        public string BarCode { get; set; }
+        public string ProductName { get; set; }
+        public float SalePricePercent { get; set; }
+        public float SalePrice { get; set; }
+        public float Amount { get; set; }
+        public float PurchasePrice { get; set; }
+        public float TotalPrice { get; set; }
+    }
+
+    class IngresaProductos
+    {
+        public int Id { get; set; }
+        public string BarCode { get; set; }
+        public string ProductName { get; set; }
+        public float SalePricePercent { get; set; }
+        public float SalePrice { get; set; }
+        public float PurchasePrice { get; set; }
+        public float TotalPrice { get; set; }
+        public float Amount { get; set; }
+        public List<IngresaProductos> listaIngresos = new List<IngresaProductos>();
+
+        public List<IngresaProductos> ListaIngresaProductos(List<ProductosSeleccionados> listaProductosSeleccionados)
+        {
+            if (listaProductosSeleccionados != null)
+            {
+                foreach (ProductosSeleccionados productoSelect in listaProductosSeleccionados)
+                {
+                    listaIngresos.Add(
+                        new IngresaProductos
+                        {
+                            Id = productoSelect.Id,
+                            BarCode = productoSelect.BarCode,
+                            ProductName = productoSelect.ProductName,
+                            SalePricePercent = productoSelect.SalePricePercent,
+                            SalePrice = productoSelect.SalePrice,
+                            Amount = productoSelect.Amount,
+                            PurchasePrice = productoSelect.PurchasePrice,
+                            TotalPrice = productoSelect.TotalPrice
+                        }
+                    );
+                }
+            }
+
+            return listaIngresos;
         }
     }
 }

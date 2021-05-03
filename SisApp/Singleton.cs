@@ -1,4 +1,6 @@
-﻿namespace SisApp
+﻿using System.Collections.Generic;
+
+namespace SisApp
 {
     class Singleton
     {
@@ -15,5 +17,7 @@
 
         //Se usan para seleccionar cliente a facturar
         public int selectedCliente = 1;
+
+        public List<IngresaProductos> listaIngresos = new List<IngresaProductos>();
     }
 }

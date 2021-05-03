@@ -24,25 +24,24 @@ namespace DataModels
 	/// </summary>
 	public partial class SisAppCompactDB : LinqToDB.Data.DataConnection
 	{
-		public ITable<Cashier>              Cashiers             { get { return this.GetTable<Cashier>(); } }
-		public ITable<Category>             Categories           { get { return this.GetTable<Category>(); } }
-		public ITable<Customer>             Customers            { get { return this.GetTable<Customer>(); } }
-		public ITable<Egress>               Egresses             { get { return this.GetTable<Egress>(); } }
-		public ITable<EgressProduct>        EgressProducts       { get { return this.GetTable<EgressProduct>(); } }
-		public ITable<Product>              Products             { get { return this.GetTable<Product>(); } }
-		public ITable<ProductsPurchase>     ProductsPurchases    { get { return this.GetTable<ProductsPurchase>(); } }
-		public ITable<ProductsReceipt>      ProductsReceipts     { get { return this.GetTable<ProductsReceipt>(); } }
-		public ITable<ProductsSale>         ProductsSales        { get { return this.GetTable<ProductsSale>(); } }
-		public ITable<ProductsStore>        ProductsStores       { get { return this.GetTable<ProductsStore>(); } }
-		public ITable<Provider>             Providers            { get { return this.GetTable<Provider>(); } }
-		public ITable<Purchase>             Purchases            { get { return this.GetTable<Purchase>(); } }
-		public ITable<PurchasesOld20210501> PurchasesOld20210501 { get { return this.GetTable<PurchasesOld20210501>(); } }
-		public ITable<Receipt>              Receipts             { get { return this.GetTable<Receipt>(); } }
-		public ITable<Rol>                  Rols                 { get { return this.GetTable<Rol>(); } }
-		public ITable<Sale>                 Sales                { get { return this.GetTable<Sale>(); } }
-		public ITable<Store>                Stores               { get { return this.GetTable<Store>(); } }
-		public ITable<TradeMark>            TradeMarks           { get { return this.GetTable<TradeMark>(); } }
-		public ITable<User>                 Users                { get { return this.GetTable<User>(); } }
+		public ITable<Cashier>          Cashiers          { get { return this.GetTable<Cashier>(); } }
+		public ITable<Category>         Categories        { get { return this.GetTable<Category>(); } }
+		public ITable<Customer>         Customers         { get { return this.GetTable<Customer>(); } }
+		public ITable<Egress>           Egresses          { get { return this.GetTable<Egress>(); } }
+		public ITable<EgressProduct>    EgressProducts    { get { return this.GetTable<EgressProduct>(); } }
+		public ITable<Product>          Products          { get { return this.GetTable<Product>(); } }
+		public ITable<ProductsPurchase> ProductsPurchases { get { return this.GetTable<ProductsPurchase>(); } }
+		public ITable<ProductsReceipt>  ProductsReceipts  { get { return this.GetTable<ProductsReceipt>(); } }
+		public ITable<ProductsSale>     ProductsSales     { get { return this.GetTable<ProductsSale>(); } }
+		public ITable<ProductsStore>    ProductsStores    { get { return this.GetTable<ProductsStore>(); } }
+		public ITable<Provider>         Providers         { get { return this.GetTable<Provider>(); } }
+		public ITable<Purchase>         Purchases         { get { return this.GetTable<Purchase>(); } }
+		public ITable<Receipt>          Receipts          { get { return this.GetTable<Receipt>(); } }
+		public ITable<Rol>              Rols              { get { return this.GetTable<Rol>(); } }
+		public ITable<Sale>             Sales             { get { return this.GetTable<Sale>(); } }
+		public ITable<Store>            Stores            { get { return this.GetTable<Store>(); } }
+		public ITable<TradeMark>        TradeMarks        { get { return this.GetTable<TradeMark>(); } }
+		public ITable<User>             Users             { get { return this.GetTable<User>(); } }
 
 		public SisAppCompactDB()
 		{
@@ -184,14 +183,15 @@ namespace DataModels
 	[Table("Products")]
 	public partial class Product
 	{
-		[PrimaryKey, Identity] public long    Id            { get; set; } // integer
-		[Column,     Nullable] public string  ProductName   { get; set; } // text(100)
-		[Column,     Nullable] public double? Stock         { get; set; } // real
-		[Column,     Nullable] public long?   CategoryId    { get; set; } // integer
-		[Column,     Nullable] public double? PucharsePrice { get; set; } // real
-		[Column,     Nullable] public double? SalePrice     { get; set; } // real
-		[Column,     Nullable] public string  BarCode       { get; set; } // text(25)
-		[Column,     Nullable] public long?   TradeMarkId   { get; set; } // integer
+		[PrimaryKey, Identity] public long    Id               { get; set; } // integer
+		[Column,     Nullable] public string  ProductName      { get; set; } // text(100)
+		[Column,     Nullable] public double? Stock            { get; set; } // real
+		[Column,     Nullable] public long?   CategoryId       { get; set; } // integer
+		[Column,     Nullable] public double? PucharsePrice    { get; set; } // real
+		[Column,     Nullable] public double? SalePricePercent { get; set; } // real
+		[Column,     Nullable] public double? SalePrice        { get; set; } // real
+		[Column,     Nullable] public string  BarCode          { get; set; } // text(25)
+		[Column,     Nullable] public long?   TradeMarkId      { get; set; } // integer
 
 		#region Associations
 
@@ -270,22 +270,24 @@ namespace DataModels
 	[Table("ProductsReceipts")]
 	public partial class ProductsReceipt
 	{
-		[PrimaryKey, Identity] public long  Id        { get; set; } // integer
-		[Column,     Nullable] public long? ProductId { get; set; } // integer
-		[Column,     Nullable] public long? ReceiptId { get; set; } // integer
+		[PrimaryKey, Identity   ] public long    Id            { get; set; } // integer
+		[Column,     NotNull    ] public long    ProductId     { get; set; } // integer
+		[Column,     NotNull    ] public long    ReceiptId     { get; set; } // integer
+		[Column,        Nullable] public double? Amount        { get; set; } // real
+		[Column,        Nullable] public double? PurchasePrice { get; set; } // real
 
 		#region Associations
 
 		/// <summary>
 		/// FK_ProductsReceipts_1_0
 		/// </summary>
-		[Association(ThisKey="ProductId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsReceipts_1_0", BackReferenceName="ProductsReceipts")]
+		[Association(ThisKey="ProductId", OtherKey="Id", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsReceipts_1_0", BackReferenceName="ProductsReceipts")]
 		public Product Product { get; set; }
 
 		/// <summary>
 		/// FK_ProductsReceipts_0_0
 		/// </summary>
-		[Association(ThisKey="ReceiptId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsReceipts_0_0", BackReferenceName="ProductsReceipts")]
+		[Association(ThisKey="ReceiptId", OtherKey="Id", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsReceipts_0_0", BackReferenceName="ProductsReceipts")]
 		public Receipt Receipt { get; set; }
 
 		#endregion
@@ -321,11 +323,13 @@ namespace DataModels
 	[Table("ProductsStores")]
 	public partial class ProductsStore
 	{
-		[PrimaryKey, Identity] public long    Id          { get; set; } // integer
-		[Column,     Nullable] public long?   StoreId     { get; set; } // integer
-		[Column,     Nullable] public long?   ProductId   { get; set; } // integer
-		[Column,     Nullable] public double? Stock       { get; set; } // real
-		[Column,     Nullable] public double? PriceByUnit { get; set; } // real
+		[PrimaryKey, Identity   ] public long    Id               { get; set; } // integer
+		[Column,        Nullable] public long?   StoreId          { get; set; } // integer
+		[Column,        Nullable] public long?   ProductId        { get; set; } // integer
+		[Column,        Nullable] public double? Stock            { get; set; } // real
+		[Column,        Nullable] public double? SalePricePercent { get; set; } // real
+		[Column,     NotNull    ] public double  PriceByUnit      { get; set; } // real
+		[Column,        Nullable] public double? PurchasePrice    { get; set; } // real
 
 		#region Associations
 
@@ -371,12 +375,6 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="ProviderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Purchase> Purchases { get; set; }
 
-		/// <summary>
-		/// FK__Purchases_old_20210501_0_0_BackReference
-		/// </summary>
-		[Association(ThisKey="Id", OtherKey="ProviderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<PurchasesOld20210501> Purchasesolds { get; set; }
-
 		#endregion
 	}
 
@@ -416,36 +414,14 @@ namespace DataModels
 		#endregion
 	}
 
-	[Table("_Purchases_old_20210501")]
-	public partial class PurchasesOld20210501
-	{
-		[PrimaryKey, Identity] public long    Id           { get; set; } // integer
-		[Column,     Nullable] public string  PurchaseCode { get; set; } // text(100)
-		[Column,     Nullable] public string  PurchaseDate { get; set; } // text(50)
-		[Column,     Nullable] public double? TotalPrice   { get; set; } // real
-		[Column,     Nullable] public double? SubPrice     { get; set; } // real
-		[Column,     Nullable] public double? Tax          { get; set; } // real
-		[Column,     Nullable] public double? Discount     { get; set; } // real
-		[Column,     Nullable] public long?   ProviderId   { get; set; } // integer
-
-		#region Associations
-
-		/// <summary>
-		/// FK__Purchases_old_20210501_0_0
-		/// </summary>
-		[Association(ThisKey="ProviderId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Purchases_old_20210501_0_0", BackReferenceName="Purchasesolds")]
-		public Provider Provider { get; set; }
-
-		#endregion
-	}
-
 	[Table("Receipts")]
 	public partial class Receipt
 	{
-		[PrimaryKey, Identity   ] public long   Id          { get; set; } // integer
-		[Column,     NotNull    ] public string Type        { get; set; } // text(max)
-		[Column,        Nullable] public string ReceiptDate { get; set; } // text(12)
-		[Column,        Nullable] public long?  StoreId     { get; set; } // integer
+		[PrimaryKey, Identity   ] public long    Id                { get; set; } // integer
+		[Column,     NotNull    ] public string  Type              { get; set; } // text(max)
+		[Column,        Nullable] public string  ReceiptDate       { get; set; } // text(12)
+		[Column,        Nullable] public long?   StoreId           { get; set; } // integer
+		[Column,        Nullable] public double? TotalPriceReceipt { get; set; } // real
 
 		#region Associations
 
@@ -685,12 +661,6 @@ namespace DataModels
 		}
 
 		public static Purchase Find(this ITable<Purchase> table, long Id)
-		{
-			return table.FirstOrDefault(t =>
-				t.Id == Id);
-		}
-
-		public static PurchasesOld20210501 Find(this ITable<PurchasesOld20210501> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
