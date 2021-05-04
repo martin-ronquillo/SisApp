@@ -21,6 +21,7 @@ namespace SisApp
     /// </summary>
     public partial class MuestraRegistro : Window
     {
+        GeneraExcel GeneraExcel = new GeneraExcel();
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
         private int Id;
         private int TipoConsulta;
@@ -38,6 +39,22 @@ namespace SisApp
             LlenaInfo();
 
             LlenaListView();
+        }
+
+        private void btn_generaExcel_Click(object sender, RoutedEventArgs e)
+        {
+            btn_generaExcel.IsEnabled = false;
+            
+            if (TipoConsulta == 1)
+            {
+                GeneraExcel.CreaExcel(listaRegistros, 1);
+            }
+            else
+            {
+                GeneraExcel.CreaExcel(listaRegistros, 2);
+            }
+
+            btn_generaExcel.IsEnabled = true;
         }
 
         public void LlenaListView()

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Reflection;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SisApp
 {
@@ -369,5 +371,59 @@ namespace SisApp
         public float Percent { get; set; }
         public float Purchase { get; set; }
         public float Total { get; set; }
+    }
+
+    class GeneraExcel
+    {
+        private string tipoConsulta { get; set; }
+
+        public void CreaExcel(List<ConsultaRegistroInfo> listaRegistros, int tipoConsulta)
+        {
+            if (tipoConsulta == 1)
+            {
+                this.tipoConsulta = "INGRESOS";
+            }
+            else
+            {
+                this.tipoConsulta = "EGRESOS";
+            }
+            // Creamos un objeto Excel.
+            Excel.Application Mi_Excel = default(Excel.Application);
+            // Creamos un objeto WorkBook. Para crear el documento Excel.           
+            Excel.Workbook LibroExcel = default(Excel.Workbook);
+            // Creamos un objeto WorkSheet. Para crear la hoja del documento.
+            Excel.Worksheet HojaExcel = default(Excel.Worksheet);
+
+            // Iniciamos una instancia a Excel, y Hacemos visibles para ver como se va creando el reporte, 
+            // podemos hacerlo visible al final si se desea.
+            Mi_Excel = new Excel.Application();
+            Mi_Excel.Visible = true;
+
+            /* Ahora creamos un nuevo documento y seleccionamos la primera hoja del 
+                * documento en la cual crearemos nuestro informe. 
+                */
+            // Creamos una instancia del Workbooks de excel.            
+            LibroExcel = Mi_Excel.Workbooks.Add();
+            // Creamos una instancia de la primera hoja de trabajo de excel            
+            HojaExcel = LibroExcel.Worksheets[1];
+            HojaExcel.Visible = Excel.XlSheetVisibility.xlSheetVisible;
+
+            // Hacemos esta hoja la visible en pantalla 
+            // (como seleccionamos la primera esto no es necesario
+            // si seleccionamos una diferente a la primera si lo
+            // necesitariamos).
+            HojaExcel.Activate();
+
+            // Crear el encabezado de nuestro informe.
+            // La primera línea une las celdas y las convierte un en una sola.            
+            HojaExcel.Range["A2:G2"].Merge();
+            // La segunda línea Asigna el nombre del encabezado.
+            HojaExcel.Range["A2:G2"].Value = "REGISTROS DE "+this.tipoConsulta;
+            // La tercera línea asigna negrita al titulo.
+            HojaExcel.Range["A2:G2"].Font.Bold = true;
+            // La cuarta línea signa un Size a titulo de 15.
+            HojaExcel.Range["A2:G2"].Font.Size = 15;
+            HojaExcel.Range["A2:G2"].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+        }
     }
 }

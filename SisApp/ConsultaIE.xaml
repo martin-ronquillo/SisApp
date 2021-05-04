@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:SisApp"
         mc:Ignorable="d"
         Title="Consultas" Height="450" Width="800">
-    <Grid Margin="14,0,14,14">
+    <Grid Margin="14,0,14,3">
 
         <Grid.RowDefinitions>
 
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
 
         </Grid.RowDefinitions>
 
@@ -47,6 +48,25 @@
                 </ListView.View>
 
             </ListView>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="0,3,0,1">
+
+            <Button x:Name="btn_generaExcel" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="130" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Click="btn_generaExcel_Click">
+                <Grid>
+                    
+                    <Grid.ColumnDefinitions>
+                        
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                        
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="Excel.png"/>
+                    <Label Content="GENERAR EXCEL" Grid.Column="1" HorizontalAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
 
         </Grid>
 

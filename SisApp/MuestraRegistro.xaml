@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:SisApp"
         mc:Ignorable="d"
         Title="MuestraRegistro" Height="538.334" Width="888.333">
-    <Grid Margin="14,5,14,14">
+    <Grid Margin="14,5,14,8">
 
         <Grid.RowDefinitions>
 
             <RowDefinition Height="45"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
 
         </Grid.RowDefinitions>
 
@@ -55,7 +55,7 @@
             
         </Grid>
         
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="0,0,0,7">
 
             <ListView x:Name="lv_registros" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
 
@@ -83,8 +83,23 @@
 
         </Grid>
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" Margin="0,0,0,0">
+            
+            <Button x:Name="btn_generaExcel" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="130" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Click="btn_generaExcel_Click">
+                <Grid>
 
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="Excel.png"/>
+                    <Label Content="GENERAR EXCEL" Grid.Column="1" HorizontalAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            
         </Grid>
         
         <!--Hacer proporciona ancho automatico al campo "producto" del listview-->

@@ -115,5 +115,10 @@ namespace SisApp
                 muestraRegistro.Show();
             }
         }
+
+        private void btn_generaExcel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
