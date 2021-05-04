@@ -176,6 +176,9 @@
     <Compile Include="Confirmar.xaml.cs">
       <DependentUpon>Confirmar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConsultaIE.xaml.cs">
+      <DependentUpon>ConsultaIE.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataClasses1.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,6 +188,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClassesCompact.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EgresoArticulos.xaml.cs">
+      <DependentUpon>EgresoArticulos.xaml</DependentUpon>
     </Compile>
     <Compile Include="IngresoArticulos.xaml.cs">
       <DependentUpon>IngresoArticulos.xaml</DependentUpon>
@@ -201,6 +207,9 @@
     </Compile>
     <Compile Include="Marcas.xaml.cs">
       <DependentUpon>Marcas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MuestraRegistro.xaml.cs">
+      <DependentUpon>MuestraRegistro.xaml</DependentUpon>
     </Compile>
     <Compile Include="SeleccionaIngreso.xaml.cs">
       <DependentUpon>SeleccionaIngreso.xaml</DependentUpon>
@@ -236,6 +245,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ConsultaIE.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EgresoArticulos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="IngresoArticulos.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -257,6 +274,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Marcas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MuestraRegistro.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

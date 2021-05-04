@@ -59,6 +59,7 @@
                 <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="37" Margin="0,23,16,0" Stroke="Black" VerticalAlignment="Top" Width="159" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
                 <TextBox x:Name="txt_nVenta" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="35" Width="112" FontSize="22" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" Margin="0,28,26,-0.333" BorderThickness="0" Background="{x:Null}"/>
                 <Label Content="N°" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,135,0" FontFamily="Verdana" FontSize="20" FontStyle="Italic" FontWeight="Bold" Foreground="#FF8B8B8B"/>
+                
             </Grid>
 
             <!--Cliente y tabla de productos -->

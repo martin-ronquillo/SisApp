@@ -348,4 +348,26 @@ namespace SisApp
             return listaIngresos;
         }
     }
+
+    //Consulta Ingresos - Egresos
+    class ConsultaIngEgr
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Store { get; set; }
+        public float Total { get; set; }
+        public string Type { get; set; }
+        public List<ConsultaIngEgr> listaConsulta = new List<ConsultaIngEgr>();
+    }
+
+    class ConsultaRegistroInfo
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Product { get; set; }
+        public float Amount { get; set; }
+        public float Percent { get; set; }
+        public float Purchase { get; set; }
+        public float Total { get; set; }
+    }
 }

@@ -203,7 +203,9 @@ namespace SisApp
                             ProductName = selectedProducto.ProductName,
                             SalePricePercent = selectedProducto.SalePricePercent,
                             SalePrice = selectedProducto.SalePrice,
-                            Amount = 1
+                            PurchasePrice = selectedProducto.PurchasePrice,
+                            Amount = 1,
+                            TotalPrice = selectedProducto.PurchasePrice
                         }
                     );
                 }

@@ -101,6 +101,8 @@ namespace SisApp
 
         private void btn_Guardar_Click(object sender, RoutedEventArgs e)
         {
+            btn_Guardar.IsEnabled = false;
+
             ValidaForm();
             if (validate)
             {
@@ -108,12 +110,16 @@ namespace SisApp
                 {
                     try
                     {
+                        Random r = new Random();
+                        string receiptCode = r.Next(1000,9999999).ToString("D7");
+
                         //Genera el ingreso
                         Receipt receipt = new Receipt
                         {
                             Type = cbBox_tipoIngreso.SelectedItem.ToString().ToUpper(),
                             ReceiptDate = dp_ingreso.Text,
-                            StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id
+                            StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id,
+                            ReceiptCode = receiptCode
                         };
 
                         db.Insert(receipt);
@@ -190,16 +196,20 @@ namespace SisApp
                         db.Update(lastReceipt);
 
                         LimpiaForm();
+
+                        btn_Guardar.IsEnabled = true;
                     }
                     catch (Exception exc)
                     {
                         MessageBox.Show("No se pudo generar el ingreso \n Excepcion COntrolada: \n" + exc);
+                        btn_Guardar.IsEnabled = true;
                     }
                 }
             }
             else
             {
                 MessageBox.Show("No se puede guardar los datos, seleccione un Almacen, un Tipo de Ingreso y una Fecha");
+                btn_Guardar.IsEnabled = true;
             }
         }
 
@@ -333,21 +343,6 @@ namespace SisApp
             {
                 MessageBox.Show("Error, excepcion controlada: \n" + exc);
             }
-        }
-
-        public void ActualizaCantidadesDG()
-        {
-            foreach (var item in dg_datos.Items.OfType<IngresaProductos>())
-            {
-                var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == item.Id);
-
-                found.Amount = item.Amount;
-                found.PurchasePrice = item.PurchasePrice;
-                found.TotalPrice = item.Amount * (float)item.PurchasePrice;
-            }
-            dg_datos.ItemsSource = null;
-
-            dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
         }
 
         public void ValidaForm()

@@ -134,10 +134,12 @@ namespace DataModels
 	[Table("Egress")]
 	public partial class Egress
 	{
-		[PrimaryKey, Identity   ] public long   Id         { get; set; } // integer
-		[Column,     NotNull    ] public string Type       { get; set; } // text(20)
-		[Column,        Nullable] public string EgressDate { get; set; } // text(12)
-		[Column,        Nullable] public long?  StoreId    { get; set; } // integer
+		[PrimaryKey, Identity   ] public long    Id               { get; set; } // integer
+		[Column,     NotNull    ] public string  Type             { get; set; } // text(20)
+		[Column,        Nullable] public string  EgressDate       { get; set; } // text(12)
+		[Column,        Nullable] public long?   StoreId          { get; set; } // integer
+		[Column,        Nullable] public double? TotalPriceEgress { get; set; } // real
+		[Column,        Nullable] public string  EgressCode       { get; set; } // text(7)
 
 		#region Associations
 
@@ -159,9 +161,11 @@ namespace DataModels
 	[Table("EgressProducts")]
 	public partial class EgressProduct
 	{
-		[PrimaryKey, Identity] public long  Id        { get; set; } // integer
-		[Column,     Nullable] public long? ProductId { get; set; } // integer
-		[Column,     Nullable] public long? EgressId  { get; set; } // integer
+		[PrimaryKey, Identity] public long    Id            { get; set; } // integer
+		[Column,     Nullable] public long?   ProductId     { get; set; } // integer
+		[Column,     Nullable] public long?   EgressId      { get; set; } // integer
+		[Column,     Nullable] public double? Amount        { get; set; } // real
+		[Column,     Nullable] public double? PurchasePrice { get; set; } // real
 
 		#region Associations
 
@@ -422,6 +426,7 @@ namespace DataModels
 		[Column,        Nullable] public string  ReceiptDate       { get; set; } // text(12)
 		[Column,        Nullable] public long?   StoreId           { get; set; } // integer
 		[Column,        Nullable] public double? TotalPriceReceipt { get; set; } // real
+		[Column,        Nullable] public string  ReceiptCode       { get; set; } // text(7)
 
 		#region Associations
 

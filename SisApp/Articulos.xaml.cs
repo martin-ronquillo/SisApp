@@ -290,17 +290,20 @@ namespace SisApp
 
         private void consultaIngresos_Click(object sender, RoutedEventArgs e)
         {
-
+            ConsultaIE consultaIE = new ConsultaIE(1);
+            consultaIE.Show();
         }
 
         private void egresaArticulos_Click(object sender, RoutedEventArgs e)
         {
-
+            EgresoArticulos egresoArticulos = new EgresoArticulos();
+            egresoArticulos.Show();
         }
 
         private void consultaEgresos_Click(object sender, RoutedEventArgs e)
         {
-
+            ConsultaIE consultaIE = new ConsultaIE(2);
+            consultaIE.Show();
         }
 
         private void traspasoArticulos_Click(object sender, RoutedEventArgs e)
