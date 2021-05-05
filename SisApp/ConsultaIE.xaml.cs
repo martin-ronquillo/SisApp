@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using DataModels;
 using LinqToDB;
 
@@ -21,13 +22,18 @@ namespace SisApp
     /// </summary>
     public partial class ConsultaIE : Window
     {
+        //Id del ingreso o egreso
+        private int Id;
         private int Consulta;
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
         List<ConsultaIngEgr> listaRegistros = new List<ConsultaIngEgr>();
+        GeneraExcel GeneraExcel = new GeneraExcel();
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         public ConsultaIE(int Consulta)
         {
             InitializeComponent();
+            WindowState = WindowState.Maximized;
             //Si el valor recibido es 1, las consultas seran sobre Ingresos, sino, seran en Egresos
             this.Consulta = Consulta;
 
@@ -118,7 +124,29 @@ namespace SisApp
 
         private void btn_generaExcel_Click(object sender, RoutedEventArgs e)
         {
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
 
+            btn_generaExcel.IsEnabled = false;
+
+            dispatcherTimer.Start();
+
+            if (Consulta == 1)
+            {
+                GeneraExcel.CreaExcel(1, dp_fechaConsulta.Text);
+            }
+            else
+            {
+                GeneraExcel.CreaExcel(2, dp_fechaConsulta.Text);
+            }
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            //Things which happen after 1 timer interval
+            btn_generaExcel.IsEnabled = true;
+            //Disable the timer
+            dispatcherTimer.IsEnabled = false;
         }
     }
 }

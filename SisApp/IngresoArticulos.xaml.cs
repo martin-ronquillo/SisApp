@@ -48,14 +48,14 @@ namespace SisApp
             if (dg_datos.Items.Count == 0)
             {
                 SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso();
-                WindowState = WindowState.Minimized;
+                //WindowState = WindowState.Minimized;
 
                 seleccionaIngreso.ShowDialog();
             }
             else
             {
                 SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso(dg_datos);
-                WindowState = WindowState.Minimized;
+                //WindowState = WindowState.Minimized;
 
                 seleccionaIngreso.ShowDialog();
             }

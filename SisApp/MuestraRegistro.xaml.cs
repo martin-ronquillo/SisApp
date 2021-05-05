@@ -22,10 +22,11 @@ namespace SisApp
     /// </summary>
     public partial class MuestraRegistro : Window
     {
-        GeneraExcel GeneraExcel = new GeneraExcel();
-        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+        //Id del ingreso o egreso
         private int Id;
         private int TipoConsulta;
+        GeneraExcelEspec GeneraExcel = new GeneraExcelEspec();
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         List<ConsultaRegistroInfo> listaRegistros = new List<ConsultaRegistroInfo>();
@@ -54,11 +55,11 @@ namespace SisApp
 
             if (TipoConsulta == 1)
             {
-                GeneraExcel.CreaExcel(listaRegistros, 1, Id);
+                GeneraExcel.CreaExcel(1, Id);
             }
             else
             {
-                GeneraExcel.CreaExcel(listaRegistros, 2, Id);
+                GeneraExcel.CreaExcel(2, Id);
             }
         }
 

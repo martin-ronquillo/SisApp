@@ -373,13 +373,487 @@ namespace SisApp
         public float Total { get; set; }
     }
 
+    //Genera un excel de todos los ingresos o egresos de una fecha especifica
     class GeneraExcel
     {
         private string tipoConsulta { get; set; }
         private int Id { get; set; }
         readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
-        public void CreaExcel(List<ConsultaRegistroInfo> listaRegistros, int tipoConsulta, int Id)
+        //Recibe la fecha consultada y el tipo de la consulta "ingreso o egreso"
+        public void CreaExcel(int tipoConsulta, string fechaConsulta)
+        {
+            if (tipoConsulta == 1)
+            {
+                try
+                {
+                    this.tipoConsulta = "INGRESOS";
+
+                    var registros = db.Receipts.LoadWith(t => t.Store).LoadWith(foo => foo.User).LoadWith(t => t.ProductsReceipts).Where(re => re.ReceiptDate.Equals(fechaConsulta)).ToList();
+
+                    // Creamos un objeto Excel.
+                    Excel.Application Mi_Excel = default(Excel.Application);
+                    // Creamos un objeto WorkBook. Para crear el documento Excel.           
+                    Excel.Workbook LibroExcel = default(Excel.Workbook);
+                    // Creamos un objeto WorkSheet. Para crear la hoja del documento.
+                    Excel.Worksheet HojaExcel = default(Excel.Worksheet);
+
+                    // Iniciamos una instancia a Excel, y Hacemos visibles para ver como se va creando el reporte, 
+                    // podemos hacerlo visible al final si se desea.
+                    Mi_Excel = new Excel.Application();
+
+                    /* Ahora creamos un nuevo documento y seleccionamos la primera hoja del 
+                        * documento en la cual crearemos nuestro informe. 
+                        */
+                    // Creamos una instancia del Workbooks de excel.            
+                    LibroExcel = Mi_Excel.Workbooks.Add();
+
+                    // Creamos una instancia de la primera hoja de trabajo de excel            
+                    HojaExcel = LibroExcel.Worksheets[1];
+                    HojaExcel.Visible = Excel.XlSheetVisibility.xlSheetVisible;
+                    HojaExcel.Activate();
+
+                    // Crear el encabezado de nuestro informe.
+                    // La primera línea une las celdas y las convierte un en una sola.            
+                    HojaExcel.Range["A2:G2"].Merge();
+                    // La segunda línea Asigna el nombre del encabezado.
+                    HojaExcel.Range["A2:G2"].Value = "REGISTROS DE " + this.tipoConsulta + " DEL: " + fechaConsulta;
+                    // La tercera línea asigna negrita al titulo.
+                    HojaExcel.Range["A2:G2"].Font.Bold = true;
+                    // La cuarta línea signa un Size a titulo de 15.
+                    HojaExcel.Range["A2:G2"].Font.Size = 15;
+                    HojaExcel.Range["A2:G2"].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                    int documentInit = 4;
+
+                    foreach (var registro in registros)
+                    {
+                        var proRec = db.ProductsReceipts.LoadWith(foo => foo.Product).Where(re => re.ReceiptId.Equals(registro.Id));
+
+                        /*// Creamos una instancia de la primera hoja de trabajo de excel            
+                        HojaExcel = LibroExcel.Worksheets[sheet];
+                        HojaExcel.Visible = Excel.XlSheetVisibility.xlSheetVisible;
+                        HojaExcel.Activate();
+
+                        // Crear el encabezado de nuestro informe.
+                        // La primera línea une las celdas y las convierte un en una sola.            
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Merge();
+                        // La segunda línea Asigna el nombre del encabezado.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Value = "REGISTROS DE " + this.tipoConsulta;
+                        // La tercera línea asigna negrita al titulo.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Font.Bold = true;
+                        // La cuarta línea signa un Size a titulo de 15.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Font.Size = 15;
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;*/
+
+                        //Se aumenta la fila del documento
+                        //documentInit ++;
+
+                        //Escribe el Codigo del Ingreso
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Merge();
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Value = "Codigo Ingreso:";
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["C" + documentInit].Value = registro.ReceiptCode;
+                        HojaExcel.Range["C" + documentInit].Font.Italic = true;
+
+                        //Escribe el nombre de la persona que realizo la accion
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Merge();
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Value = "Personal:";
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Merge();
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Value = registro.User.Name + " " + registro.User.LastName;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Almacen donde se realizo la accion
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Merge();
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Value = "Almacen:";
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["C" + documentInit].Value = registro.Store.StoreName;
+                        HojaExcel.Range["C" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["C" + documentInit].Font.Size = 10;
+                        HojaExcel.Range["C" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Tipo de ingreso
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Merge();
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Value = "Tipo:";
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Merge();
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Value = registro.Type;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Separacion
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Merge();
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Encabezados de apartados
+                        HojaExcel.Range["A" + documentInit].Value = "Codigo";
+                        HojaExcel.Range["A" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Merge();
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Value = "Producto";
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["E" + documentInit].Value = "Cantidad";
+                        HojaExcel.Range["E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit].Value = "Val. Compra";
+                        HojaExcel.Range["F" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["F" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["G" + documentInit].Value = "Val. Total";
+                        HojaExcel.Range["G" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        int i = documentInit + 1;
+
+                        /*foreach (var con in xd)
+                        {
+                            MessageBox.Show("ahber");
+                        }*/
+                        
+                        foreach (var item in proRec)
+                        {
+                            //Configura las celdas desde B hasta D
+                            HojaExcel.Range["B" + i + ":D" + i].Merge();
+                            HojaExcel.Range["B" + i + ":D" + i].Font.Size = 10;
+
+                            //Codigo
+                            HojaExcel.Cells[i, "A"] = item.Product.BarCode;
+                            //Producto
+                            HojaExcel.Cells[i, "B"] = item.Product.ProductName;
+                            //Cantidad
+                            HojaExcel.Cells[i, "E"] = item.Amount;
+                            //Precio Compra
+                            HojaExcel.Cells[i, "F"] = item.PurchasePrice;
+                            //Total por cada producto
+                            //HojaExcel.Range["G" + i].Formula = "=PRODUCTO(E" + i + ":F" + i + ")";
+                            //HojaExcel.Cells[i, "G"] = "=PRODUCTO(E" + i + ":F" + i + ")";
+                            HojaExcel.Cells[i, "G"] = item.Amount * item.PurchasePrice;
+
+                            // Avanzamos una fila
+                            i++;
+                        }
+
+                        i += 2;
+
+                        //Escribe el total del ingreso
+                        HojaExcel.Range["F" + i].Value = "Total:";
+                        HojaExcel.Range["F" + i].Font.Bold = true;
+                        HojaExcel.Range["F" + i].Font.Size = 14;
+                        HojaExcel.Range["F" + i].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["G" + i].Value = registro.TotalPriceReceipt;
+                        HojaExcel.Range["G" + i].Font.Bold = true;
+                        HojaExcel.Range["G" + i].Font.Size = 12;
+
+                        i += 3;
+
+                        //Marca el fin de un registro
+                        HojaExcel.Range["A" + i + ":G" + i].Merge();
+                        HojaExcel.Range["A" + i + ":G" + i].Value = "*****************************************************************************";
+                        HojaExcel.Range["A" + i + ":G" + i].Font.Bold = true;
+                        HojaExcel.Range["A" + i + ":G" + i].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        // Seleccionar todo el bloque desde A1 hasta G #de filas.
+                        //Excel.Range Rango = HojaExcel.Range["A3:G" + (i - 1).ToString()];
+
+                        // Selecionado todo el rango especificado
+                        //Rango.Select();
+
+                        // Ajustamos el ancho de las columnas al ancho máximo del
+                        // contenido de sus celdas
+                        //Rango.Columns.AutoFit();
+
+                        // Asignar filtro por columna
+                        //Rango.AutoFilter(1);
+
+                        //Muestra la ventana de excel
+                        //Mi_Excel.Visible = true;
+
+                        //Bloquea la hoja ante edicion
+                        //HojaExcel.Protect();
+
+                        // Hacemos esta hoja la visible en pantalla 
+                        // (como seleccionamos la primera esto no es necesario
+                        // si seleccionamos una diferente a la primera si lo
+                        // necesitariamos).
+                        //HojaExcel.Activate();
+
+
+                        // Crear un total general
+                        //LibroExcel.PrintPreview();
+                        documentInit = i + 3;
+                    }
+                    //Muestra la ventana de excel
+                    Mi_Excel.Visible = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("No se pudo crear el documento. Excepcion controlada: \n" + e);
+                }
+            }
+            else
+            {
+                try
+                {
+                    this.tipoConsulta = "EGRESOS";
+
+                    var registros = db.Egresses.LoadWith(t => t.Store).LoadWith(foo => foo.User).LoadWith(t => t.EgressProducts).Where(re => re.EgressDate.Equals(fechaConsulta)).ToList();
+
+                    // Creamos un objeto Excel.
+                    Excel.Application Mi_Excel = default(Excel.Application);
+                    // Creamos un objeto WorkBook. Para crear el documento Excel.           
+                    Excel.Workbook LibroExcel = default(Excel.Workbook);
+                    // Creamos un objeto WorkSheet. Para crear la hoja del documento.
+                    Excel.Worksheet HojaExcel = default(Excel.Worksheet);
+
+                    // Iniciamos una instancia a Excel, y Hacemos visibles para ver como se va creando el reporte, 
+                    // podemos hacerlo visible al final si se desea.
+                    Mi_Excel = new Excel.Application();
+
+                    /* Ahora creamos un nuevo documento y seleccionamos la primera hoja del 
+                        * documento en la cual crearemos nuestro informe. 
+                        */
+                    // Creamos una instancia del Workbooks de excel.            
+                    LibroExcel = Mi_Excel.Workbooks.Add();
+
+                    // Creamos una instancia de la primera hoja de trabajo de excel            
+                    HojaExcel = LibroExcel.Worksheets[1];
+                    HojaExcel.Visible = Excel.XlSheetVisibility.xlSheetVisible;
+                    HojaExcel.Activate();
+
+                    // Crear el encabezado de nuestro informe.
+                    // La primera línea une las celdas y las convierte un en una sola.            
+                    HojaExcel.Range["A2:G2"].Merge();
+                    // La segunda línea Asigna el nombre del encabezado.
+                    HojaExcel.Range["A2:G2"].Value = "REGISTROS DE " + this.tipoConsulta + " DEL: " + fechaConsulta;
+                    // La tercera línea asigna negrita al titulo.
+                    HojaExcel.Range["A2:G2"].Font.Bold = true;
+                    // La cuarta línea signa un Size a titulo de 15.
+                    HojaExcel.Range["A2:G2"].Font.Size = 15;
+                    HojaExcel.Range["A2:G2"].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                    int documentInit = 4;
+
+                    foreach (var registro in registros)
+                    {
+                        var proRec = db.EgressProducts.LoadWith(foo => foo.Product).Where(re => re.EgressId.Equals(registro.Id));
+
+                        /*// Creamos una instancia de la primera hoja de trabajo de excel            
+                        HojaExcel = LibroExcel.Worksheets[sheet];
+                        HojaExcel.Visible = Excel.XlSheetVisibility.xlSheetVisible;
+                        HojaExcel.Activate();
+
+                        // Crear el encabezado de nuestro informe.
+                        // La primera línea une las celdas y las convierte un en una sola.            
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Merge();
+                        // La segunda línea Asigna el nombre del encabezado.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Value = "REGISTROS DE " + this.tipoConsulta;
+                        // La tercera línea asigna negrita al titulo.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Font.Bold = true;
+                        // La cuarta línea signa un Size a titulo de 15.
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Font.Size = 15;
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;*/
+
+                        //Se aumenta la fila del documento
+                        //documentInit ++;
+
+                        //Escribe el Codigo del Egreso
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Merge();
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Value = "Codigo Egreso:";
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["C" + documentInit].Value = registro.EgressCode;
+                        HojaExcel.Range["C" + documentInit].Font.Italic = true;
+
+                        //Escribe el nombre de la persona que realizo la accion
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Merge();
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Value = "Personal:";
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Merge();
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Value = registro.User.Name + " " + registro.User.LastName;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Almacen donde se realizo la accion
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Merge();
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Value = "Almacen:";
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit + ":B" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["C" + documentInit].Value = registro.Store.StoreName;
+                        HojaExcel.Range["C" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["C" + documentInit].Font.Size = 10;
+                        HojaExcel.Range["C" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Tipo de ingreso
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Merge();
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Value = "Tipo:";
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["D" + documentInit + ":E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Merge();
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Value = registro.Type;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Font.Italic = true;
+                        HojaExcel.Range["F" + documentInit + ":G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Separacion
+                        HojaExcel.Range["A" + documentInit + ":G" + documentInit].Merge();
+
+                        //Se aumenta la fila del documento
+                        documentInit++;
+
+                        //Encabezados de apartados
+                        HojaExcel.Range["A" + documentInit].Value = "Codigo";
+                        HojaExcel.Range["A" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["A" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Merge();
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Value = "Producto";
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["B" + documentInit + ":D" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["E" + documentInit].Value = "Cantidad";
+                        HojaExcel.Range["E" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["E" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["F" + documentInit].Value = "Val. Compra";
+                        HojaExcel.Range["F" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["F" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["G" + documentInit].Value = "Val. Total";
+                        HojaExcel.Range["G" + documentInit].Font.Bold = true;
+                        HojaExcel.Range["G" + documentInit].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        int i = documentInit + 1;
+
+                        /*foreach (var con in xd)
+                        {
+                            MessageBox.Show("ahber");
+                        }*/
+
+                        foreach (var item in proRec)
+                        {
+                            //Configura las celdas desde B hasta D
+                            HojaExcel.Range["B" + i + ":D" + i].Merge();
+                            HojaExcel.Range["B" + i + ":D" + i].Font.Size = 10;
+
+                            //Codigo
+                            HojaExcel.Cells[i, "A"] = item.Product.BarCode;
+                            //Producto
+                            HojaExcel.Cells[i, "B"] = item.Product.ProductName;
+                            //Cantidad
+                            HojaExcel.Cells[i, "E"] = item.Amount;
+                            //Precio Compra
+                            HojaExcel.Cells[i, "F"] = item.PurchasePrice;
+                            //Total por cada producto
+                            //HojaExcel.Range["G" + i].Formula = "=PRODUCTO(E" + i + ":F" + i + ")";
+                            //HojaExcel.Cells[i, "G"] = "=PRODUCTO(E" + i + ":F" + i + ")";
+                            HojaExcel.Cells[i, "G"] = item.Amount * item.PurchasePrice;
+
+                            // Avanzamos una fila
+                            i++;
+                        }
+
+                        i += 2;
+
+                        //Escribe el total del ingreso
+                        HojaExcel.Range["F" + i].Value = "Total:";
+                        HojaExcel.Range["F" + i].Font.Bold = true;
+                        HojaExcel.Range["F" + i].Font.Size = 14;
+                        HojaExcel.Range["F" + i].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        HojaExcel.Range["G" + i].Value = registro.TotalPriceEgress;
+                        HojaExcel.Range["G" + i].Font.Bold = true;
+                        HojaExcel.Range["G" + i].Font.Size = 12;
+
+                        i += 3;
+
+                        //Marca el fin de un registro
+                        HojaExcel.Range["A" + i + ":G" + i].Merge();
+                        HojaExcel.Range["A" + i + ":G" + i].Value = "*****************************************************************************";
+                        HojaExcel.Range["A" + i + ":G" + i].Font.Bold = true;
+                        HojaExcel.Range["A" + i + ":G" + i].Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                        // Seleccionar todo el bloque desde A1 hasta G #de filas.
+                        //Excel.Range Rango = HojaExcel.Range["A3:G" + (i - 1).ToString()];
+
+                        // Selecionado todo el rango especificado
+                        //Rango.Select();
+
+                        // Ajustamos el ancho de las columnas al ancho máximo del
+                        // contenido de sus celdas
+                        //Rango.Columns.AutoFit();
+
+                        // Asignar filtro por columna
+                        //Rango.AutoFilter(1);
+
+                        //Muestra la ventana de excel
+                        //Mi_Excel.Visible = true;
+
+                        //Bloquea la hoja ante edicion
+                        //HojaExcel.Protect();
+
+                        // Hacemos esta hoja la visible en pantalla 
+                        // (como seleccionamos la primera esto no es necesario
+                        // si seleccionamos una diferente a la primera si lo
+                        // necesitariamos).
+                        //HojaExcel.Activate();
+
+
+                        // Crear un total general
+                        //LibroExcel.PrintPreview();
+                        documentInit = i + 3;
+                    }
+                    //Muestra la ventana de excel
+                    Mi_Excel.Visible = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("No se pudo crear el documento. Excepcion controlada: \n" + e);
+                }
+            }
+        }
+    }
+
+    //Genera un excel de un ingreso o egreso especifico
+    class GeneraExcelEspec
+    {
+        private string tipoConsulta { get; set; }
+        private int Id { get; set; }
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+
+        public void CreaExcel(int tipoConsulta, int Id)
         {
             this.Id = Id;
 
