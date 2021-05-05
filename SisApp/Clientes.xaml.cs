@@ -114,7 +114,7 @@ namespace SisApp
                         Name = cliente.Name + ' ' + cliente.LastName,
                         HomeAddress = cliente.HomeAddress,
                         Email = cliente.Email,
-                        Telephone = cliente.Telephone
+                        Telephone = cliente.Telephone,
                     }
                 );
             }

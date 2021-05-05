@@ -24,24 +24,26 @@ namespace DataModels
 	/// </summary>
 	public partial class SisAppCompactDB : LinqToDB.Data.DataConnection
 	{
-		public ITable<Cashier>          Cashiers          { get { return this.GetTable<Cashier>(); } }
-		public ITable<Category>         Categories        { get { return this.GetTable<Category>(); } }
-		public ITable<Customer>         Customers         { get { return this.GetTable<Customer>(); } }
-		public ITable<Egress>           Egresses          { get { return this.GetTable<Egress>(); } }
-		public ITable<EgressProduct>    EgressProducts    { get { return this.GetTable<EgressProduct>(); } }
-		public ITable<Product>          Products          { get { return this.GetTable<Product>(); } }
-		public ITable<ProductsPurchase> ProductsPurchases { get { return this.GetTable<ProductsPurchase>(); } }
-		public ITable<ProductsReceipt>  ProductsReceipts  { get { return this.GetTable<ProductsReceipt>(); } }
-		public ITable<ProductsSale>     ProductsSales     { get { return this.GetTable<ProductsSale>(); } }
-		public ITable<ProductsStore>    ProductsStores    { get { return this.GetTable<ProductsStore>(); } }
-		public ITable<Provider>         Providers         { get { return this.GetTable<Provider>(); } }
-		public ITable<Purchase>         Purchases         { get { return this.GetTable<Purchase>(); } }
-		public ITable<Receipt>          Receipts          { get { return this.GetTable<Receipt>(); } }
-		public ITable<Rol>              Rols              { get { return this.GetTable<Rol>(); } }
-		public ITable<Sale>             Sales             { get { return this.GetTable<Sale>(); } }
-		public ITable<Store>            Stores            { get { return this.GetTable<Store>(); } }
-		public ITable<TradeMark>        TradeMarks        { get { return this.GetTable<TradeMark>(); } }
-		public ITable<User>             Users             { get { return this.GetTable<User>(); } }
+		public ITable<Cashier>             Cashiers            { get { return this.GetTable<Cashier>(); } }
+		public ITable<Category>            Categories          { get { return this.GetTable<Category>(); } }
+		public ITable<Customer>            Customers           { get { return this.GetTable<Customer>(); } }
+		public ITable<Egress>              Egresses            { get { return this.GetTable<Egress>(); } }
+		public ITable<EgressOld20210504>   EgressOld20210504   { get { return this.GetTable<EgressOld20210504>(); } }
+		public ITable<EgressProduct>       EgressProducts      { get { return this.GetTable<EgressProduct>(); } }
+		public ITable<Product>             Products            { get { return this.GetTable<Product>(); } }
+		public ITable<ProductsPurchase>    ProductsPurchases   { get { return this.GetTable<ProductsPurchase>(); } }
+		public ITable<ProductsReceipt>     ProductsReceipts    { get { return this.GetTable<ProductsReceipt>(); } }
+		public ITable<ProductsSale>        ProductsSales       { get { return this.GetTable<ProductsSale>(); } }
+		public ITable<ProductsStore>       ProductsStores      { get { return this.GetTable<ProductsStore>(); } }
+		public ITable<Provider>            Providers           { get { return this.GetTable<Provider>(); } }
+		public ITable<Purchase>            Purchases           { get { return this.GetTable<Purchase>(); } }
+		public ITable<Receipt>             Receipts            { get { return this.GetTable<Receipt>(); } }
+		public ITable<ReceiptsOld20210504> ReceiptsOld20210504 { get { return this.GetTable<ReceiptsOld20210504>(); } }
+		public ITable<Rol>                 Rols                { get { return this.GetTable<Rol>(); } }
+		public ITable<Sale>                Sales               { get { return this.GetTable<Sale>(); } }
+		public ITable<Store>               Stores              { get { return this.GetTable<Store>(); } }
+		public ITable<TradeMark>           TradeMarks          { get { return this.GetTable<TradeMark>(); } }
+		public ITable<User>                Users               { get { return this.GetTable<User>(); } }
 
 		public SisAppCompactDB()
 		{
@@ -140,6 +142,7 @@ namespace DataModels
 		[Column,        Nullable] public long?   StoreId          { get; set; } // integer
 		[Column,        Nullable] public double? TotalPriceEgress { get; set; } // real
 		[Column,        Nullable] public string  EgressCode       { get; set; } // text(7)
+		[Column,        Nullable] public long?   UserId           { get; set; } // integer
 
 		#region Associations
 
@@ -150,9 +153,36 @@ namespace DataModels
 		public IEnumerable<EgressProduct> EgressProducts { get; set; }
 
 		/// <summary>
+		/// FK_Egress_1_0
+		/// </summary>
+		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Egress_1_0", BackReferenceName="Egresses")]
+		public Store Store { get; set; }
+
+		/// <summary>
 		/// FK_Egress_0_0
 		/// </summary>
-		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Egress_0_0", BackReferenceName="Egresses")]
+		[Association(ThisKey="UserId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Egress_0_0", BackReferenceName="Egresses")]
+		public User User { get; set; }
+
+		#endregion
+	}
+
+	[Table("_Egress_old_20210504")]
+	public partial class EgressOld20210504
+	{
+		[PrimaryKey, Identity   ] public long    Id               { get; set; } // integer
+		[Column,     NotNull    ] public string  Type             { get; set; } // text(20)
+		[Column,        Nullable] public string  EgressDate       { get; set; } // text(12)
+		[Column,        Nullable] public long?   StoreId          { get; set; } // integer
+		[Column,        Nullable] public double? TotalPriceEgress { get; set; } // real
+		[Column,        Nullable] public string  EgressCode       { get; set; } // text(7)
+
+		#region Associations
+
+		/// <summary>
+		/// FK__Egress_old_20210504_0_0
+		/// </summary>
+		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Egress_old_20210504_0_0", BackReferenceName="Egressolds")]
 		public Store Store { get; set; }
 
 		#endregion
@@ -427,6 +457,7 @@ namespace DataModels
 		[Column,        Nullable] public long?   StoreId           { get; set; } // integer
 		[Column,        Nullable] public double? TotalPriceReceipt { get; set; } // real
 		[Column,        Nullable] public string  ReceiptCode       { get; set; } // text(7)
+		[Column,        Nullable] public long?   UserId            { get; set; } // integer
 
 		#region Associations
 
@@ -437,9 +468,36 @@ namespace DataModels
 		public IEnumerable<ProductsReceipt> ProductsReceipts { get; set; }
 
 		/// <summary>
+		/// FK_Receipts_1_0
+		/// </summary>
+		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Receipts_1_0", BackReferenceName="Receipts")]
+		public Store Store { get; set; }
+
+		/// <summary>
 		/// FK_Receipts_0_0
 		/// </summary>
-		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Receipts_0_0", BackReferenceName="Receipts")]
+		[Association(ThisKey="UserId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Receipts_0_0", BackReferenceName="Receipts")]
+		public User User { get; set; }
+
+		#endregion
+	}
+
+	[Table("_Receipts_old_20210504")]
+	public partial class ReceiptsOld20210504
+	{
+		[PrimaryKey, Identity   ] public long    Id                { get; set; } // integer
+		[Column,     NotNull    ] public string  Type              { get; set; } // text(max)
+		[Column,        Nullable] public string  ReceiptDate       { get; set; } // text(12)
+		[Column,        Nullable] public long?   StoreId           { get; set; } // integer
+		[Column,        Nullable] public double? TotalPriceReceipt { get; set; } // real
+		[Column,        Nullable] public string  ReceiptCode       { get; set; } // text(7)
+
+		#region Associations
+
+		/// <summary>
+		/// FK__Receipts_old_20210504_0_0
+		/// </summary>
+		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Receipts_old_20210504_0_0", BackReferenceName="Receiptsolds")]
 		public Store Store { get; set; }
 
 		#endregion
@@ -526,10 +584,16 @@ namespace DataModels
 		public IEnumerable<Cashier> Cashiers { get; set; }
 
 		/// <summary>
-		/// FK_Egress_0_0_BackReference
+		/// FK_Egress_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Egress> Egresses { get; set; }
+
+		/// <summary>
+		/// FK__Egress_old_20210504_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<EgressOld20210504> Egressolds { get; set; }
 
 		/// <summary>
 		/// FK_ProductsStores_1_0_BackReference
@@ -544,10 +608,16 @@ namespace DataModels
 		public IEnumerable<Purchase> Purchases { get; set; }
 
 		/// <summary>
-		/// FK_Receipts_0_0_BackReference
+		/// FK_Receipts_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Receipt> Receipts { get; set; }
+
+		/// <summary>
+		/// FK__Receipts_old_20210504_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ReceiptsOld20210504> Receiptsolds { get; set; }
 
 		#endregion
 	}
@@ -581,6 +651,18 @@ namespace DataModels
 		[Column,        Nullable] public string Password { get; set; } // text(20)
 
 		#region Associations
+
+		/// <summary>
+		/// FK_Egress_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="UserId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Egress> Egresses { get; set; }
+
+		/// <summary>
+		/// FK_Receipts_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="UserId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Receipt> Receipts { get; set; }
 
 		/// <summary>
 		/// FK_Users_0_0
@@ -618,6 +700,12 @@ namespace DataModels
 		}
 
 		public static Egress Find(this ITable<Egress> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static EgressOld20210504 Find(this ITable<EgressOld20210504> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
@@ -672,6 +760,12 @@ namespace DataModels
 		}
 
 		public static Receipt Find(this ITable<Receipt> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static ReceiptsOld20210504 Find(this ITable<ReceiptsOld20210504> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

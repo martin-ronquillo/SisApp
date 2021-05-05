@@ -373,12 +373,20 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Menos.png" />
+    <Resource Include="Venta.png" />
+    <Resource Include="Proveedor.png" />
+    <Resource Include="Transferir.png" />
+    <Resource Include="Marca.png" />
+    <Resource Include="Nuevo.png" />
     <Resource Include="Subir.png" />
     <Resource Include="Añadir.png" />
     <Resource Include="Actualizar.png" />
     <Resource Include="Agrega_usuario.png" />
     <Resource Include="Basura.png" />
     <Resource Include="Check.png" />
+    <Resource Include="Categoria.png" />
+    <Resource Include="Compra.png" />
     <Content Include="DataClassesCompact.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DataClassesCompact.Context.cs</LastGenOutput>
@@ -386,6 +394,10 @@
     <Resource Include="Editar.png" />
     <Resource Include="Limpiar.png" />
     <Resource Include="Excel.png" />
+    <Resource Include="Hoy.png" />
+    <Resource Include="Devolucion.png" />
+    <Resource Include="IngresaCompra.png" />
+    <Resource Include="IngresaVenta.png" />
     <Content Include="LinqToDB.Templates\CopyMe.SQLite.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CopyMe.SQLite.generated.cs</LastGenOutput>

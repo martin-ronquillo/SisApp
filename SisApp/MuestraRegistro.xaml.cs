@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using DataModels;
 using LinqToDB;
 
@@ -25,6 +26,7 @@ namespace SisApp
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
         private int Id;
         private int TipoConsulta;
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         List<ConsultaRegistroInfo> listaRegistros = new List<ConsultaRegistroInfo>();
 
@@ -43,18 +45,21 @@ namespace SisApp
 
         private void btn_generaExcel_Click(object sender, RoutedEventArgs e)
         {
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
+
             btn_generaExcel.IsEnabled = false;
-            
+
+            dispatcherTimer.Start();
+
             if (TipoConsulta == 1)
             {
-                GeneraExcel.CreaExcel(listaRegistros, 1);
+                GeneraExcel.CreaExcel(listaRegistros, 1, Id);
             }
             else
             {
-                GeneraExcel.CreaExcel(listaRegistros, 2);
+                GeneraExcel.CreaExcel(listaRegistros, 2, Id);
             }
-
-            btn_generaExcel.IsEnabled = true;
         }
 
         public void LlenaListView()
@@ -129,6 +134,14 @@ namespace SisApp
                 txt_tipoIngreso.Text = egreso.Type;
                 txt_totalIngreso.Text = egreso.TotalPriceEgress.ToString();
             }
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            //Things which happen after 1 timer interval
+            btn_generaExcel.IsEnabled = true;
+            //Disable the timer
+            dispatcherTimer.IsEnabled = false;
         }
     }
 }

@@ -48,14 +48,14 @@ namespace SisApp
             if (dg_datos.Items.Count == 0)
             {
                 SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso();
-                WindowState = WindowState.Minimized;
+                //WindowState = WindowState.Minimized;
 
                 seleccionaIngreso.ShowDialog();
             }
             else
             {
                 SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso(dg_datos);
-                WindowState = WindowState.Minimized;
+                //WindowState = WindowState.Minimized;
 
                 seleccionaIngreso.ShowDialog();
             }
@@ -161,7 +161,8 @@ namespace SisApp
                             Type = cbBox_tipoEgreso.SelectedItem.ToString().ToUpper(),
                             EgressDate = dp_egreso.Text,
                             StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id,
-                            EgressCode = egressCode
+                            EgressCode = egressCode,
+                            UserId = Singleton.Instancia.idUser
                         };
 
                         db.Insert(egress);

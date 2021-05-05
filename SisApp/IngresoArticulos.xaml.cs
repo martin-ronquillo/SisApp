@@ -119,7 +119,8 @@ namespace SisApp
                             Type = cbBox_tipoIngreso.SelectedItem.ToString().ToUpper(),
                             ReceiptDate = dp_ingreso.Text,
                             StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id,
-                            ReceiptCode = receiptCode
+                            ReceiptCode = receiptCode,
+                            UserId = Singleton.Instancia.idUser
                         };
 
                         db.Insert(receipt);
