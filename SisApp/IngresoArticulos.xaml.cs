@@ -184,6 +184,9 @@ namespace SisApp
             lbl_saveInfo.Content = "";
             pbStatus.Value = 0;
             pbStatus.Visibility = Visibility.Collapsed;
+
+            int nIng = db.Receipts.Count() + 1;
+            txt_nIngreso.Text = nIng.ToString("D7");
         }
         //Trabajo que ejecutara la tarea en segundo plano
         void worker_DoWork(object sender, DoWorkEventArgs e)

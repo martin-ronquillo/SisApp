@@ -60,11 +60,28 @@
         </DataGrid>
 
         <Grid Grid.Row="3">
+            
+            <Grid.ColumnDefinitions>
 
-            <Button x:Name="btn_Guardar" Content="GUARDAR" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="75" Click="btn_Guardar_Click"/>
-            <Button x:Name="btn_limpiar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,20,0,0" Height="40" Width="40" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Click="btn_limpiar_Click" ToolTip="Limpiar formulario">
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="100"/>
+
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btn_limpiar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,7,0,0" Height="40" Width="40" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Click="btn_limpiar_Click" ToolTip="Limpiar formulario">
                 <Image Source="Limpiar.png" OpacityMask="#FFDDDDDD"/>
             </Button>
+
+            <Label Name="lbl_saveInfo" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,120,4" Foreground="#FF797979"/>
+
+            <ProgressBar x:Name="pbStatus" VerticalAlignment="Center" HorizontalAlignment="Right" Width="90" Height="20" Margin="25,0"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Height="35">
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            </StackPanel>
+
+            <Button Grid.Column="2" x:Name="btn_Guardar" Content="GUARDAR" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="75" Click="btn_Guardar_Click"/>
 
         </Grid>
 
