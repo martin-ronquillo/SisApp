@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DataModels;
 using LinqToDB;
+using System.ComponentModel;
+using System.Threading;
 
 namespace SisApp
 {
@@ -22,6 +24,7 @@ namespace SisApp
     public partial class IngresoArticulos : Window
     {
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+        BackgroundWorker worker = new BackgroundWorker();
 
         IngresaProductos editCell;
         bool validate = true;
@@ -40,6 +43,7 @@ namespace SisApp
             int nIng = db.Receipts.Count() + 1;
             txt_nIngreso.Text = nIng.ToString("D7");
 
+            pbStatus.Visibility = Visibility.Collapsed;
             btn_Guardar.IsEnabled = false;
         }
 
@@ -85,7 +89,10 @@ namespace SisApp
 
         private void btn_limpiar_Click(object sender, RoutedEventArgs e)
         {
-            LimpiaForm();
+            Singleton.Instancia.listaIngresos.Clear();
+            dg_datos.ItemsSource = null;
+            dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
+            dg_datos.Items.Refresh();
         }
 
         public void LlenaCombos()
@@ -108,12 +115,16 @@ namespace SisApp
             {
                 if (dg_datos.Items.Count != 0)
                 {
+                    //Muestra el estado del trabajo en segundo plano
+                    pbStatus.Visibility = Visibility.Visible;
+                    lbl_saveInfo.Content = "Generando nuevo ingreso";
+
+                    Random r = new Random();
+                    string receiptCode = r.Next(1000, 9999999).ToString("D7");
+
+                    //Genera el ingreso
                     try
                     {
-                        Random r = new Random();
-                        string receiptCode = r.Next(1000,9999999).ToString("D7");
-
-                        //Genera el ingreso
                         Receipt receipt = new Receipt
                         {
                             Type = cbBox_tipoIngreso.SelectedItem.ToString().ToUpper(),
@@ -124,87 +135,29 @@ namespace SisApp
                         };
 
                         db.Insert(receipt);
-
-                        var lastReceipt = db.Receipts.OrderByDescending(re => re.Id).FirstOrDefault();
-                        float totalPriceReceipt = 0;
-
-                        var productStore = db.ProductsStores.Where(ps => ps.StoreId.Equals(lastReceipt.StoreId));
-
-                        foreach (var item in dg_datos.Items.OfType<IngresaProductos>())
-                        {
-                            //Vincula el ingreso con los productos ingresados
-                            ProductsReceipt productsReceipt = new ProductsReceipt
-                            {
-                                ProductId = item.Id,
-                                ReceiptId = lastReceipt.Id,
-                                Amount = item.Amount,
-                                PurchasePrice = Math.Round(item.PurchasePrice, 2)
-                            };
-
-                            db.Insert(productsReceipt);
-
-                            //Suma los productos ingresados al inventario total del producto
-                            var producto = db.Products.First(pro => pro.Id.Equals(item.Id));
-
-                            producto.Stock = producto.Stock + item.Amount;
-
-                            if (producto.PucharsePrice <= 0)
-                            {
-                                producto.PucharsePrice = Math.Round(item.PurchasePrice, 2);
-                            }
-                            if (producto.SalePrice <= 0)
-                            {
-                                producto.SalePrice = Math.Round(item.SalePrice, 2);
-                            }
-                            if (producto.SalePricePercent <= 0)
-                            {
-                                producto.SalePricePercent = Math.Round(item.SalePricePercent, 2);
-                            }
-
-                            db.Update(producto);
-
-                            //Suma los productos ingresados al inventario del almacen correspondiente
-                            var vinculo = productStore.FirstOrDefault(ps => ps.ProductId.Equals(item.Id));
-
-                            if (vinculo != null)
-                            {
-                                vinculo.Stock = vinculo.Stock + item.Amount;
-                                vinculo.PriceByUnit = Math.Round(item.SalePrice, 2);
-                                vinculo.PurchasePrice = Math.Round(item.PurchasePrice, 2);
-                                vinculo.SalePricePercent = Math.Round(item.SalePricePercent, 2);
-
-                                db.Update(vinculo);
-                            }
-                            else
-                            {
-                                ProductsStore proSto = new ProductsStore()
-                                {
-                                    StoreId = lastReceipt.StoreId,
-                                    ProductId = item.Id,
-                                    Stock = item.Amount,
-                                    PriceByUnit = Math.Round(item.SalePrice, 2),
-                                    PurchasePrice = Math.Round(item.PurchasePrice, 2),
-                                    SalePricePercent = Math.Round(item.SalePricePercent, 2)
-                            };
-
-                                db.Insert(proSto);
-                            }
-
-                            totalPriceReceipt = totalPriceReceipt + item.TotalPrice;
-                        }
-                        //Almacena el valor total del ingreso en la tabla Receipts
-                        lastReceipt.TotalPriceReceipt = Math.Round(totalPriceReceipt, 2);
-                        db.Update(lastReceipt);
-
-                        LimpiaForm();
-
-                        btn_Guardar.IsEnabled = true;
                     }
                     catch (Exception exc)
                     {
-                        MessageBox.Show("No se pudo generar el ingreso \n Excepcion COntrolada: \n" + exc);
-                        btn_Guardar.IsEnabled = true;
+                        MessageBox.Show("Error: " + exc);
                     }
+
+                    //Deshabilita el estado de todos los botones y controles del form
+                    cbBox_almacen.IsEnabled = false;
+                    cbBox_tipoIngreso.IsEnabled = false;
+                    dp_ingreso.IsEnabled = false;
+                    btn_seleccionaProducto.IsEnabled = false;
+                    dg_datos.IsReadOnly = true;
+                    //Resta las tareas que se hayan asignado al segundo plano anteriormente
+                    worker.DoWork -= worker_DoWork;
+                    worker.ProgressChanged -= worker_ProgressChanged;
+                    worker.RunWorkerCompleted -= Worker_RunWorkerCompleted;
+                    //Agrega una tarea al segundo plano
+                    worker.WorkerReportsProgress = true;
+                    worker.DoWork += worker_DoWork;
+                    worker.ProgressChanged += worker_ProgressChanged;
+                    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                    //Empieza una tarea en segundo plano
+                    worker.RunWorkerAsync();
                 }
             }
             else
@@ -213,10 +166,123 @@ namespace SisApp
                 btn_Guardar.IsEnabled = true;
             }
         }
-
-        public void LimpiaForm()
+        //Cuando se completa la tarea en segundo plano
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            //Habilita todos los botones y controles
+            cbBox_almacen.IsEnabled = true;
+            cbBox_tipoIngreso.IsEnabled = true;
+            dp_ingreso.IsEnabled = true;
+            btn_seleccionaProducto.IsEnabled = true;
+            dg_datos.IsReadOnly = false;
+            //Resetea la lista de los ingresos
+            Singleton.Instancia.listaIngresos.Clear();
             dg_datos.ItemsSource = null;
+            dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
+            dg_datos.Items.Refresh();
+            //Resetea la informacion del estado de almacenamiento
+            lbl_saveInfo.Content = "";
+            pbStatus.Value = 0;
+            pbStatus.Visibility = Visibility.Collapsed;
+        }
+        //Trabajo que ejecutara la tarea en segundo plano
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                var lastReceipt = db.Receipts.OrderByDescending(re => re.Id).FirstOrDefault();
+                float totalPriceReceipt = 0;
+
+                var productStore = db.ProductsStores.Where(ps => ps.StoreId.Equals(lastReceipt.StoreId));
+
+                //Variables de control de progreso de la tarea
+                float xd = 100 / dg_datos.Items.Count;
+                int i = (int)Math.Round(xd);
+                int i2 = 0;
+                int anterior = 0;
+
+                foreach (var item in dg_datos.Items.OfType<IngresaProductos>())
+                {
+                    anterior = i2;
+                    i2 = anterior + i;
+
+                    ProductsReceipt productsReceipt = new ProductsReceipt
+                    {
+                        ProductId = item.Id,
+                        ReceiptId = lastReceipt.Id,
+                        Amount = Math.Round(item.Amount, 2),
+                        PurchasePrice = Math.Round(item.PurchasePrice, 2)
+                    };
+
+                    db.Insert(productsReceipt);//Suma los productos ingresados al inventario total del producto
+                    var producto = db.Products.First(pro => pro.Id.Equals(item.Id));
+
+                    producto.Stock = producto.Stock + Math.Round(item.Amount, 2);
+
+                    if (producto.PucharsePrice <= 0)
+                    {
+                        producto.PucharsePrice = Math.Round(item.PurchasePrice, 2);
+                    }
+                    if (producto.SalePrice <= 0)
+                    {
+                        producto.SalePrice = Math.Round(item.SalePrice, 2);
+                    }
+                    if (producto.SalePricePercent <= 0)
+                    {
+                        producto.SalePricePercent = Math.Round(item.SalePricePercent, 2);
+                    }
+
+                    db.Update(producto);
+
+                    //Suma los productos ingresados al inventario del almacen correspondiente
+                    var vinculo = productStore.FirstOrDefault(ps => ps.ProductId.Equals(item.Id));
+
+                    if (vinculo != null)
+                    {
+                        vinculo.Stock = vinculo.Stock + Math.Round(item.Amount, 2);
+                        vinculo.PriceByUnit = Math.Round(item.SalePrice, 2);
+                        vinculo.PurchasePrice = Math.Round(item.PurchasePrice, 2);
+                        vinculo.SalePricePercent = Math.Round(item.SalePricePercent, 2);
+
+                        db.Update(vinculo);
+                    }
+                    else
+                    {
+                        ProductsStore proSto = new ProductsStore()
+                        {
+                            StoreId = lastReceipt.StoreId,
+                            ProductId = item.Id,
+                            Stock = Math.Round(item.Amount, 2),
+                            PriceByUnit = Math.Round(item.SalePrice, 2),
+                            PurchasePrice = Math.Round(item.PurchasePrice, 2),
+                            SalePricePercent = Math.Round(item.SalePricePercent, 2)
+                        };
+
+                        db.Insert(proSto);
+                    }
+
+                    totalPriceReceipt = totalPriceReceipt + item.TotalPrice;
+
+                    (sender as BackgroundWorker).ReportProgress(i2);
+                }
+                //Almacena el valor total del ingreso en la tabla Receipts
+                lastReceipt.TotalPriceReceipt = Math.Round(totalPriceReceipt, 2);
+                db.Update(lastReceipt);
+
+                //Envia el reporte de progreso de la tarea en segundo plano
+                (sender as BackgroundWorker).ReportProgress(i2 + i);
+            }
+            catch(Exception exc)
+            {
+                MessageBox.Show(exc.ToString());
+            }
+        }
+        //Muestra el reporte de la tarea en segundo plano
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            lbl_saveInfo.Content = "Vinculando productos al ingreso: " + e.ProgressPercentage + "%";
+
+            pbStatus.Value = e.ProgressPercentage;
         }
 
         private void cbBox_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)

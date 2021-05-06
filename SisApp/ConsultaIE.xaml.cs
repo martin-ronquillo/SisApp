@@ -124,20 +124,23 @@ namespace SisApp
 
         private void btn_generaExcel_Click(object sender, RoutedEventArgs e)
         {
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
-
-            btn_generaExcel.IsEnabled = false;
-
-            dispatcherTimer.Start();
-
-            if (Consulta == 1)
+            if (dp_fechaConsulta.Text != "" & dp_fechaConsulta.Text != null)
             {
-                GeneraExcel.CreaExcel(1, dp_fechaConsulta.Text);
-            }
-            else
-            {
-                GeneraExcel.CreaExcel(2, dp_fechaConsulta.Text);
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
+
+                btn_generaExcel.IsEnabled = false;
+
+                dispatcherTimer.Start();
+
+                if (Consulta == 1)
+                {
+                    GeneraExcel.CreaExcel(1, dp_fechaConsulta.Text);
+                }
+                else
+                {
+                    GeneraExcel.CreaExcel(2, dp_fechaConsulta.Text);
+                }
             }
         }
 

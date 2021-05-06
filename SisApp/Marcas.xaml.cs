@@ -43,7 +43,7 @@ namespace SisApp
 
         private void btn_guardar_Click(object sender, RoutedEventArgs e)
         {
-            if (txt_descripcionMarca.Text == "")
+            if (txt_descripcionMarca.Text != "")
             {
                 try
                 {
@@ -53,6 +53,8 @@ namespace SisApp
                     };
 
                     db.Insert(tradeMark);
+
+                    this.Close();
                 }
                 catch(Exception exc)
                 {

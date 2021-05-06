@@ -140,29 +140,37 @@ namespace SisApp
 
         public void GuardaInfo()
         {
-            if (Edit)
+            try
             {
-                Producto.BarCode = txt_codigoBarras.Text.ToUpper();
-                Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
-                Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
-                Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
-
-                db.Update(Producto);
-            }
-            else
-            {
-                Product product = new Product
+                if (Edit)
                 {
-                    ProductName = txt_descripcionArticulo.Text.ToUpper(),
-                    BarCode = txt_codigoBarras.Text.ToUpper(),
-                    CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id,
-                    TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id,
-                    Stock = 0,
-                    SalePrice = 0,
-                    PucharsePrice = 0,
-                };
+                    Producto.BarCode = txt_codigoBarras.Text.ToUpper();
+                    Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
+                    Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
+                    Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
 
-                db.Insert(product);
+                    db.Update(Producto);
+                }
+                else
+                {
+                    Product product = new Product
+                    {
+                        ProductName = txt_descripcionArticulo.Text.ToUpper(),
+                        BarCode = txt_codigoBarras.Text.ToUpper(),
+                        CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id,
+                        TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id,
+                        SalePricePercent = 0,
+                        Stock = 0,
+                        SalePrice = 0,
+                        PucharsePrice = 0,
+                    };
+
+                    db.Insert(product);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("No se pudo guardar la informacion. \n Excepcion controlada: "+e);
             }
         }
 
