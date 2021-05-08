@@ -312,6 +312,16 @@ namespace SisApp
                 //Busca el producto editado en la lista
                 var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == editCell.Id);
 
+                //Si se edita la Ganancia
+                if (col_index == 2)
+                {
+                    found.SalePrice = 0;
+                }
+                //Si se edita el P.v.P
+                if (col_index == 3)
+                {
+                    found.SalePrice = 0;
+                }
                 //Si se edita la cantidad
                 if (col_index == 4)
                 {

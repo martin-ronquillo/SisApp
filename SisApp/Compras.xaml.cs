@@ -54,53 +54,62 @@ namespace SisApp
 
             chck_boxIva.IsEnabled = false;
             txt_descuento.IsEnabled = false;
+            dg_datos.IsReadOnly = true;
         }
 
         private void btn_seleccionaProducto_Click(object sender, RoutedEventArgs e)
         {
-            if (dg_datos.Items.Count == 0)
+            if (cbBox_almacen.SelectedItem != null)
             {
-                SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso();
-                //WindowState = WindowState.Minimized;
+                if (dg_datos.Items.Count == 0)
+                {
+                    SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso();
+                    //WindowState = WindowState.Minimized;
 
-                seleccionaIngreso.ShowDialog();
+                    seleccionaIngreso.ShowDialog();
+                }
+                else
+                {
+                    SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso(dg_datos);
+                    //WindowState = WindowState.Minimized;
+
+                    seleccionaIngreso.ShowDialog();
+                }
+
+                //Si hay un almacen seleccionado, se acomodan los datos
+                if (cbBox_almacen.SelectedItem != "" & cbBox_almacen.SelectedItem != null)
+                {
+                    dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
+
+                    ActualizaDG();
+
+                    chck_boxIva.IsEnabled = true;
+                    txt_descuento.IsEnabled = true;
+                }
+                else
+                {
+                    dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
+                }
+
+                if (dg_datos.Items.Count == 0)
+                {
+                    btn_Guardar.IsEnabled = false;
+                }
+                else
+                {
+                    btn_Guardar.IsEnabled = true;
+                }
+                WindowState = WindowState.Maximized;
             }
             else
             {
-                SeleccionaIngreso seleccionaIngreso = new SeleccionaIngreso(dg_datos);
-                //WindowState = WindowState.Minimized;
-
-                seleccionaIngreso.ShowDialog();
+                MessageBox.Show("Primero seleccione un almacen");
             }
-
-            //Si hay un almacen seleccionado, se acomodan los datos
-            if (cbBox_almacen.SelectedItem != "" & cbBox_almacen.SelectedItem != null)
-            {
-                dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
-
-                ActualizaDG();
-
-                chck_boxIva.IsEnabled = true;
-                txt_descuento.IsEnabled = true;
-            }
-            else
-            {
-                dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
-            }
-
-            if (dg_datos.Items.Count == 0)
-            {
-                btn_Guardar.IsEnabled = false;
-            }
-            else
-            {
-                btn_Guardar.IsEnabled = true;
-            }
-            WindowState = WindowState.Maximized;
         }
 
         private void cbBox_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            dg_datos.IsReadOnly = false;
             ActualizaDG();
         }
 
@@ -122,14 +131,24 @@ namespace SisApp
             {
                 //Busca el producto editado en la lista
                 var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == editCell.Id);
-
-                //Si se edita la cantidad
+                
+                //Si se edita la Ganancia %
                 if (col_index == 2)
+                {
+                    found.SalePricePercent = 0;
+                }
+                //Si se edita el Valor de venta
+                if (col_index == 3)
+                {
+                    found.SalePrice = 0;
+                }
+                //Si se edita la cantidad
+                if (col_index == 4)
                 {
                     found.Amount = 1;
                 }
                 //Si se edita el valor de compra
-                if (col_index == 3)
+                if (col_index == 5)
                 {
                     found.PurchasePrice = 0;
                     found.TotalPrice = 0 * found.Amount;
@@ -143,14 +162,26 @@ namespace SisApp
                 //Busca el producto editado en la lista
                 var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == editCell.Id);
 
-                //Si se edita la Cantidad
+                //Si se edita la Ganancia %
                 if (col_index == 2)
+                {
+                    found.SalePricePercent = edit;
+                    found.SalePrice = (found.PurchasePrice * edit) + found.PurchasePrice;
+                }
+                //Si se edita el V. Venta
+                if (col_index == 3)
+                {
+                    found.SalePrice = edit;
+                    found.SalePricePercent = ((edit - found.PurchasePrice) / found.PurchasePrice);
+                }
+                //Si se edita la Cantidad
+                if (col_index == 4)
                 {
                     found.Amount = edit;
                     found.TotalPrice = found.Amount * found.PurchasePrice;
                 }
                 //Si se edita el Valor de Compra
-                if (col_index == 3)
+                if (col_index == 5)
                 {
                     found.PurchasePrice = edit;
                     found.TotalPrice = found.Amount * edit;
@@ -160,6 +191,8 @@ namespace SisApp
 
                     found.SubTotal = subtotal;
                     found.Tax = iva;
+
+                    found.SalePrice = (found.PurchasePrice * found.SalePricePercent) + found.PurchasePrice;
 
                     ValorTotalFactura = 0;
                 }
@@ -385,6 +418,7 @@ namespace SisApp
 
                 var Almacen = db.Stores.First(alm => alm.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper()));
                 var ProductStore = db.ProductsStores.Where(ps => ps.StoreId.Equals(Almacen.Id));
+                List<String> listaProductosSinVinculo = new List<String>();
 
                 foreach (var item in dg_datos.Items.OfType<IngresaProductos>())
                 {
@@ -395,13 +429,26 @@ namespace SisApp
                         var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == item.Id);
 
                         found.PurchasePrice = (float)vinculo.PurchasePrice;
-
+                        found.SalePricePercent = (float)vinculo.SalePricePercent;
+                        found.SalePrice = (float)vinculo.PriceByUnit;
                         found.SubTotal = (float)vinculo.PurchasePrice - (float)(vinculo.PurchasePrice * 0.12);
                         found.Tax = (float)(vinculo.PurchasePrice * 0.12);
                         found.TotalPrice = item.Amount * found.PurchasePrice;
 
                         ValorTotalFactura += item.Amount * found.PurchasePrice;
                     }
+                    else
+                    {
+                        listaProductosSinVinculo.Add(item.ProductName);
+                    }
+                }
+
+                if (listaProductosSinVinculo.Count() > 0)
+                {
+
+                    MessageBox.Show("Los siguientes productos no possen inventario en el almacen " + cbBox_almacen.SelectedItem.ToString() + "." +
+                        " No olvide cambiar los valores del producto en caso de ser necesario. \n\n" + 
+                        String.Join(Environment.NewLine, listaProductosSinVinculo.Where(x => x != null)));
                 }
 
                 ValTF = ValorTotalFactura;
@@ -544,15 +591,8 @@ namespace SisApp
                     {
                         vinculo.Stock = vinculo.Stock + Math.Round(item.Amount, 2);
 
-                        if (vinculo.PriceByUnit == 0)
-                        {
-                            vinculo.PriceByUnit = Math.Round(item.PurchasePrice * 1.35, 2);
-                        }
-                        if (vinculo.SalePricePercent == 0)
-                        {
-                            vinculo.SalePricePercent = 1.35;
-                        }
-
+                        vinculo.PriceByUnit = Math.Round(item.SalePrice, 2);
+                        vinculo.SalePricePercent = Math.Round(item.SalePricePercent, 2);
                         vinculo.PurchasePrice = Math.Round(item.PurchasePrice, 2);
 
                         db.Update(vinculo);
@@ -564,9 +604,9 @@ namespace SisApp
                             StoreId = lastPurchase.StoreId,
                             ProductId = item.Id,
                             Stock = Math.Round(item.Amount, 2),
-                            PriceByUnit = Math.Round(item.PurchasePrice * 1.35, 2),
+                            PriceByUnit = Math.Round(item.SalePrice, 2),
                             PurchasePrice = Math.Round(item.PurchasePrice, 2),
-                            SalePricePercent = 1.35
+                            SalePricePercent = Math.Round(item.SalePricePercent, 2)
                         };
 
                         db.Insert(proSto);

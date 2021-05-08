@@ -59,10 +59,12 @@
 
                 <DataGridTextColumn Header="CODIGO" IsReadOnly="True" Width="95" Binding="{Binding BarCode}"/>
                 <DataGridTextColumn Header="PRODUCTO" IsReadOnly="True" Width="*" Binding="{Binding ProductName}"/>
-                <DataGridTextColumn Header="CANTIDAD" IsReadOnly="False" Width="95" Binding="{Binding Amount}"/>
+                <DataGridTextColumn Header=" GANANCIA %" IsReadOnly="False" Width="95" Binding="{Binding SalePricePercent}"/>
+                <DataGridTextColumn Header="  V. VENTA" IsReadOnly="False" Width="75" Binding="{Binding SalePrice}"/>
+                <DataGridTextColumn Header="   CANTIDAD" IsReadOnly="False" Width="85" Binding="{Binding Amount}"/>
                 <DataGridTextColumn Header="V. COMPRA $" IsReadOnly="False" Width="90" Binding="{Binding PurchasePrice}"/>
-                <DataGridTextColumn Header="    SUBTOTAL" IsReadOnly="True" Width="95" Binding="{Binding SubTotal}"/>
-                <DataGridTextColumn Header="         I.V.A." IsReadOnly="True" Width="95" Binding="{Binding Tax}"/>
+                <DataGridTextColumn Header=" SUBTOTAL" IsReadOnly="True" Width="75" Binding="{Binding SubTotal}"/>
+                <DataGridTextColumn Header="      I.V.A." IsReadOnly="True" Width="75" Binding="{Binding Tax}"/>
                 <DataGridTextColumn Header="  V. TOTAL $" IsReadOnly="True" Width="85" Binding="{Binding TotalPrice}"/>
 
             </DataGrid.Columns>
