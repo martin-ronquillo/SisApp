@@ -311,6 +311,10 @@ namespace SisApp
         public float Amount { get; set; }
         public float PurchasePrice { get; set; }
         public float TotalPrice { get; set; }
+        //Prueba de parametros para compras
+        public float Discount { get; set; }
+        public float SubTotal { get; set; }
+        public float Tax { get; set; }
     }
 
     class IngresaProductos
@@ -323,6 +327,10 @@ namespace SisApp
         public float PurchasePrice { get; set; }
         public float TotalPrice { get; set; }
         public float Amount { get; set; }
+        //Prueba de parametros para compras
+        public float Discount { get; set; }
+        public float SubTotal { get; set; }
+        public float Tax { get; set; }
         public List<IngresaProductos> listaIngresos = new List<IngresaProductos>();
 
         public List<IngresaProductos> ListaIngresaProductos(List<ProductosSeleccionados> listaProductosSeleccionados)
@@ -341,7 +349,10 @@ namespace SisApp
                             SalePrice = productoSelect.SalePrice,
                             Amount = productoSelect.Amount,
                             PurchasePrice = productoSelect.PurchasePrice,
-                            TotalPrice = productoSelect.TotalPrice
+                            TotalPrice = productoSelect.TotalPrice,
+                            Discount = 0,
+                            SubTotal = 0,
+                            Tax = 0,
                         }
                     );
                 }
@@ -1210,5 +1221,24 @@ namespace SisApp
                 }
             }
         }
+    }
+
+    class ProveedoresController
+    {
+        public int Id { get; set; }
+        public string Ruc { get; set; }
+        public string ProviderName { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
+        public string TelephoneOne { get; set; }
+        public string TelephoneTwo { get; set; }
+        public string WebSite { get; set; }
+        public string SalesManName { get; set; }
+        public string SalesManTelephone { get; set; }
+        public string SalesManEmail { get; set; }
+        public string Bank { get; set; }
+        public string AccountType { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNumber { get; set; }
     }
 }

@@ -257,9 +257,8 @@ namespace DataModels
 		[PrimaryKey, Identity] public long    Id            { get; set; } // integer
 		[Column,     Nullable] public long?   PurchaseId    { get; set; } // integer
 		[Column,     Nullable] public long?   ProductId     { get; set; } // integer
-		[Column,     Nullable] public long?   Amount        { get; set; } // integer
+		[Column,     Nullable] public double? Amount        { get; set; } // real
 		[Column,     Nullable] public double? PurchasePrice { get; set; } // real
-		[Column,     Nullable] public double? TotalPrice    { get; set; } // real
 
 		#region Associations
 

@@ -210,6 +210,8 @@ namespace SisApp
                     var cliente = db.Customers.First(cli => cli.Id.Equals(selectedCliente.Id));
 
                     db.Delete(cliente);
+
+                    Singleton.Instancia.confirma = false;
                 }
             }
         }

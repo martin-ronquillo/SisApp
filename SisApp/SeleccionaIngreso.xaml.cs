@@ -49,7 +49,7 @@ namespace SisApp
             LlenaComboBox();
 
             listaSeleccionados.Clear();
-
+            //Si ya habia elementos en el datagrid, esos elementos se mantienen a menos que sea retirados aqui
             foreach (var item in dataGrid.Items.OfType<IngresaProductos>())
             {
                 listaSeleccionados.Add(
@@ -63,6 +63,9 @@ namespace SisApp
                         Amount = item.Amount,
                         PurchasePrice = item.PurchasePrice,
                         TotalPrice = item.TotalPrice,
+                        Discount = item.Discount,
+                        SubTotal = item.SubTotal,
+                        Tax = item.Tax
                     }
                 );
             }
@@ -126,12 +129,12 @@ namespace SisApp
         {
             LlenaListView();
         }
-        //Lista de todos los productos en doble clic
+        //Agrega un producto a la lista de productos seleccionados
         private void lv_productos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             LlenaSeleccionados();
         }
-        //Lista de todos los productos en keydown
+        //Agrega un producto a la lista de productos seleccionados
         private void lv_productos_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -139,7 +142,7 @@ namespace SisApp
                 LlenaSeleccionados();
             }
         }
-        //Lista de productos seleccionados en keyDown
+        //Quita un producto seleccionado de la lista
         private void lv_productosSeleccionados_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -159,12 +162,12 @@ namespace SisApp
                 }
             }
         }
-        //ComboBox
+        //ComboBox filtrar por almacen
         private void cb_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LlenaListView();
         }
-        //CheckBox
+        //CheckBox "dispone stock"
         private void chckB_stock_Checked(object sender, RoutedEventArgs e)
         {
             checkBox = !checkBox;
@@ -205,7 +208,10 @@ namespace SisApp
                             SalePrice = selectedProducto.SalePrice,
                             PurchasePrice = selectedProducto.PurchasePrice,
                             Amount = 1,
-                            TotalPrice = selectedProducto.PurchasePrice
+                            TotalPrice = selectedProducto.PurchasePrice,
+                            Discount = 0,
+                            SubTotal = 0,
+                            Tax = 0
                         }
                     );
                 }

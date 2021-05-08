@@ -21,7 +21,7 @@
 
             <Label Content="INGRESAR PRODUCTOS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
             <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="30" Stroke="Black" VerticalAlignment="Top" Width="100" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
-            <TextBox x:Name="txt_nIngreso" IsEnabled="False" Text="" VerticalAlignment="Top" HorizontalContentAlignment="Right" Height="25" Width="85" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right"  BorderThickness="0" Background="{x:Null}" Margin="0,2,0,0"/>
+            <TextBox x:Name="txt_nIngreso" IsEnabled="False" Text="" VerticalAlignment="Top" HorizontalContentAlignment="Right" Height="25" Width="85" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right"  BorderThickness="0" Background="{x:Null}" Margin="0,2,2,0"/>
 
             <Label Content="Fecha de Ingreso:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,25"/>
             <DatePicker Name="dp_ingreso" DisplayDate="" DisplayDateStart="01/01/2015" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsTodayHighlighted="True"/>

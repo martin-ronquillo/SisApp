@@ -369,7 +369,7 @@ namespace SisApp
                     }
                 }
             }
-            catch (Exception exc)
+            catch
             {
                 ActualizaDG();
             }

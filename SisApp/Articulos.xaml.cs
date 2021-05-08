@@ -140,6 +140,8 @@ namespace SisApp
                     var producto = db.Products.First(pro => pro.Id.Equals(selectedProducto.Id));
 
                     db.Delete(producto);
+
+                    Singleton.Instancia.confirma = false;
                 }
             }
         }
@@ -313,12 +315,14 @@ namespace SisApp
 
         private void consultaProveedores_Click(object sender, RoutedEventArgs e)
         {
-
+            Proveedores proveedores = new Proveedores();
+            proveedores.Show();
         }
 
         private void ingresaCompras_Click(object sender, RoutedEventArgs e)
         {
-
+            Compras compras = new Compras();
+            compras.Show();
         }
 
         private void consultaCompras_Click(object sender, RoutedEventArgs e)

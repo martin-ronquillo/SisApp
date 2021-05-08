@@ -172,6 +172,9 @@
     <Compile Include="Clientes.xaml.cs">
       <DependentUpon>Clientes.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Compras.xaml.cs">
+      <DependentUpon>Compras.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Confirmar.xaml.cs">
       <DependentUpon>Confirmar.xaml</DependentUpon>
     </Compile>
@@ -210,6 +213,12 @@
     <Compile Include="MuestraRegistro.xaml.cs">
       <DependentUpon>MuestraRegistro.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Proveedores.xaml.cs">
+      <DependentUpon>Proveedores.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProveedoresCRUD.xaml.cs">
+      <DependentUpon>ProveedoresCRUD.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SeleccionaIngreso.xaml.cs">
       <DependentUpon>SeleccionaIngreso.xaml</DependentUpon>
     </Compile>
@@ -237,6 +246,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Clientes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Compras.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -277,6 +290,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MuestraRegistro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Proveedores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProveedoresCRUD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -332,6 +353,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="SisAppCompact.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="SisAppDataSet.xsc">
       <DependentUpon>SisAppDataSet.xsd</DependentUpon>
     </None>

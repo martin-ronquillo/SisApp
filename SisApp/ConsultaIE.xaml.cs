@@ -23,7 +23,6 @@ namespace SisApp
     public partial class ConsultaIE : Window
     {
         //Id del ingreso o egreso
-        private int Id;
         private int Consulta;
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
         List<ConsultaIngEgr> listaRegistros = new List<ConsultaIngEgr>();
@@ -126,6 +125,7 @@ namespace SisApp
         {
             if (dp_fechaConsulta.Text != "" & dp_fechaConsulta.Text != null)
             {
+                //Desactiva el boton de "generar excel" durante 5 segundos luego de pulsarlo
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
 
