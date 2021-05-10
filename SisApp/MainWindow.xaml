@@ -67,7 +67,9 @@
 
                 <Label Content="Cliente:" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="65" FontSize="18" FontFamily="Sitka Display" Height="31"/>
                 <TextBox x:Name="txt_cliente" IsEnabled="False" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="24" Margin="89,16,0,0" VerticalAlignment="Top" Width="229" FontStyle="Italic" BorderThickness="1,1,0,1" FontSize="14" Padding="3,0,0,0"/>
-                <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" x:Name="btn_busca_cliente" HorizontalAlignment="Left" Margin="318,16,0,0" VerticalAlignment="Top" Width="24" Height="24" BorderBrush="#FFE6E6E6" BorderThickness="0" Click="btn_busca_cliente_Click"></Button>
+                <Button x:Name="btn_busca_cliente" HorizontalAlignment="Left" Margin="318,16,0,0" VerticalAlignment="Top" Width="24" Height="24" BorderBrush="#FFE6E6E6" BorderThickness="0" Click="btn_busca_cliente_Click">
+                    <Image Source="BuscarCliente.png"/>
+                </Button>
                 <Label Content="Cedula:" HorizontalAlignment="Left" Margin="368,10,0,0" VerticalAlignment="Top" Width="65" FontSize="18" FontFamily="Sitka Display"/>
                 <TextBox x:Name="txt_cedula" IsEnabled="False" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="24" Margin="438,15,0,0" Text="" VerticalAlignment="Top" Width="122" FontStyle="Italic" FontSize="14" BorderThickness="0,0,0,1" Padding="3,0,0,0"/>
                 <Label Content="Direccion:" HorizontalAlignment="Left" Margin="414,48,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Sitka Display"/>

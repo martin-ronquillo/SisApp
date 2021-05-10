@@ -351,7 +351,8 @@ namespace SisApp
 
         private void ingresaVenta_Click(object sender, RoutedEventArgs e)
         {
-
+            Ventas ventas = new Ventas();
+            ventas.Show();
         }
 
         private void consultaVenta_Click(object sender, RoutedEventArgs e)

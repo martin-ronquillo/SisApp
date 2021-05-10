@@ -219,7 +219,7 @@ namespace SisApp
             }
             else
             {
-                txt_descuento.IsEnabled = true;
+                txt_descuento.IsEnabled = false;
                 chck_boxIva.IsEnabled = false;
             }
 
@@ -353,7 +353,7 @@ namespace SisApp
             }
             else
             {
-                MessageBox.Show("No se puede guardar los datos, Ingrese un Codigo de Factura, seleccione un Almacen, un Proveedor y una Fecha");
+                MessageBox.Show("No se puede guardar los datos, Ingrese un Codigo de Factura, seleccione un Almacen, un Proveedor y una Fecha. Recuerde que el valor total no puede ser 0");
 
                 //Habilita todos los botones y controles
                 cbBox_almacen.IsEnabled = true;

@@ -1,0 +1,97 @@
+﻿<Window x:Class="SisApp.Ventas"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Ventas" Height="676.524" Width="1063.786">
+    <Grid Margin="14,10">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid Margin="0,0,0,10">
+
+            <Label Content="GENERAR VENTAS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <Label Content="Fecha de Ingreso:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,25"/>
+            <DatePicker Name="dp_compra" DisplayDate="" DisplayDateStart="01/01/2015" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsTodayHighlighted="True"/>
+
+            <Label Content="Almacen:" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,247,20"/>
+            <ComboBox x:Name="cbBox_almacen" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="130" Margin="0,0,170,0" SelectionChanged="cbBox_almacen_SelectionChanged"/>
+
+            <Label Content="Cliente:" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,100,20"/>
+            <TextBox x:Name="txt_cliente" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="120" Height="23" Margin="0,0,22,0"/>
+            <Button x:Name="btn_buscaCliente" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="23" Width="23" Click="btn_buscaCliente_Click">
+
+                <Image Source="BuscarCliente.png"/>
+
+            </Button>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+            <Separator VerticalAlignment="Top" Margin="0"/>
+
+            <TextBox x:Name="txt_buscaProducto" HorizontalAlignment="Left" VerticalAlignment="Center" Height="25" Width="148" IsEnabled="False"/>
+            <Button x:Name="btn_seleccionaProducto" HorizontalAlignment="Left" VerticalAlignment="Center" Height="24" Width="25" ToolTip="Seleccionar Productos" Margin="122,8,0,8" Click="btn_seleccionaProducto_Click">
+                <Image Source="Subir.png"/>
+            </Button>
+
+            <Label Content="DESCUENTO:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,280,9" FontSize="14" FontWeight="Bold"/>
+            <TextBox x:Name="txt_descuento" HorizontalAlignment="Right" VerticalAlignment="Center" Height="24" Width="85" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Margin="0,8,185,8" Background="#FFCDF9FA" KeyDown="txt_descuento_KeyDown"/>
+
+            <Label Content="TOTAL:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,107,9" FontSize="14" FontWeight="Bold"/>
+            <TextBox x:Name="txt_valorTotalFactura" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Height="24" Width="102" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="14" Background="Red" FontWeight="Bold" Margin="0,8"/>
+
+        </Grid>
+
+        <DataGrid x:Name="dg_datos" Grid.Row="2" HorizontalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dg_datos_CellEditEnding" LoadingRow="dg_datos_UnloadingRow" UnloadingRow="dg_datos_UnloadingRow">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="CODIGO" IsReadOnly="True" Width="95" Binding="{Binding BarCode}"/>
+                <DataGridTextColumn Header="PRODUCTO" IsReadOnly="True" Width="*" Binding="{Binding ProductName}"/>
+                <DataGridTextColumn Header="  V. UNIDAD" IsReadOnly="True" Width="75" Binding="{Binding SalePrice}"/>
+                <DataGridTextColumn Header="   CANTIDAD" IsReadOnly="False" Width="85" Binding="{Binding Amount}"/>
+                <DataGridTextColumn Header=" SUBTOTAL" IsReadOnly="True" Width="75" Binding="{Binding SubTotal}"/>
+                <DataGridTextColumn Header="      I.V.A." IsReadOnly="True" Width="75" Binding="{Binding Tax}"/>
+                <DataGridTextColumn Header="  V. TOTAL $" IsReadOnly="True" Width="85" Binding="{Binding TotalPrice}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="3">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="100"/>
+
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btn_limpiar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,7,0,0" Height="40" Width="40" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Click="btn_limpiar_Click" ToolTip="Limpiar formulario">
+                <Image Source="Limpiar.png" OpacityMask="#FFDDDDDD"/>
+            </Button>
+
+            <Label Name="lbl_saveInfo" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,120,4" Foreground="#FF797979"/>
+
+            <ProgressBar x:Name="pbStatus" VerticalAlignment="Center" HorizontalAlignment="Right" Width="90" Height="20" Margin="25,0"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Height="35">
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            </StackPanel>
+
+            <Button Grid.Column="2" x:Name="btn_Guardar" Content="GUARDAR" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="75" Click="btn_Guardar_Click"/>
+
+        </Grid>
+
+    </Grid>
+</Window>
