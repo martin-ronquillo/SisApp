@@ -67,7 +67,7 @@ namespace SisApp
 
         private void btn_eliminar_Click(object sender, RoutedEventArgs e)
         {
-            Provider selectedItem = (Provider)lv_proveedores.SelectedItem;
+            ProveedoresController selectedItem = (ProveedoresController)lv_proveedores.SelectedItem;
 
             if (selectedItem != null)
             {
@@ -84,6 +84,8 @@ namespace SisApp
                     db.Delete(provider);
 
                     Singleton.Instancia.confirma = false;
+
+                    LlenaListView();
                 }
             }
         }

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LinqToDB;
+using System.Text.RegularExpressions;
 
 namespace SisApp
 {
@@ -35,10 +36,6 @@ namespace SisApp
 
             try
             {
-                int nPro = db.Products.Count() + 1;
-
-                txt_nArticulo.Text = nPro.ToString("D7");
-
                 foreach (Category category in db.Categories)
                 {
                     cbBox_categoria.Items.Add(category.CategoryName);
@@ -53,16 +50,24 @@ namespace SisApp
 
                 cbBox_marca.SelectedItem = "N/A";
             }
-            catch
+            catch(Exception e)
             {
-                int nPro = 1;
-                txt_nArticulo.Text = nPro.ToString("D7");
+                MessageBox.Show("Excepcion controlada: \n"+e);
+
+                this.Close();
             }
+
+            cbBox_almacen.IsEnabled = false;
+            txt_porcentajeGanancia.IsEnabled = false;
+            txt_precioVenta.IsEnabled = false;
         }
 
         public ArticulosCRUD(int Id)
         {
             InitializeComponent();
+
+            txt_porcentajeGanancia.IsEnabled = false;
+            txt_precioVenta.IsEnabled = false;
 
             Edit = true;
 
@@ -70,9 +75,12 @@ namespace SisApp
 
             try
             {
-                Producto = db.Products.FirstOrDefault(pro => pro.Id.Equals(Id));
+                Producto = db.Products.LoadWith(t => t.TradeMark).LoadWith(t => t.Category).LoadWith(t => t.ProductsStores).FirstOrDefault(pro => pro.Id.Equals(Id));
 
-                txt_nArticulo.Text = Producto.Id.ToString("D7");
+                foreach (Store store in db.Stores)
+                {
+                    cbBox_almacen.Items.Add(store.StoreName);
+                }
 
                 foreach (Category category in db.Categories)
                 {
@@ -84,14 +92,14 @@ namespace SisApp
                     cbBox_marca.Items.Add(tradeMark.MarkName);
                 }
 
-                cbBox_marca.SelectedItem = db.TradeMarks.FirstOrDefault(tm => tm.Id.Equals(Producto.TradeMarkId)).MarkName;
-                cbBox_categoria.SelectedItem = db.Categories.FirstOrDefault(cat => cat.Id.Equals(Producto.CategoryId)).CategoryName;
+                cbBox_marca.SelectedItem = Producto.TradeMark.MarkName;
+                cbBox_categoria.SelectedItem = Producto.Category.CategoryName;
                 txt_codigoBarras.Text = Producto.BarCode;
                 txt_descripcionArticulo.Text = Producto.ProductName;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show("Error, no se encontro el Producto \n Excepcion controlada: \n"+e);
+                MessageBox.Show("Excepcion controlada: \n" + e);
 
                 this.Close();
             }
@@ -142,14 +150,23 @@ namespace SisApp
         {
             try
             {
+                Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
+                ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
+
                 if (Edit)
                 {
                     Producto.BarCode = txt_codigoBarras.Text.ToUpper();
                     Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
                     Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
                     Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
+                    Producto.SalePricePercent = float.Parse(txt_porcentajeGanancia.Text);
+                    Producto.SalePrice = float.Parse(txt_precioVenta.Text);
+
+                    productsStore.PriceByUnit = float.Parse(txt_precioVenta.Text);
+                    productsStore.SalePricePercent = float.Parse(txt_porcentajeGanancia.Text);
 
                     db.Update(Producto);
+                    db.Update(productsStore);
                 }
                 else
                 {
@@ -181,6 +198,76 @@ namespace SisApp
             if (txt_descripcionArticulo.Text == "")
             {
                 Validacion = false;
+            }
+        }
+
+        private void cbBox_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
+                ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
+
+                txt_porcentajeGanancia.Text = productsStore.SalePricePercent.ToString();
+                txt_precioVenta.Text = productsStore.PriceByUnit.ToString();
+                txt_precioCompra.Text = productsStore.PurchasePrice.ToString();
+
+                txt_porcentajeGanancia.IsEnabled = true;
+                txt_precioVenta.IsEnabled = true;
+            }
+            catch
+            {
+                MessageBox.Show("El producto no posee inventario en el almacen seleccionado");
+                txt_precioCompra.Text = "0";
+                txt_precioVenta.Text = "";
+                txt_porcentajeGanancia.Text = "";
+
+                txt_porcentajeGanancia.IsEnabled = false;
+                txt_precioVenta.IsEnabled = false;
+            }
+        }
+
+        private void txt_porcentajeGanancia_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter | e.Key == Key.Tab)
+            {
+                string cadena = txt_porcentajeGanancia.Text;
+                cadena = cadena.Replace(".", ",");
+                float value;
+
+                if (float.TryParse(cadena, out value))
+                {
+                    float valCompra = float.Parse(txt_precioCompra.Text);
+                    float valVenta = (valCompra * value) + valCompra;
+
+                    txt_precioVenta.Text = valVenta.ToString();
+                }
+                else
+                {
+                    txt_porcentajeGanancia.Text = "0";
+                }
+            }
+        }
+
+        private void txt_precioVenta_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter | e.Key == Key.Tab)
+            {
+                string cadena = txt_precioVenta.Text;
+                cadena = cadena.Replace(".", ",");
+                float value;
+
+                if (float.TryParse(cadena, out value))
+                {
+                    float valCompra = float.Parse(txt_precioCompra.Text);
+                    float valVentaPercent = ((value - valCompra) / valCompra);
+
+                    txt_porcentajeGanancia.Text = valVentaPercent.ToString();
+                }
+            }
+            else
+            {
+                txt_precioVenta.Text = "0";
             }
         }
     }

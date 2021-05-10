@@ -19,7 +19,7 @@
 
         <Grid>
 
-            <Label Name="lbl_perfilRegistro" Content="PERFIL REGISTRO" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="VERDANA" FontSize="16" FontWeight="Bold"/>
+            <Label Name="lbl_perfilRegistro" Content="PERFIL REGISTRO" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="VERDANA" FontSize="16" FontWeight="Bold" Margin="0,8" Width="312"/>
 
             <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="37" Stroke="Black" VerticalAlignment="Top" Width="159" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
             <TextBox x:Name="txt_nRegistro" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="36" Width="112" FontSize="22" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" BorderThickness="0" Background="{x:Null}" Margin="0,0,4,0"/>

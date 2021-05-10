@@ -310,7 +310,14 @@ namespace SisApp
 
         private void traspasoArticulos_Click(object sender, RoutedEventArgs e)
         {
+            TraspasoArticulos traspasoArticulos = new TraspasoArticulos();
+            traspasoArticulos.Show();
+        }
 
+        private void consultaTraspasos_Click(object sender, RoutedEventArgs e)
+        {
+            ConsultaIE consultaIE = new ConsultaIE(3);
+            consultaIE.Show();
         }
 
         private void consultaProveedores_Click(object sender, RoutedEventArgs e)
@@ -327,7 +334,8 @@ namespace SisApp
 
         private void consultaCompras_Click(object sender, RoutedEventArgs e)
         {
-
+            ConsultaIE consultaIE = new ConsultaIE(4);
+            consultaIE.Show();
         }
 
         private void realizaDevolucion_Click(object sender, RoutedEventArgs e)

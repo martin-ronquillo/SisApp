@@ -57,9 +57,17 @@ namespace SisApp
             {
                 GeneraExcel.CreaExcel(1, Id);
             }
-            else
+            if(TipoConsulta == 2)
             {
                 GeneraExcel.CreaExcel(2, Id);
+            }
+            if (TipoConsulta == 3)
+            {
+                btn_generaExcel.IsEnabled = false;
+            }
+            if (TipoConsulta == 4)
+            {
+                GeneraExcel.CreaExcel(4, Id);
             }
         }
 
@@ -86,11 +94,53 @@ namespace SisApp
 
                 lv_registros.ItemsSource = listaRegistros;
             }
-            else
+            if(TipoConsulta == 2)
             {
                 var egresos = db.EgressProducts.LoadWith(foo => foo.Product).Where(re => re.EgressId.Equals(Id));
 
                 foreach (var item in egresos)
+                {
+                    listaRegistros.Add(
+                        new ConsultaRegistroInfo
+                        {
+                            Id = (int)item.Product.Id,
+                            Code = item.Product.BarCode,
+                            Product = item.Product.ProductName,
+                            Amount = (float)item.Amount,
+                            Purchase = (float)item.PurchasePrice,
+                            Total = (float)item.Amount * (float)item.PurchasePrice
+                        }
+                    );
+                }
+
+                lv_registros.ItemsSource = listaRegistros;
+            }
+            if (TipoConsulta == 3)
+            {
+                var traspaso = db.ProductsTransfers.LoadWith(foo => foo.Product).Where(re => re.TransferId.Equals(Id));
+
+                foreach (var item in traspaso)
+                {
+                    listaRegistros.Add(
+                        new ConsultaRegistroInfo
+                        {
+                            Id = (int)item.Product.Id,
+                            Code = item.Product.BarCode,
+                            Product = item.Product.ProductName,
+                            Amount = (float)item.Amount,
+                            Purchase = (float)item.PurchasePrice,
+                            Total = (float)item.Amount * (float)item.PurchasePrice
+                        }
+                    );
+                }
+
+                lv_registros.ItemsSource = listaRegistros;
+            }
+            if (TipoConsulta == 4)
+            {
+                var compra = db.ProductsPurchases.LoadWith(foo => foo.Product).Where(re => re.PurchaseId.Equals(Id));
+
+                foreach (var item in compra)
                 {
                     listaRegistros.Add(
                         new ConsultaRegistroInfo
@@ -121,19 +171,47 @@ namespace SisApp
                 txt_tipoIngreso.Text = ingreso.Type;
                 txt_totalIngreso.Text = ingreso.TotalPriceReceipt.ToString();
             }
-            else
+            if(TipoConsulta == 2)
             {
                 var egreso = db.Egresses.LoadWith(foo => foo.Store).First(foo => foo.Id.Equals(Id));
 
                 lbl_perfilRegistro.Content = "EGRESO EN: " + egreso.Store.StoreName;
-                lbl_fecha.Content = "Fecha de Egreso";
-                lbl_tipo.Content = "Tipo de Egreso";
-                lbl_total.Content = "V. Total Egresado";
+                lbl_fecha.Content = "Fecha de Egreso:";
+                lbl_tipo.Content = "Tipo de Egreso:";
+                lbl_total.Content = "V. Total Egresado:";
 
                 txt_nRegistro.Text = egreso.EgressCode;
                 txt_fechaIngreso.Text = egreso.EgressDate;
                 txt_tipoIngreso.Text = egreso.Type;
                 txt_totalIngreso.Text = egreso.TotalPriceEgress.ToString();
+            }
+            if (TipoConsulta == 3)
+            {
+                var traspaso = db.Transfers.LoadWith(foo => foo.FromStore).LoadWith(foo => foo.ToStore).First(foo => foo.Id.Equals(Id));
+
+                lbl_perfilRegistro.Content = "TRASPASO DESDE: " + traspaso.FromStore.StoreName + " - A: " + traspaso.ToStore.StoreName;
+                lbl_fecha.Content = "Fecha de Traspaso:";
+                lbl_tipo.Content = "";
+                lbl_total.Content = "V. Total Traspasado:";
+
+                txt_nRegistro.Text = traspaso.TransferCode;
+                txt_fechaIngreso.Text = traspaso.TransferDate;
+                txt_tipoIngreso.Visibility = Visibility.Collapsed;
+                txt_totalIngreso.Text = traspaso.TotalPriceTransfer.ToString();
+            }
+            if (TipoConsulta == 4)
+            {
+                var compra = db.Purchases.LoadWith(foo => foo.Store).First(foo => foo.Id.Equals(Id));
+
+                lbl_perfilRegistro.Content = "COMPRA EN: " + compra.Store.StoreName;
+                lbl_fecha.Content = "Fecha de Compra:";
+                lbl_tipo.Content = "Descuento:";
+                lbl_total.Content = "V. Total Compra:";
+
+                txt_nRegistro.Text = compra.PurchaseCode;
+                txt_fechaIngreso.Text = compra.PurchaseDate;
+                txt_tipoIngreso.Text = compra.Discount.ToString();
+                txt_totalIngreso.Text = compra.TotalPrice.ToString();
             }
         }
 

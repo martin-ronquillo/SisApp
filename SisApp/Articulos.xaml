@@ -76,10 +76,18 @@
 
                         <Separator/>
 
-                        <MenuItem Header="Traspaso de Articulos" Name="traspasoArticulos" Click="traspasoArticulos_Click">
+                        <MenuItem Header="Traspaso de Articulos" Name="traspasoArticulos">
                             <MenuItem.Icon>
                                 <Image Source="Transferir.png"/>
                             </MenuItem.Icon>
+
+                            <MenuItem Header="Traspasar Articulos" Name="traspaArticulos" Click="traspasoArticulos_Click"/>
+
+                            <MenuItem Header="Consultar Traspaso" Name="consultaTraspasos" Click="consultaTraspasos_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="Hoy.png"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                     </MenuItem>
 
@@ -248,13 +256,13 @@
 
             <Grid Grid.Column="1">
 
-                <Button x:Name="btn_NuevoArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_NuevoArticulo_Click" ToolTip="Nuevo Articulo" BorderThickness="0" Background="WhiteSmoke">
+                <Button x:Name="btn_NuevoArticulo" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="35" Click="btn_NuevoArticulo_Click" ToolTip="Nuevo Articulo" BorderThickness="0" Background="{x:Null}" Margin="0,0,95,0">
                     <Image Source="Añadir.png"/>
                 </Button>
-                <Button x:Name="btn_EditaArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EditaArticulo_Click" ToolTip="Editar Articulo" BorderThickness="0" Background="WhiteSmoke" Margin="50,0">
+                <Button x:Name="btn_EditaArticulo" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EditaArticulo_Click" ToolTip="Editar Articulo" BorderThickness="0" Background="{x:Null}">
                     <Image Source="Editar.png"/>
                 </Button>
-                <Button x:Name="btn_EliminaArticulo" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EliminaArticulo_Click" ToolTip="Eliminar Articulo" BorderThickness="0" Background="WhiteSmoke" Margin="100,0">
+                <Button x:Name="btn_EliminaArticulo" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="35" Click="btn_EliminaArticulo_Click" ToolTip="Eliminar Articulo" BorderThickness="0" Background="{x:Null}" Margin="95,0,0,0">
                     <Image Source="Basura.png"/>
                 </Button>
                 <Button x:Name="btn_Recargar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="35" Width="35" ToolTip="Actualizar tabla" Click="btn_Recargar_Click">
@@ -273,7 +281,7 @@
                 <!--Width is set to "Fill"-->
                 <ColumnDefinition Width="*"/>
                 <!--Correction Width-->
-                <ColumnDefinition Width="510"/>
+                <ColumnDefinition Width="530"/>
             </Grid.ColumnDefinitions>
             <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
             <Grid Grid.Column="1" x:Name="helperField"/>

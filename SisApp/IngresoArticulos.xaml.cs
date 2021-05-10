@@ -33,6 +33,8 @@ namespace SisApp
         {
             InitializeComponent();
 
+            Singleton.Instancia.listaIngresos.Clear();
+
             this.WindowState = WindowState.Maximized;
 
             LlenaCombos();

@@ -39,6 +39,8 @@ namespace SisApp
         {
             InitializeComponent();
 
+            Singleton.Instancia.listaIngresos.Clear();
+
             this.WindowState = WindowState.Maximized;
 
             LlenaCombos();
@@ -616,11 +618,7 @@ namespace SisApp
 
                     (sender as BackgroundWorker).ReportProgress(i2);
                 }
-                //Almacena el valor total de la compra en la tabla Purchases
-                /*float discount = totalPricePurchase - (totalPricePurchase * (float)lastPurchase.Discount);
-                lastPurchase.TotalPrice = Math.Round(discount, 2);
-                lastPurchase.SubPrice = Math.Round(discount - (discount * 0.12), 2);
-                lastPurchase.Tax = Math.Round(discount * 0.12, 2);*/
+                lastPurchase.TotalPrice = Math.Round(totalPricePurchase, 2);
 
                 db.Update(lastPurchase);
 

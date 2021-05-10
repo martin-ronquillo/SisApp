@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SisApp"
         mc:Ignorable="d"
-        Title="Articulos" Height="272.728" Width="448.485">
+        Title="Articulos" Height="326.061" Width="448.485">
     <Grid Margin="14,0">
 
         <Grid.RowDefinitions>
@@ -19,9 +19,9 @@
         <Grid>
 
             <Label x:Name="lbl_Articulos" Content="PERFIL ARTICULOS" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Verdana" FontStyle="Italic" Margin="0,11,0,12" FontSize="14" Width="193"/>
-            <Rectangle x:Name="helper" Fill="#FFECECEC" HorizontalAlignment="Right" Height="30" Stroke="Black" VerticalAlignment="Center" Width="100" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
-            <TextBox x:Name="txt_nArticulo" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="25" Width="85" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right" Margin="0,13,7,12" BorderThickness="0" Background="{x:Null}"/>
-            <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0.65"/>
+
+            <Label Content="Almacen:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,110,0"/>
+            <ComboBox Name="cbBox_almacen" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Margin="0,0,0,0" SelectionChanged="cbBox_almacen_SelectionChanged"/>
 
         </Grid>
 
@@ -38,8 +38,17 @@
                 <Label Content="Categoria:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,60,0"/>
                 <ComboBox x:Name="cbBox_categoria" HorizontalAlignment="Right" Margin="0,36,0,0" VerticalAlignment="Top" Width="120"/>
 
-                <Label Content="Descripcion del Articulo:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,76,0,0" Width="200"/>
-                <TextBox x:Name="txt_descripcionArticulo" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="23" Text="" Margin="0,100,-0.333,0" Padding="0,0,2,0"/>
+                <Label Content="Ganancia %:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,40"/>
+                <TextBox x:Name="txt_porcentajeGanancia" HorizontalAlignment="Left" VerticalAlignment="Center" Width="127" HorizontalContentAlignment="Right" KeyDown="txt_porcentajeGanancia_KeyDown"/>
+
+                <Label Content="P.v.P:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,78,40"/>
+                <TextBox x:Name="txt_precioVenta" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" HorizontalContentAlignment="Right" Margin="10,0,0,0" KeyDown="txt_precioVenta_KeyDown"/>
+
+                <Label Content="P. Compra:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,58,40"/>
+                <TextBox x:Name="txt_precioCompra" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Width="120" HorizontalContentAlignment="Right" Margin="0,0,0,0"/>
+
+                <Label Content="Descripcion del Articulo:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,45" Width="200"/>
+                <TextBox x:Name="txt_descripcionArticulo" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="23" Text="" Margin="0,100,-0.333,20" Padding="0,0,2,0"/>
 
             </Grid>
 

@@ -34,6 +34,7 @@ namespace DataModels
 		public ITable<ProductsReceipt>  ProductsReceipts  { get { return this.GetTable<ProductsReceipt>(); } }
 		public ITable<ProductsSale>     ProductsSales     { get { return this.GetTable<ProductsSale>(); } }
 		public ITable<ProductsStore>    ProductsStores    { get { return this.GetTable<ProductsStore>(); } }
+		public ITable<ProductsTransfer> ProductsTransfers { get { return this.GetTable<ProductsTransfer>(); } }
 		public ITable<Provider>         Providers         { get { return this.GetTable<Provider>(); } }
 		public ITable<Purchase>         Purchases         { get { return this.GetTable<Purchase>(); } }
 		public ITable<Receipt>          Receipts          { get { return this.GetTable<Receipt>(); } }
@@ -41,6 +42,7 @@ namespace DataModels
 		public ITable<Sale>             Sales             { get { return this.GetTable<Sale>(); } }
 		public ITable<Store>            Stores            { get { return this.GetTable<Store>(); } }
 		public ITable<TradeMark>        TradeMarks        { get { return this.GetTable<TradeMark>(); } }
+		public ITable<Transfer>         Transfers         { get { return this.GetTable<Transfer>(); } }
 		public ITable<User>             Users             { get { return this.GetTable<User>(); } }
 
 		public SisAppCompactDB()
@@ -243,6 +245,12 @@ namespace DataModels
 		public IEnumerable<ProductsStore> ProductsStores { get; set; }
 
 		/// <summary>
+		/// FK_ProductsTransfers_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ProductId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ProductsTransfer> ProductsTransfers { get; set; }
+
+		/// <summary>
 		/// FK_Products_0_0
 		/// </summary>
 		[Association(ThisKey="TradeMarkId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Products_0_0", BackReferenceName="Products")]
@@ -354,6 +362,32 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsStores_1_0", BackReferenceName="ProductsStores")]
 		public Store Store { get; set; }
+
+		#endregion
+	}
+
+	[Table("ProductsTransfers")]
+	public partial class ProductsTransfer
+	{
+		[PrimaryKey, Identity] public long    Id            { get; set; } // integer
+		[Column,     Nullable] public long?   TransferId    { get; set; } // integer
+		[Column,     Nullable] public long?   ProductId     { get; set; } // integer
+		[Column,     Nullable] public double? Amount        { get; set; } // real
+		[Column,     Nullable] public double? PurchasePrice { get; set; } // real
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ProductsTransfers_0_0
+		/// </summary>
+		[Association(ThisKey="ProductId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsTransfers_0_0", BackReferenceName="ProductsTransfers")]
+		public Product Product { get; set; }
+
+		/// <summary>
+		/// FK_ProductsTransfers_1_0
+		/// </summary>
+		[Association(ThisKey="TransferId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ProductsTransfers_1_0", BackReferenceName="ProductsTransfers")]
+		public Transfer Transfer { get; set; }
 
 		#endregion
 	}
@@ -545,6 +579,12 @@ namespace DataModels
 		public IEnumerable<Egress> Egresses { get; set; }
 
 		/// <summary>
+		/// FK_Transfers_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="FromStoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Transfer> FkTransfers10BackReferences { get; set; }
+
+		/// <summary>
 		/// FK_ProductsStores_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
@@ -562,6 +602,12 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="StoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Receipt> Receipts { get; set; }
 
+		/// <summary>
+		/// FK_Transfers_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ToStoreId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Transfer> Transfers { get; set; }
+
 		#endregion
 	}
 
@@ -578,6 +624,39 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="TradeMarkId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Product> Products { get; set; }
+
+		#endregion
+	}
+
+	[Table("Transfers")]
+	public partial class Transfer
+	{
+		[PrimaryKey, Identity] public long    Id                 { get; set; } // integer
+		[Column,     Nullable] public string  TransferCode       { get; set; } // text(100)
+		[Column,     Nullable] public string  TransferDate       { get; set; } // text(50)
+		[Column,     Nullable] public double? TotalPriceTransfer { get; set; } // real
+		[Column,     Nullable] public long?   FromStoreId        { get; set; } // integer
+		[Column,     Nullable] public long?   ToStoreId          { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Transfers_1_0
+		/// </summary>
+		[Association(ThisKey="FromStoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Transfers_1_0", BackReferenceName="FkTransfers10BackReferences")]
+		public Store FromStore { get; set; }
+
+		/// <summary>
+		/// FK_ProductsTransfers_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="TransferId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ProductsTransfer> ProductsTransfers { get; set; }
+
+		/// <summary>
+		/// FK_Transfers_0_0
+		/// </summary>
+		[Association(ThisKey="ToStoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Transfers_0_0", BackReferenceName="Transfers")]
+		public Store ToStore { get; set; }
 
 		#endregion
 	}
@@ -684,6 +763,12 @@ namespace DataModels
 				t.Id == Id);
 		}
 
+		public static ProductsTransfer Find(this ITable<ProductsTransfer> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static Provider Find(this ITable<Provider> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
@@ -721,6 +806,12 @@ namespace DataModels
 		}
 
 		public static TradeMark Find(this ITable<TradeMark> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static Transfer Find(this ITable<Transfer> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

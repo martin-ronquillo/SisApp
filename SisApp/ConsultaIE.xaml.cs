@@ -40,9 +40,19 @@ namespace SisApp
             {
                 lbl_tipoConsulta.Content = "CONSULTAR INGRESOS";
             }
-            else
+            if(Consulta == 2)
             {
                 lbl_tipoConsulta.Content = "CONSULTAR EGRESOS";
+            }
+            if (Consulta == 3)
+            {
+                lbl_tipoConsulta.Content = "CONSULTAR TRASPASOS";
+
+                btn_generaExcel.IsEnabled = false;
+            }
+            if (Consulta == 4)
+            {
+                lbl_tipoConsulta.Content = "CONSULTAR COMPRAS";
             }
         }
 
@@ -86,7 +96,7 @@ namespace SisApp
                     );
                 }
             }
-            else
+            if(Consulta == 2)
             {
                 var registros = db.Egresses.LoadWith(t => t.Store).Where(re => re.EgressDate.Equals(dp_fechaConsulta.Text));
 
@@ -100,6 +110,42 @@ namespace SisApp
                             Store = registro.Store.StoreName,
                             Total = (float)registro.TotalPriceEgress,
                             Type = registro.Type
+                        }
+                    );
+                }
+            }
+            if (Consulta == 3)
+            {
+                var registros = db.Transfers.LoadWith(t => t.FromStore).LoadWith(t => t.ToStore).Where(re => re.TransferDate.Equals(dp_fechaConsulta.Text));
+
+                foreach (var registro in registros)
+                {
+                    listaRegistros.Add(
+                        new ConsultaIngEgr
+                        {
+                            Id = (int)registro.Id,
+                            Code = registro.TransferCode,
+                            Store = registro.FromStore.StoreName + "  =>  " + registro.ToStore.StoreName,
+                            Total = (float)registro.TotalPriceTransfer,
+                            Type = "N/A"
+                        }
+                    );
+                }
+            }
+            if (Consulta == 4)
+            {
+                var registros = db.Purchases.LoadWith(t => t.Store).Where(re => re.PurchaseDate.Equals(dp_fechaConsulta.Text));
+
+                foreach (var registro in registros)
+                {
+                    listaRegistros.Add(
+                        new ConsultaIngEgr
+                        {
+                            Id = (int)registro.Id,
+                            Code = registro.PurchaseCode,
+                            Store = registro.Store.StoreName,
+                            Total = (float)registro.TotalPrice,
+                            Type = "N/A"
                         }
                     );
                 }
@@ -137,9 +183,13 @@ namespace SisApp
                 {
                     GeneraExcel.CreaExcel(1, dp_fechaConsulta.Text);
                 }
-                else
+                if(Consulta == 2)
                 {
                     GeneraExcel.CreaExcel(2, dp_fechaConsulta.Text);
+                }
+                if (Consulta == 4)
+                {
+                    GeneraExcel.CreaExcel(4, dp_fechaConsulta.Text);
                 }
             }
         }

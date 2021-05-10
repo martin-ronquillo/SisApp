@@ -18,6 +18,7 @@ namespace SisApp
         //Se usan para seleccionar cliente a facturar
         public int selectedCliente = 1;
 
+        //Se usa para los elementos seleccionados en: Ingreso productos, Egreso productos, Compra productos
         public List<IngresaProductos> listaIngresos = new List<IngresaProductos>();
     }
 }
