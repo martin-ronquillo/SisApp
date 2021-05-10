@@ -1641,4 +1641,122 @@ namespace SisApp
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
     }
+
+    class DevolucionesController
+    {
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Store { get; set; }
+        public float Tax { get; set; }
+        public float Discount { get; set; }
+        public float Total { get; set; }
+        public List<DevolucionesController> listaDevoluciones = new List<DevolucionesController>();
+
+        public List<DevolucionesController> listaRegistros(string Type, string fechaConsulta)
+        {
+            if (Type == "Compra")
+            {
+                foreach (var item in db.Purchases.LoadWith(t => t.Store).Where(foo => foo.PurchaseDate.Equals(fechaConsulta)).ToList())
+                {
+                    var test = db.PurchasesRefunds.FirstOrDefault(foo => foo.PurchaseId.Equals(item.Id));
+
+                    if (test == null)
+                    {
+                        listaDevoluciones.Add(
+                            new DevolucionesController
+                            {
+                                Id = (int)item.Id,
+                                Code = item.PurchaseCode,
+                                Store = item.Store.StoreName,
+                                Tax = (float)item.Tax,
+                                Discount = (float)item.Discount,
+                                Total = (float)item.TotalPrice
+                            }   
+                        );
+                    }
+                }
+            }
+            if (Type == "Venta")
+            {
+                foreach (var item in db.Sales.LoadWith(t => t.Store).Where(foo => foo.SaleDate.Equals(fechaConsulta)).ToList())
+                {
+                    var test = db.SalesRefunds.FirstOrDefault(foo => foo.SalesId.Equals(item.Id));
+
+                    if (test == null)
+                    {
+                        listaDevoluciones.Add(
+                            new DevolucionesController
+                            {
+                                Id = (int)item.Id,
+                                Code = item.Id.ToString("D7"),
+                                Store = item.Store.StoreName,
+                                Tax = (float)item.Tax,
+                                Discount = (float)item.Discount,
+                                Total = (float)item.TotalPrice
+                            }
+                        );
+                    }
+                }
+            }
+
+            return listaDevoluciones;
+        }
+    }
+
+    class DetalleDevolucion
+    {
+        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+
+        public int Id { get; set; }
+        public string BarCode { get; set; }
+        public string Product { get; set; }
+        public float Cantidad { get; set; }
+        public float Precio { get; set; }
+        public float Total { get; set; }
+
+        public List<DetalleDevolucion> listaDetalleDevolucion = new List<DetalleDevolucion>();
+
+        public List<DetalleDevolucion> detalleDevolucion(string Type, int Id)
+        {
+            if (Type == "Compra")
+            {
+                foreach (var item in db.ProductsPurchases.LoadWith(t => t.Product).Where(foo => foo.PurchaseId.Equals(Id)).ToList())
+                {
+                    listaDetalleDevolucion.Add(
+                        new DetalleDevolucion
+                        {
+                            Id = (int)item.ProductId,
+                            BarCode = item.Product.BarCode,
+                            Product = item.Product.ProductName,
+                            Cantidad = (float)item.Amount,
+                            Precio = (float)item.PurchasePrice,
+                            Total = (float)item.Amount * (float)item.PurchasePrice
+                        }
+                    );
+                }
+            }
+
+            if (Type == "Venta")
+            {
+                foreach (var item in db.ProductsSales.LoadWith(t => t.Product).Where(foo => foo.SaleId.Equals(Id)))
+                {
+                    listaDetalleDevolucion.Add(
+                        new DetalleDevolucion
+                        {
+                            Id = (int)item.ProductId,
+                            BarCode = item.Product.BarCode,
+                            Product = item.Product.ProductName,
+                            Cantidad = (float)item.Amount,
+                            Precio = (float)item.SalePrice,
+                            Total = (float)item.Amount * (float)item.SalePrice
+                        }
+                    );
+                }
+            }
+
+            return listaDetalleDevolucion;
+        }
+    }
 }

@@ -134,20 +134,38 @@ namespace SisApp
             }
             if (Consulta == 4)
             {
-                var registros = db.Purchases.LoadWith(t => t.Store).Where(re => re.PurchaseDate.Equals(dp_fechaConsulta.Text));
+                var registros = db.Purchases.LoadWith(t => t.Store).Where(re => re.PurchaseDate.Equals(dp_fechaConsulta.Text)).ToList();
 
                 foreach (var registro in registros)
                 {
-                    listaRegistros.Add(
-                        new ConsultaIngEgr
-                        {
-                            Id = (int)registro.Id,
-                            Code = registro.PurchaseCode,
-                            Store = registro.Store.StoreName,
-                            Total = (float)registro.TotalPrice,
-                            Type = "N/A"
-                        }
-                    );
+                    var test = db.PurchasesRefunds.FirstOrDefault(foo => foo.PurchaseId.Equals(registro.Id));
+
+                    if (test == null)
+                    {
+                        listaRegistros.Add(
+                            new ConsultaIngEgr
+                            {
+                                Id = (int)registro.Id,
+                                Code = registro.PurchaseCode,
+                                Store = registro.Store.StoreName,
+                                Total = (float)registro.TotalPrice,
+                                Type = "Ok"
+                            }
+                        );
+                    }
+                    else
+                    {
+                        listaRegistros.Add(
+                            new ConsultaIngEgr
+                            {
+                                Id = (int)registro.Id,
+                                Code = registro.PurchaseCode,
+                                Store = registro.Store.StoreName,
+                                Total = (float)registro.TotalPrice,
+                                Type = "Compra Devuelta"
+                            }
+                        );
+                    }
                 }
             }
 

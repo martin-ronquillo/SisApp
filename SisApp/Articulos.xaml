@@ -123,11 +123,11 @@
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Devoluciones" Name="consultaDevolucion" Click="consultaDevolucion_Click">
+                            <!--<MenuItem Header="Consultar Devoluciones" Name="consultaDevolucion" Click="consultaDevolucion_Click">
                                 <MenuItem.Icon>
                                     <Image Source="Hoy.png"/>
                                 </MenuItem.Icon>
-                            </MenuItem>
+                            </MenuItem>-->
                         </MenuItem>
 
                         <MenuItem Header="Ventas">
@@ -155,11 +155,11 @@
                                 </MenuItem.Icon>
                             </MenuItem>
 
-                            <MenuItem Header="Consultar Devoluciones" Name="consultaDevolucionVenta" Click="consultaDevolucionVenta_Click">
+                            <!--<MenuItem Header="Consultar Devoluciones" Name="consultaDevolucionVenta" Click="consultaDevolucionVenta_Click">
                                 <MenuItem.Icon>
                                     <Image Source="Hoy.png"/>
                                 </MenuItem.Icon>
-                            </MenuItem>
+                            </MenuItem>-->
                         </MenuItem>
                     </MenuItem>
 

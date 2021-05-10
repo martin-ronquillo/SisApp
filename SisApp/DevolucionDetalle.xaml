@@ -1,0 +1,106 @@
+﻿<Window x:Class="SisApp.DevolucionDetalle"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="DevolucionDetalle" Height="552" Width="968">
+    <Grid Margin="14,5">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid>
+
+            <Label Name="lbl_detalleDevolucion" Content="PERFIL DETALLE DEVOLUCION" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <Rectangle x:Name="helper" Fill="#FFCDF9FA" HorizontalAlignment="Right" Height="44" Stroke="Black" VerticalAlignment="Center" Width="210" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
+            <TextBox x:Name="txt_codigo" IsEnabled="False" Text="" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="38" Width="200" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right"  BorderThickness="0" Background="{x:Null}" Margin="0,8,2,4" VerticalContentAlignment="Center"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,7">
+
+            <Separator VerticalAlignment="Top" Margin="0,0,0,3"/>
+
+            <Label Content="Fecha:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,35,22" FontSize="14"/>
+            <TextBox x:Name="txt_fecha" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,20,0,0" Width="90"/>
+
+            <Label x:Name="lbl_proveedor" Content="Proveedor:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="115,0,0,22" FontSize="14"/>
+            <TextBox x:Name="txt_proveedor" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="120,20,0,0" Width="150"/>
+            
+            <Label Content="Total:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,35,22" FontSize="14"/>
+            <TextBox x:Name="txt_valTotal" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,0,0" Width="70"/>
+
+            <Label Content="IVA:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,130,22" FontSize="14"/>
+            <TextBox x:Name="txt_iva" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,90,0" Width="70"/>
+
+            <Label Content="Descuento:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,177,22" FontSize="14"/>
+            <TextBox x:Name="txt_descuento" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,180,0" Width="70"/>
+
+            <Label Content="SubTotal:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,280,22" FontSize="14"/>
+            <TextBox x:Name="txt_subTotal" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,270,0" Width="70"/>
+
+            <Label x:Name="lbl_cambio" Content="Cambio:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,375,22" FontSize="14"/>
+            <TextBox x:Name="txt_cambio" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,360,0" Width="70"/>
+
+            <Label x:Name="lbl_efectivo" Content="Efectivo:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,470,22" FontSize="14"/>
+            <TextBox x:Name="txt_efectivo" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,20,455,0" Width="70"/>
+            
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <ListView x:Name="lv_registros" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.View>
+
+                    <GridView>
+
+                        <GridViewColumn Header="  Codigo  " x:Name="list_cantidad" Width="120" DisplayMemberBinding="{Binding BarCode}"/>
+                        <GridViewColumn Header="Producto" x:Name="list_producto" DisplayMemberBinding="{Binding Product}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Cantidad  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding Cantidad}"/>
+                        <GridViewColumn Header="  P.v.P  " x:Name="list_pvp" Width="100" DisplayMemberBinding="{Binding Precio}"/>
+                        <GridViewColumn Header="  Total  " x:Name="list_total" Width="100" DisplayMemberBinding="{Binding Total}"/>
+
+                    </GridView>
+
+                </ListView.View>
+
+            </ListView>
+
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,7">
+
+            <Button x:Name="btn_devolver" Content="GENERAR DEVOLUCION" BorderThickness="0" Click="btn_devolver_Click"/>
+
+        </Grid>
+        
+        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Visibility="Hidden" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!--Width is bound to width of the first GridViewColumn -->
+                <ColumnDefinition Width="{Binding ElementName=list_cantidad, Path=ActualWidth}"/>
+                <!--Width is set to "Fill"-->
+                <ColumnDefinition Width="*"/>
+                <!--Correction Width-->
+                <ColumnDefinition Width="310"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="1" x:Name="helperField"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -340,7 +340,8 @@ namespace SisApp
 
         private void realizaDevolucion_Click(object sender, RoutedEventArgs e)
         {
-
+            Devoluciones devoluciones = new Devoluciones("Compra");
+            devoluciones.Show();
         }
 
         private void consultaDevolucion_Click(object sender, RoutedEventArgs e)
@@ -360,7 +361,8 @@ namespace SisApp
 
         private void realizaDevolucionVenta_Click(object sender, RoutedEventArgs e)
         {
-
+            Devoluciones devoluciones = new Devoluciones("Venta");
+            devoluciones.Show();
         }
 
         private void consultaDevolucionVenta_Click(object sender, RoutedEventArgs e)

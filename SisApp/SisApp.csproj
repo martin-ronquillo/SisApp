@@ -191,6 +191,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClassesCompact.Context.tt</DependentUpon>
     </Compile>
+    <Compile Include="DevolucionDetalle.xaml.cs">
+      <DependentUpon>DevolucionDetalle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devoluciones.xaml.cs">
+      <DependentUpon>Devoluciones.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EgresoArticulos.xaml.cs">
       <DependentUpon>EgresoArticulos.xaml</DependentUpon>
     </Compile>
@@ -261,6 +267,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConsultaIE.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DevolucionDetalle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devoluciones.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
