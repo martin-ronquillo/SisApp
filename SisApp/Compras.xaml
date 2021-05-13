@@ -21,7 +21,8 @@
 
             <Label Content="INGRESAR COMPRAS" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
             <Rectangle x:Name="helper" Fill="#FFCDF9FA" HorizontalAlignment="Right" Height="44" Stroke="Black" VerticalAlignment="Top" Width="210" RadiusX="5" RadiusY="5" StrokeThickness="0"/>
-            <TextBox x:Name="txt_codigoCompra" Text="" VerticalAlignment="Top" HorizontalContentAlignment="Right" Height="38" Width="200" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right"  BorderThickness="0" Background="{x:Null}" Margin="0,10,2,0"/>
+            <Label Content="Cod. Compra:" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="9"/>
+            <TextBox x:Name="txt_codigoCompra" Text="" VerticalAlignment="Top" HorizontalContentAlignment="Right" Height="38" Width="200" FontSize="18" FontFamily="Verdana" FontStyle="Italic" Foreground="DarkCyan" HorizontalAlignment="Right"  BorderThickness="0" Background="{x:Null}" Margin="0,18,2,0"/>
 
             <Label Content="Fecha de Ingreso:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,25"/>
             <DatePicker Name="dp_compra" DisplayDate="" DisplayDateStart="01/01/2015" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsTodayHighlighted="True"/>

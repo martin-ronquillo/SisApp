@@ -29,9 +29,11 @@ namespace SisApp
 
         //Almacena el valor total de la factura
         float ValTF;
-        int IdCliente;
+        int IdCliente = 1;
         bool validate = true;
         float ValorTotalFactura;
+        Random r = new Random();
+        string saleCode;
 
         public Ventas()
         {
@@ -53,7 +55,11 @@ namespace SisApp
             txt_valorTotalFactura.Text = "0";
 
             txt_descuento.IsEnabled = false;
+            txt_valorTotalFactura.IsEnabled = false;
             dg_datos.IsReadOnly = true;
+
+            saleCode = r.Next(1000, 9999999).ToString("D7");
+            txt_codigoVenta.Text = saleCode;
         }
 
         private void btn_seleccionaProducto_Click(object sender, RoutedEventArgs e)
@@ -76,17 +82,22 @@ namespace SisApp
                 }
 
                 //Si hay un almacen seleccionado, se acomodan los datos
-                if (cbBox_almacen.SelectedItem != "" & cbBox_almacen.SelectedItem != null)
+                if (cbBox_almacen.SelectedItem.ToString() != "" & cbBox_almacen.SelectedItem != null)
                 {
                     dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
 
                     ActualizaDG();
 
                     txt_descuento.IsEnabled = true;
+                    txt_valorTotalFactura.IsEnabled = true;
                 }
                 else
                 {
                     dg_datos.ItemsSource = Singleton.Instancia.listaIngresos;
+                    ActualizaDG();
+
+                    txt_descuento.IsEnabled = true;
+                    txt_valorTotalFactura.IsEnabled = true;
                 }
 
                 if (dg_datos.Items.Count == 0)
@@ -138,7 +149,11 @@ namespace SisApp
                 //Si se edita la cantidad
                 if (col_index == 3)
                 {
+                    float iva = found.SalePrice * (float)0.12;
+                    float subtotal = found.SalePrice - iva;
+
                     found.Amount = 1;
+                    found.TotalPrice = 1 * found.SalePrice;
                 }
             }
             else
@@ -148,17 +163,36 @@ namespace SisApp
 
                 //Busca el producto editado en la lista
                 var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == editCell.Id);
+                var almacen = db.Stores.First(foo => foo.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
 
+                var cantidad = db.ProductsStores.First(foo => foo.ProductId.Equals(found.Id) & foo.StoreId.Equals(almacen.Id)).Stock;
                 //Si se edita la Cantidad
                 if (col_index == 3)
                 {
-                    float iva = found.SalePrice * (float)0.12;
-                    float subtotal = found.SalePrice - iva;
+                    if (edit <= cantidad)
+                    {
+                        float totalCant = found.SalePrice * edit;
+                        float iva = totalCant * (float)0.12;
+                        float subtotal = totalCant - iva;
 
-                    found.Amount = edit;
-                    found.SubTotal = subtotal;
-                    found.Tax = iva;
-                    found.TotalPrice = found.Amount * found.SalePrice;
+                        found.Amount = edit;
+                        found.SubTotal = subtotal;
+                        found.Tax = iva;
+                        found.TotalPrice = totalCant;
+                    }
+                    else
+                    {
+                        float totalCant = found.SalePrice * 1;
+                        float iva = totalCant * (float)0.12;
+                        float subtotal = totalCant - iva;
+
+                        found.Amount = 1;
+                        found.SubTotal = subtotal;
+                        found.Tax = iva;
+                        found.TotalPrice = 1 * found.SalePrice;
+
+                        MessageBox.Show("El producto solo posee " + cantidad + " existencias en " + almacen.StoreName);
+                    }
                 }
             }
 
@@ -177,10 +211,12 @@ namespace SisApp
             if (ValorTotalFactura != 0)
             {
                 txt_descuento.IsEnabled = true;
+                txt_valorTotalFactura.IsEnabled = true;
             }
             else
             {
                 txt_descuento.IsEnabled = false;
+                txt_valorTotalFactura.IsEnabled = false;
             }
 
             txt_valorTotalFactura.Text = ValTF.ToString();
@@ -207,7 +243,24 @@ namespace SisApp
             ValTF = ValorTotalFactura;
             txt_valorTotalFactura.Text = ValTF.ToString();
 
-            txt_descuento.IsEnabled = true;
+            if (dg_datos.Items.Count != 0)
+            {
+                txt_descuento.IsEnabled = true;
+                txt_valorTotalFactura.IsEnabled = true;
+
+                if (txt_descuento.Text != "0" & txt_descuento.Text != "")
+                {
+                    float valorDescontado = ValTF - (ValTF * (float.Parse(txt_descuento.Text) / 100));
+                    txt_valorTotalFactura.Text = valorDescontado.ToString();
+                }
+            }
+            else
+            {
+                txt_descuento.Text = "0";
+                txt_valorTotalFactura.Text = "0";
+                txt_descuento.IsEnabled = false;
+                txt_valorTotalFactura.IsEnabled = false;
+            }
         }
 
         private void btn_limpiar_Click(object sender, RoutedEventArgs e)
@@ -217,6 +270,7 @@ namespace SisApp
             txt_cliente.Text = "Consumidor Final";
             txt_descuento.IsEnabled = false;
             btn_Guardar.IsEnabled = false;
+            txt_valorTotalFactura.IsEnabled = false;
 
             Singleton.Instancia.listaIngresos.Clear();
             dg_datos.ItemsSource = null;
@@ -233,62 +287,80 @@ namespace SisApp
             dg_datos.IsReadOnly = true;
             btn_Guardar.IsEnabled = false;
             btn_buscaCliente.IsEnabled = false;
+            txt_descuento.IsEnabled = false;
+            txt_valorTotalFactura.IsEnabled = false;
 
             ValidaForm();
-            if (validate)
-            {
-                if (dg_datos.Items.Count != 0)
-                {
-                    //Muestra el estado del trabajo en segundo plano
-                    pbStatus.Visibility = Visibility.Visible;
-                    lbl_saveInfo.Content = "Generando nueva venta";
 
-                    //Genera el ingreso
-                    try
+            try
+            {
+                if (validate)
+                {
+                    if (dg_datos.Items.Count != 0)
                     {
-                        float subprice = (float.Parse(txt_valorTotalFactura.Text)) - (float.Parse(txt_valorTotalFactura.Text) * (float)0.12);
+                        //Muestra el estado del trabajo en segundo plano
+                        pbStatus.Visibility = Visibility.Visible;
+                        lbl_saveInfo.Content = "Generando nueva venta";
+
+                        //Genera el ingreso
+
+                        float subprice = float.Parse(txt_valorTotalFactura.Text) - (float.Parse(txt_valorTotalFactura.Text) * (float)0.12);
                         float tax = float.Parse(txt_valorTotalFactura.Text) * (float)0.12;
+                        var cajero = db.Cashiers.First(foo => foo.CheckerName.Equals(Environment.MachineName));
 
                         Sale sale = new Sale
                         {
                             UserId = Singleton.Instancia.idUser,
                             CustomerId = IdCliente,
                             SaleDate = dp_compra.Text,
-                            TotalPrice = ValTF,
-                            SubPrice = subprice,
-                            Tax = tax,
-                            Discount = float.Parse(txt_descuento.Text),
+                            TotalPrice = Math.Round(float.Parse(txt_valorTotalFactura.Text), 2),
+                            SubPrice = Math.Round(subprice, 2),
+                            Tax = Math.Round(tax, 2),
+                            Discount = Math.Round(float.Parse(txt_descuento.Text), 2),
                             Cash = 0,
                             RemainingCash = 0,
-                            CashierId = 1,
-                            StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id
+                            CashierId = cajero != null ? cajero.Id : 1,
+                            StoreId = db.Stores.First(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString().ToUpper())).Id,
+                            SaleCode = txt_codigoVenta.Text == "" ? saleCode : txt_codigoVenta.Text
                         };
 
                         db.Insert(sale);
+
+                        //Resta las tareas que se hayan asignado al segundo plano anteriormente
+                        worker.DoWork -= worker_DoWork;
+                        worker.ProgressChanged -= worker_ProgressChanged;
+                        worker.RunWorkerCompleted -= Worker_RunWorkerCompleted;
+
+                        //Agrega una tarea al segundo plano
+                        worker.WorkerReportsProgress = true;
+                        worker.DoWork += worker_DoWork;
+                        worker.ProgressChanged += worker_ProgressChanged;
+                        worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                        //Empieza una tarea en segundo plano
+                        worker.RunWorkerAsync();
+
                     }
-                    catch (Exception exc)
+                    else
                     {
-                        MessageBox.Show("Error: " + exc);
+                        MessageBox.Show("Error, el codigo de factura proporcionado ya existe o fue ingresado anteriormente");
+
+                        saleCode = r.Next(1000, 9999999).ToString("D7");
+                        txt_codigoVenta.Text = saleCode;
                     }
-
-                    //Resta las tareas que se hayan asignado al segundo plano anteriormente
-                    worker.DoWork -= worker_DoWork;
-                    worker.ProgressChanged -= worker_ProgressChanged;
-                    worker.RunWorkerCompleted -= Worker_RunWorkerCompleted;
-
-                    //Agrega una tarea al segundo plano
-                    worker.WorkerReportsProgress = true;
-                    worker.DoWork += worker_DoWork;
-                    worker.ProgressChanged += worker_ProgressChanged;
-                    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-                    //Empieza una tarea en segundo plano
-                    worker.RunWorkerAsync();
-                
                 }
-                else
-                {
-                    MessageBox.Show("Error, el codigo de factura proporcionado ya existe o fue ingresado anteriormente");
-                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error: " + exc);
+
+                cbBox_almacen.IsEnabled = true;
+                dp_compra.IsEnabled = true;
+                btn_seleccionaProducto.IsEnabled = true;
+                dg_datos.IsReadOnly = false;
+                btn_Guardar.IsEnabled = true;
+                btn_buscaCliente.IsEnabled = true;
+                txt_descuento.IsEnabled = true;
+                txt_valorTotalFactura.IsEnabled = true;
             }
         }
 
@@ -337,8 +409,14 @@ namespace SisApp
                         {
                             var found = Singleton.Instancia.listaIngresos.FirstOrDefault(fo => fo.Id == item.Id);
 
+                            float totalCant = found.SalePrice * found.Amount;
+                            float iva = totalCant * (float)0.12;
+                            float subtotal = totalCant - iva;
+
+                            found.SubTotal = subtotal;
+                            found.Tax = iva;
                             found.SalePrice = (float)vinculo.PriceByUnit;
-                            found.TotalPrice = item.Amount * found.PurchasePrice;
+                            found.TotalPrice = item.Amount * (float)vinculo.PriceByUnit;
                         }
                         else
                         {
@@ -372,6 +450,7 @@ namespace SisApp
                 if (!int.TryParse(txt_descuento.Text, out value))
                 {
                     txt_descuento.Text = "0";
+                    txt_valorTotalFactura.Text = ValTF.ToString();
                 }
                 else
                 {
@@ -379,6 +458,7 @@ namespace SisApp
                     if (txt_descuento.Text == "0" | txt_descuento.Text == "")
                     {
                         txt_descuento.Text = "0";
+                        txt_valorTotalFactura.Text = ValTF.ToString();
                     }
                     else
                     {
@@ -481,9 +561,6 @@ namespace SisApp
 
                     (sender as BackgroundWorker).ReportProgress(i2);
                 }
-                lastSale.TotalPrice = Math.Round(totalPriceSale, 2);
-
-                db.Update(lastSale);
 
                 //Envia el reporte de progreso de la tarea en segundo plano
                 (sender as BackgroundWorker).ReportProgress(i2 + i);
@@ -503,6 +580,7 @@ namespace SisApp
             dg_datos.IsReadOnly = false;
             btn_Guardar.IsEnabled = false;
             txt_descuento.IsEnabled = false;
+            txt_valorTotalFactura.IsEnabled = false;
 
             cbBox_almacen.SelectedItem = "";
             txt_descuento.Text = "0";
@@ -518,6 +596,8 @@ namespace SisApp
             pbStatus.Value = 0;
             pbStatus.Visibility = Visibility.Collapsed;
 
+            saleCode = r.Next(1000, 9999999).ToString("D7");
+            txt_codigoVenta.Text = saleCode;
         }
         //Muestra el reporte de la tarea en segundo plano
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -525,6 +605,46 @@ namespace SisApp
             lbl_saveInfo.Content = "Vinculando productos a la compra: " + e.ProgressPercentage + "%";
 
             pbStatus.Value = e.ProgressPercentage;
+        }
+
+        private void txt_valorTotalFactura_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter | e.Key == Key.Tab)
+            {
+                float value;
+                string cadena = txt_valorTotalFactura.Text;
+                cadena = cadena.Replace(".", ",");
+                //Si ingresa un caracter no numerico se reestablece a 0
+                if (!float.TryParse(cadena, out value))
+                {
+                    txt_valorTotalFactura.Text = "0";
+                    txt_descuento.Text = "0";
+                }
+                else
+                {
+                    //Si se ingresa el 0 o un vacio, se reestablece a 0
+                    if (txt_valorTotalFactura.Text == "0" | txt_valorTotalFactura.Text == "")
+                    {
+                        txt_valorTotalFactura.Text = "0";
+                        txt_descuento.Text = "0";
+                    }
+                    else
+                    {/*
+                        if (col_index == 3)
+                        {
+                            found.SalePrice = edit;
+                            found.SalePricePercent = ((edit - found.PurchasePrice) / found.PurchasePrice);
+                        }*/
+                        float descuento = ((ValTF - value) / ValTF) * 100;
+
+                        if (descuento < 0) descuento = 0;
+
+                        txt_valorTotalFactura.Text = cadena;
+
+                        txt_descuento.Text = Math.Round(descuento).ToString();
+                    }
+                }
+            }
         }
     }
 }

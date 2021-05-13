@@ -28,6 +28,13 @@ namespace SisApp
         {
             InitializeComponent();
 
+            if (LoggedUser.Rol != "ADMIN")
+            {
+                btn_eliminar.Visibility = Visibility.Collapsed;
+                btn_editar.Visibility = Visibility.Collapsed;
+                btn_nuevo.Visibility = Visibility.Collapsed;
+            }
+
             this.WindowState = WindowState.Maximized;
 
             LlenaListView();

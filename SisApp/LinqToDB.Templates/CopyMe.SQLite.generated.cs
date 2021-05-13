@@ -41,7 +41,6 @@ namespace DataModels
 		public ITable<Receipt>          Receipts          { get { return this.GetTable<Receipt>(); } }
 		public ITable<Rol>              Rols              { get { return this.GetTable<Rol>(); } }
 		public ITable<Sale>             Sales             { get { return this.GetTable<Sale>(); } }
-		public ITable<SalesOld20210509> SalesOld20210509  { get { return this.GetTable<SalesOld20210509>(); } }
 		public ITable<SalesRefund>      SalesRefunds      { get { return this.GetTable<SalesRefund>(); } }
 		public ITable<Store>            Stores            { get { return this.GetTable<Store>(); } }
 		public ITable<TradeMark>        TradeMarks        { get { return this.GetTable<TradeMark>(); } }
@@ -89,12 +88,6 @@ namespace DataModels
 		public IEnumerable<Sale> Sales { get; set; }
 
 		/// <summary>
-		/// FK__Sales_old_20210509_0_0_BackReference
-		/// </summary>
-		[Association(ThisKey="Id", OtherKey="CashierId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SalesOld20210509> Salesolds { get; set; }
-
-		/// <summary>
 		/// FK_Cashiers_0_0
 		/// </summary>
 		[Association(ThisKey="StoreId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Cashiers_0_0", BackReferenceName="Cashiers")]
@@ -138,12 +131,6 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CustomerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Sale> Sales { get; set; }
-
-		/// <summary>
-		/// FK__Sales_old_20210509_1_0_BackReference
-		/// </summary>
-		[Association(ThisKey="Id", OtherKey="CustomerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SalesOld20210509> Salesolds { get; set; }
 
 		#endregion
 	}
@@ -565,6 +552,7 @@ namespace DataModels
 		[Column,     Nullable] public double? RemainingCash { get; set; } // real
 		[Column,     Nullable] public long?   CashierId     { get; set; } // integer
 		[Column,     Nullable] public long?   StoreId       { get; set; } // integer
+		[Column,     Nullable] public string  SaleCode      { get; set; } // text(100)
 
 		#region Associations
 
@@ -602,44 +590,6 @@ namespace DataModels
 		/// FK_Sales_3_0
 		/// </summary>
 		[Association(ThisKey="UserId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Sales_3_0", BackReferenceName="Sales")]
-		public User User { get; set; }
-
-		#endregion
-	}
-
-	[Table("_Sales_old_20210509")]
-	public partial class SalesOld20210509
-	{
-		[PrimaryKey, Identity] public long    Id            { get; set; } // integer
-		[Column,     Nullable] public long?   UserId        { get; set; } // integer
-		[Column,     Nullable] public long?   CustomerId    { get; set; } // integer
-		[Column,     Nullable] public string  SaleDate      { get; set; } // text(30)
-		[Column,     Nullable] public double? TotalPrice    { get; set; } // real
-		[Column,     Nullable] public double? SubPrice      { get; set; } // real
-		[Column,     Nullable] public double? Tax           { get; set; } // real
-		[Column,     Nullable] public double? Discount      { get; set; } // real
-		[Column,     Nullable] public double? Cash          { get; set; } // real
-		[Column,     Nullable] public double? RemainingCash { get; set; } // real
-		[Column,     Nullable] public long?   CashierId     { get; set; } // integer
-
-		#region Associations
-
-		/// <summary>
-		/// FK__Sales_old_20210509_0_0
-		/// </summary>
-		[Association(ThisKey="CashierId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Sales_old_20210509_0_0", BackReferenceName="Salesolds")]
-		public Cashier Cashier { get; set; }
-
-		/// <summary>
-		/// FK__Sales_old_20210509_1_0
-		/// </summary>
-		[Association(ThisKey="CustomerId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Sales_old_20210509_1_0", BackReferenceName="Salesolds")]
-		public Customer Customer { get; set; }
-
-		/// <summary>
-		/// FK__Sales_old_20210509_2_0
-		/// </summary>
-		[Association(ThisKey="UserId", OtherKey="Id", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK__Sales_old_20210509_2_0", BackReferenceName="Salesolds")]
 		public User User { get; set; }
 
 		#endregion
@@ -782,7 +732,7 @@ namespace DataModels
 	[Table("Users")]
 	public partial class User
 	{
-		[PrimaryKey, NotNull    ] public long   Id       { get; set; } // integer
+		[PrimaryKey, Identity   ] public long   Id       { get; set; } // integer
 		[Column,     NotNull    ] public string Ci       { get; set; } // text(13)
 		[Column,        Nullable] public string Name     { get; set; } // text(50)
 		[Column,        Nullable] public string LastName { get; set; } // text(50)
@@ -815,12 +765,6 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="UserId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Sale> Sales { get; set; }
-
-		/// <summary>
-		/// FK__Sales_old_20210509_2_0_BackReference
-		/// </summary>
-		[Association(ThisKey="Id", OtherKey="UserId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SalesOld20210509> Salesolds { get; set; }
 
 		#endregion
 	}
@@ -924,12 +868,6 @@ namespace DataModels
 		}
 
 		public static Sale Find(this ITable<Sale> table, long Id)
-		{
-			return table.FirstOrDefault(t =>
-				t.Id == Id);
-		}
-
-		public static SalesOld20210509 Find(this ITable<SalesOld20210509> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

@@ -400,7 +400,17 @@ namespace SisApp
                     }
                     else
                     {
-                        MessageBox.Show("El producto " + item.ProductName + " no existe en el almacen " + vinculo.Store.StoreName);
+                        ProductsStore productsStore = new ProductsStore
+                        {
+                            StoreId = lastTransfer.ToStoreId,
+                            ProductId = item.Id,
+                            Stock = Math.Round(item.Amount, 2),
+                            SalePricePercent = 1.35,
+                            PriceByUnit = Math.Round(item.PurchasePrice * 1.35, 2),
+                            PurchasePrice = Math.Round(item.PurchasePrice, 2)
+                        };
+
+                        db.Insert(productsStore);
                     }
 
                     //Resta los productos del almacen del que se transfirieron
@@ -411,6 +421,10 @@ namespace SisApp
                         if (vinculo2.Stock >= item.Amount)
                         {
                             vinculo2.Stock = vinculo2.Stock - Math.Round(item.Amount, 2);
+                        }
+                        else
+                        {
+                            vinculo2.Stock = 0;
                         }
 
                         db.Update(vinculo2);

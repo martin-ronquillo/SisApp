@@ -166,6 +166,9 @@
     <Compile Include="ArticulosCRUD.xaml.cs">
       <DependentUpon>ArticulosCRUD.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Cajeros.xaml.cs">
+      <DependentUpon>Cajeros.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Categorias.xaml.cs">
       <DependentUpon>Categorias.xaml</DependentUpon>
     </Compile>
@@ -238,6 +241,12 @@
     <Compile Include="TraspasoArticulos.xaml.cs">
       <DependentUpon>TraspasoArticulos.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Usuarios.xaml.cs">
+      <DependentUpon>Usuarios.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UsuariosCRUD.xaml.cs">
+      <DependentUpon>UsuariosCRUD.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ventas.xaml.cs">
       <DependentUpon>Ventas.xaml</DependentUpon>
     </Compile>
@@ -250,6 +259,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ArticulosCRUD.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cajeros.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -329,6 +342,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Usuarios.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UsuariosCRUD.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ventas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -382,6 +403,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Resource Include="BuscarCliente.png" />
+    <Resource Include="Kardex.png" />
+    <Resource Include="Recibo.png" />
     <Content Include="SisAppCompact.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -54,6 +54,10 @@ namespace SisApp
             {
                 lbl_tipoConsulta.Content = "CONSULTAR COMPRAS";
             }
+            if (Consulta == 5)
+            {
+                lbl_tipoConsulta.Content = "CONSULTAR VENTAS";
+            }
         }
 
         private void btn_consulta_Click(object sender, RoutedEventArgs e)
@@ -140,32 +144,36 @@ namespace SisApp
                 {
                     var test = db.PurchasesRefunds.FirstOrDefault(foo => foo.PurchaseId.Equals(registro.Id));
 
-                    if (test == null)
-                    {
-                        listaRegistros.Add(
-                            new ConsultaIngEgr
-                            {
-                                Id = (int)registro.Id,
-                                Code = registro.PurchaseCode,
-                                Store = registro.Store.StoreName,
-                                Total = (float)registro.TotalPrice,
-                                Type = "Ok"
-                            }
-                        );
-                    }
-                    else
-                    {
-                        listaRegistros.Add(
-                            new ConsultaIngEgr
-                            {
-                                Id = (int)registro.Id,
-                                Code = registro.PurchaseCode,
-                                Store = registro.Store.StoreName,
-                                Total = (float)registro.TotalPrice,
-                                Type = "Compra Devuelta"
-                            }
-                        );
-                    }
+                    listaRegistros.Add(
+                        new ConsultaIngEgr
+                        {
+                            Id = (int)registro.Id,
+                            Code = registro.PurchaseCode,
+                            Store = registro.Store.StoreName,
+                            Total = (float)registro.TotalPrice,
+                            Type = test == null ? "Ok" : "Compra Devuelta"
+                        }
+                    );
+                }
+            }
+            if (Consulta == 5)
+            {
+                var registros = db.Sales.LoadWith(t => t.Store).Where(re => re.SaleDate.Equals(dp_fechaConsulta.Text)).ToList();
+
+                foreach (var registro in registros)
+                {
+                    var test = db.SalesRefunds.FirstOrDefault(foo => foo.SalesId.Equals(registro.Id));
+
+                    listaRegistros.Add(
+                        new ConsultaIngEgr
+                        {
+                            Id = (int)registro.Id,
+                            Code = registro.SaleCode,
+                            Store = registro.Store.StoreName,
+                            Total = (float)registro.TotalPrice,
+                            Type = test == null ? "Ok" : "Venta Devuelta"
+                        }
+                    );
                 }
             }
 
@@ -208,6 +216,10 @@ namespace SisApp
                 if (Consulta == 4)
                 {
                     GeneraExcel.CreaExcel(4, dp_fechaConsulta.Text);
+                }
+                if (Consulta == 5)
+                {
+                    GeneraExcel.CreaExcel(5, dp_fechaConsulta.Text);
                 }
             }
         }

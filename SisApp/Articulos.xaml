@@ -22,7 +22,7 @@
                 
                 <Menu DockPanel.Dock="Top" Height="25" VerticalAlignment="Center" FontSize="14" FontStyle="Italic">
 
-                    <MenuItem Header="Mantenimiento">
+                    <MenuItem Header="Mantenimiento" Name="menuMantenimiento">
 
                         <MenuItem Header="Nuevo Articulo" Click="btn_NuevoArticulo_Click">
                             <MenuItem.Icon>
@@ -39,6 +39,18 @@
                         <MenuItem Header="Marcas" Name="creaMarca" Click="creaMarca_Click">
                             <MenuItem.Icon>
                                 <Image Source="Marca.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Usuarios" Name="creaUsuario" Click="creaUsuario_Click">
+                            <MenuItem.Icon>
+                                <Image Source="Agrega_usuario.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Cajeros" Name="agregaCajero" Click="agregaCajero_Click">
+                            <MenuItem.Icon>
+                                <Image Source="Recibo.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         
@@ -98,7 +110,7 @@
                             </MenuItem.Icon>
                         </MenuItem>
 
-                        <MenuItem Header="Compras">
+                        <MenuItem Header="Compras" Name="menuCompras">
                             <MenuItem.Icon>
                                 <Image Source="Compra.png"/>
                             </MenuItem.Icon>
@@ -122,12 +134,6 @@
                                     <Image Source="Devolucion.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-
-                            <!--<MenuItem Header="Consultar Devoluciones" Name="consultaDevolucion" Click="consultaDevolucion_Click">
-                                <MenuItem.Icon>
-                                    <Image Source="Hoy.png"/>
-                                </MenuItem.Icon>
-                            </MenuItem>-->
                         </MenuItem>
 
                         <MenuItem Header="Ventas">
@@ -154,12 +160,14 @@
                                     <Image Source="Devolucion.png"/>
                                 </MenuItem.Icon>
                             </MenuItem>
+                        </MenuItem>
 
-                            <!--<MenuItem Header="Consultar Devoluciones" Name="consultaDevolucionVenta" Click="consultaDevolucionVenta_Click">
-                                <MenuItem.Icon>
-                                    <Image Source="Hoy.png"/>
-                                </MenuItem.Icon>
-                            </MenuItem>-->
+                        <Separator/>
+
+                        <MenuItem Header="Kardex" Name="kardex" Click="kardex_Click">
+                            <MenuItem.Icon>
+                                <Image Source="Kardex.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
 

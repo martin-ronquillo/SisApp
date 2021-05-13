@@ -384,12 +384,12 @@ namespace SisApp
         {
             validate = true;
 
-            if (cbBox_almacen.SelectedItem == "" | cbBox_almacen.SelectedItem == null)
+            if (cbBox_almacen.SelectedItem.ToString() == "" | cbBox_almacen.SelectedItem == null)
             {
                 validate = false;
             }
 
-            if (cbBox_tipoEgreso.SelectedItem == "" | cbBox_tipoEgreso.SelectedItem == null)
+            if (cbBox_tipoEgreso.SelectedItem.ToString() == "" | cbBox_tipoEgreso.SelectedItem == null)
             {
                 validate = false;
             }

@@ -60,6 +60,11 @@ namespace SisApp
             cbBox_almacen.IsEnabled = false;
             txt_porcentajeGanancia.IsEnabled = false;
             txt_precioVenta.IsEnabled = false;
+            txt_precioCompra.IsEnabled = false;
+
+            txt_precioCompra.Visibility = Visibility.Collapsed;
+            txt_precioVenta.Visibility = Visibility.Collapsed;
+            txt_porcentajeGanancia.Visibility = Visibility.Collapsed;
         }
 
         public ArticulosCRUD(int Id)
@@ -96,6 +101,9 @@ namespace SisApp
                 cbBox_categoria.SelectedItem = Producto.Category.CategoryName;
                 txt_codigoBarras.Text = Producto.BarCode;
                 txt_descripcionArticulo.Text = Producto.ProductName;
+                txt_porcentajeGanancia.Text = "0";
+                txt_precioCompra.Text = "0";
+                txt_precioVenta.Text = "0";
             }
             catch (Exception e)
             {
@@ -150,8 +158,16 @@ namespace SisApp
         {
             try
             {
-                Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
-                ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
+                if (cbBox_almacen.SelectedItem != null)
+                {
+                    Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
+                    ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
+
+                    productsStore.PriceByUnit = Math.Round(float.Parse(txt_precioVenta.Text), 2);
+                    productsStore.SalePricePercent = Math.Round(float.Parse(txt_porcentajeGanancia.Text), 2);
+
+                    db.Update(productsStore);
+                }
 
                 if (Edit)
                 {
@@ -159,14 +175,11 @@ namespace SisApp
                     Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
                     Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
                     Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
-                    Producto.SalePricePercent = float.Parse(txt_porcentajeGanancia.Text);
-                    Producto.SalePrice = float.Parse(txt_precioVenta.Text);
+                    Producto.SalePricePercent = Math.Round(float.Parse(txt_porcentajeGanancia.Text), 2);
+                    Producto.SalePrice = Math.Round(float.Parse(txt_precioVenta.Text), 2);
 
-                    productsStore.PriceByUnit = float.Parse(txt_precioVenta.Text);
-                    productsStore.SalePricePercent = float.Parse(txt_porcentajeGanancia.Text);
 
                     db.Update(Producto);
-                    db.Update(productsStore);
                 }
                 else
                 {
@@ -240,6 +253,7 @@ namespace SisApp
                     float valCompra = float.Parse(txt_precioCompra.Text);
                     float valVenta = (valCompra * value) + valCompra;
 
+                    txt_porcentajeGanancia.Text = cadena;
                     txt_precioVenta.Text = valVenta.ToString();
                 }
                 else
@@ -262,6 +276,7 @@ namespace SisApp
                     float valCompra = float.Parse(txt_precioCompra.Text);
                     float valVentaPercent = ((value - valCompra) / valCompra);
 
+                    txt_precioVenta.Text = cadena;
                     txt_porcentajeGanancia.Text = valVentaPercent.ToString();
                 }
             }

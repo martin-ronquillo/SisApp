@@ -1,0 +1,81 @@
+﻿<Window x:Class="SisApp.Usuarios"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Usuarios" Height="711" Width="949">
+    <Grid Margin="14,10">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid>
+
+            <Label Content="USUARIOS" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+            <ListView x:Name="lv_usuarios" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.View>
+
+                    <GridView>
+
+                        <GridViewColumn Header="  Cedula  " x:Name="list_cantidad" Width="170" DisplayMemberBinding="{Binding Ci}"/>
+                        <GridViewColumn Header="Nombre Y Apellido" x:Name="list_producto" DisplayMemberBinding="{Binding NameLastname}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Acceso  " x:Name="list_val_total" Width="96" DisplayMemberBinding="{Binding Role}"/>
+                        <GridViewColumn Header="  Perfil  " x:Name="list_val_unidad" Width="100" DisplayMemberBinding="{Binding LoggUser}"/>
+                        <GridViewColumn Header="  Contraseña  " x:Name="list" Width="100" DisplayMemberBinding="{Binding Password}"/>
+
+                    </GridView>
+
+                </ListView.View>
+
+            </ListView>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <Button x:Name="btn_agregar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" ToolTip="Agregar Usuario" Click="btn_agregar_Click">
+                <Image Source="Añadir.png"/>
+            </Button>
+            <Button x:Name="btn_editar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" Margin="0,0,45,0" ToolTip="Editar Usuario" Click="btn_editar_Click">
+                <Image Source="Editar.png"/>
+            </Button>
+            <Button x:Name="btn_eliminar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" Margin="0,0,90,0" ToolTip="Eliminar Usuario" Click="btn_eliminar_Click">
+                <Image Source="Basura.png"/>
+            </Button>
+            
+        </Grid>
+        
+        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Visibility="Hidden" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!--Width is bound to width of the first GridViewColumn -->
+                <ColumnDefinition Width="{Binding ElementName=list_cantidad, Path=ActualWidth}"/>
+                <!--Width is set to "Fill"-->
+                <ColumnDefinition Width="*"/>
+                <!--Correction Width-->
+                <ColumnDefinition Width="315"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="1" x:Name="helperField"/>
+        </Grid>
+    </Grid>
+</Window>

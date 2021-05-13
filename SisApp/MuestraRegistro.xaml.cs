@@ -69,6 +69,10 @@ namespace SisApp
             {
                 GeneraExcel.CreaExcel(4, Id);
             }
+            if (TipoConsulta == 5)
+            {
+                GeneraExcel.CreaExcel(5, Id);
+            }
         }
 
         public void LlenaListView()
@@ -157,6 +161,27 @@ namespace SisApp
 
                 lv_registros.ItemsSource = listaRegistros;
             }
+            if (TipoConsulta == 5)
+            {
+                var venta = db.ProductsSales.LoadWith(foo => foo.Product).Where(re => re.SaleId.Equals(Id));
+
+                foreach (var item in venta)
+                {
+                    listaRegistros.Add(
+                        new ConsultaRegistroInfo
+                        {
+                            Id = (int)item.Product.Id,
+                            Code = item.Product.BarCode,
+                            Product = item.Product.ProductName,
+                            Amount = (float)item.Amount,
+                            Purchase = (float)item.SalePrice,
+                            Total = (float)item.Amount * (float)item.SalePrice
+                        }
+                    );
+                }
+
+                lv_registros.ItemsSource = listaRegistros;
+            }
         }
 
         public void LlenaInfo()
@@ -212,6 +237,20 @@ namespace SisApp
                 txt_fechaIngreso.Text = compra.PurchaseDate;
                 txt_tipoIngreso.Text = compra.Discount.ToString();
                 txt_totalIngreso.Text = compra.TotalPrice.ToString();
+            }
+            if (TipoConsulta == 5)
+            {
+                var venta = db.Sales.LoadWith(foo => foo.Store).First(foo => foo.Id.Equals(Id));
+
+                lbl_perfilRegistro.Content = "VENTA EN: " + venta.Store.StoreName;
+                lbl_fecha.Content = "Fecha de Venta:";
+                lbl_tipo.Content = "Descuento:";
+                lbl_total.Content = "V. Total Venta:";
+
+                txt_nRegistro.Text = venta.SaleCode;
+                txt_fechaIngreso.Text = venta.SaleDate;
+                txt_tipoIngreso.Text = venta.Discount.ToString();
+                txt_totalIngreso.Text = venta.TotalPrice.ToString();
             }
         }
 

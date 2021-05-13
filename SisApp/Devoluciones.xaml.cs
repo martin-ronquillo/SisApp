@@ -64,6 +64,7 @@ namespace SisApp
             DevolucionDetalle devolucionDetalle = new DevolucionDetalle(Type, selectedItem.Id);
             devolucionDetalle.ShowDialog();
 
+            devoluciones.listaDevoluciones.Clear();
             lv_registros.ItemsSource = null;
             lv_registros.ItemsSource = devoluciones.listaRegistros(Type, dp_fechaConsulta.Text);
         }
@@ -75,6 +76,7 @@ namespace SisApp
             DevolucionDetalle devolucionDetalle = new DevolucionDetalle(Type, selectedItem.Id);
             devolucionDetalle.ShowDialog();
 
+            devoluciones.listaDevoluciones.Clear();
             lv_registros.ItemsSource = null;
             lv_registros.ItemsSource = devoluciones.listaRegistros(Type, dp_fechaConsulta.Text);
         }

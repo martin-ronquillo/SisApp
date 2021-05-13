@@ -75,6 +75,39 @@ namespace SisApp
 
                     db.Insert(purchasesRefund);
 
+                    var purchase = db.Purchases.First(foo => foo.Id.Equals(Id));
+
+                    var productosPur = db.ProductsPurchases.Where(foo => foo.PurchaseId.Equals(Id)).ToList();
+
+                    foreach (var item in productosPur)
+                    {
+                        var pro = db.ProductsStores.First(foo => foo.StoreId.Equals(purchase.StoreId) & foo.ProductId.Equals(item.ProductId));
+
+                        if (pro.Stock >= item.Amount)
+                        {
+                            pro.Stock = pro.Stock - item.Amount;
+                        }
+                        else
+                        {
+                            pro.Stock = 0;
+                        }
+
+                        db.Update(pro);
+
+                        var producto = db.Products.First(foo => foo.Id.Equals(item.ProductId));
+
+                        if (producto.Stock >= item.Amount)
+                        {
+                            producto.Stock = producto.Stock - item.Amount;
+                        }
+                        else
+                        {
+                            producto.Stock = 0;
+                        }
+
+                        db.Update(producto);
+                    }
+
                     this.Close();
                 }
                 catch(Exception exc)
@@ -96,6 +129,25 @@ namespace SisApp
                     };
 
                     db.Insert(salesRefund);
+
+                    var sale = db.Sales.First(foo => foo.Id.Equals(Id));
+
+                    var productosSale = db.ProductsSales.Where(foo => foo.SaleId.Equals(Id)).ToList();
+
+                    foreach (var item in productosSale)
+                    {
+                        var pro = db.ProductsStores.First(foo => foo.StoreId.Equals(sale.StoreId) & foo.ProductId.Equals(item.ProductId));
+
+                        pro.Stock = pro.Stock + item.Amount;
+
+                        db.Update(pro);
+
+                        var producto = db.Products.First(foo => foo.Id.Equals(item.ProductId));
+
+                        producto.Stock = producto.Stock + item.Amount;
+
+                        db.Update(producto);
+                    }
 
                     this.Close();
                 }

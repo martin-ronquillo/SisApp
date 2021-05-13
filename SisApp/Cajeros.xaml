@@ -1,0 +1,67 @@
+﻿<Window x:Class="SisApp.Cajeros"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SisApp"
+        mc:Ignorable="d"
+        Title="Cajeros" Height="416" Width="666">
+    <Grid Margin="14,5">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid>
+
+            <Label Content="CAJEROS" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <Label Content="Almacen:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,140,5" FontSize="16" FontStyle="Italic"/>
+            <ComboBox Name="cbBox_almacen" HorizontalAlignment="Right" VerticalAlignment="Center" Width="130" Height="25" SelectionChanged="cbBox_almacen_SelectionChanged"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+            <ListView x:Name="lv_cajeros" SelectedItem="{Binding SelectedItem}" TextElement.Foreground="Black" TextBlock.TextAlignment="Center" TextElement.FontSize="15" Background="#FFECECEC">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.View>
+
+                    <GridView>
+
+                        <GridViewColumn Header="  Caja  " x:Name="list_cantidad" Width="200" DisplayMemberBinding="{Binding CheckerName}"/>
+                        <GridViewColumn Header="Direccion" x:Name="list_producto" DisplayMemberBinding="{Binding Direction}" Width="{Binding ElementName=helperField, Path=ActualWidth}"/>
+                        <GridViewColumn Header="  Almacen  " x:Name="list_val_compra" Width="130" DisplayMemberBinding="{Binding Store}"/>
+
+                    </GridView>
+
+                </ListView.View>
+
+            </ListView>
+
+        </Grid>
+        
+        <!--Hacer proporciona ancho automatico al campo "producto" del listview-->
+        <Grid Visibility="Hidden" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!--Width is bound to width of the first GridViewColumn -->
+                <ColumnDefinition Width="{Binding ElementName=list_cantidad, Path=ActualWidth}"/>
+                <!--Width is set to "Fill"-->
+                <ColumnDefinition Width="*"/>
+                <!--Correction Width-->
+                <ColumnDefinition Width="145"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="1" x:Name="helperField"/>
+        </Grid>
+    </Grid>
+</Window>

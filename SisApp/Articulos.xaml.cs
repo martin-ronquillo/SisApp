@@ -32,6 +32,8 @@ namespace SisApp
             if (LoggedUser.Rol != "ADMIN")
             {
                 btn_EliminaArticulo.Visibility = Visibility.Collapsed;
+                menuMantenimiento.Visibility = Visibility.Collapsed;
+                menuCompras.Visibility = Visibility.Collapsed;
             }
 
             LlenaComboBox();
@@ -344,11 +346,6 @@ namespace SisApp
             devoluciones.Show();
         }
 
-        private void consultaDevolucion_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void ingresaVenta_Click(object sender, RoutedEventArgs e)
         {
             Ventas ventas = new Ventas();
@@ -357,7 +354,8 @@ namespace SisApp
 
         private void consultaVenta_Click(object sender, RoutedEventArgs e)
         {
-
+            ConsultaIE consultaIE = new ConsultaIE(5);
+            consultaIE.Show();
         }
 
         private void realizaDevolucionVenta_Click(object sender, RoutedEventArgs e)
@@ -366,7 +364,19 @@ namespace SisApp
             devoluciones.Show();
         }
 
-        private void consultaDevolucionVenta_Click(object sender, RoutedEventArgs e)
+        private void creaUsuario_Click(object sender, RoutedEventArgs e)
+        {
+            Usuarios usuarios = new Usuarios();
+            usuarios.Show();
+        }
+
+        private void agregaCajero_Click(object sender, RoutedEventArgs e)
+        {
+            Cajeros cajeros = new Cajeros();
+            cajeros.Show();
+        }
+
+        private void kardex_Click(object sender, RoutedEventArgs e)
         {
 
         }
