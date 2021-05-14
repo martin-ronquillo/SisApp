@@ -1,7 +1,9 @@
 ﻿using DataModels;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using LinqToDB;
 
 namespace SisApp
 {
@@ -15,6 +17,8 @@ namespace SisApp
         public Loggin()
         {
             InitializeComponent();
+
+            ValidaCaja();
         }
 
         private void btnEntrar_Click(object sender, RoutedEventArgs e)
@@ -56,6 +60,29 @@ namespace SisApp
             {
                 MessageBox.Show("Usuario o Contraseña incorrectos");
                 txtUsuario.Focus();
+            }
+        }
+
+        public void ValidaCaja()
+        {
+            //Encuentra la caja segun el nombre y obtiene su ID. Si no existe, se crea
+            try
+            {
+                var caja = db.Cashiers.First(caj => caj.CheckerName.Equals(Environment.MachineName));
+            }
+            catch
+            {
+                Cashier caja = new Cashier
+                {
+                    CheckerName = Environment.MachineName,
+                    Direction = "Undefined",
+                    StoreId = null,
+                };
+
+                db.Insert(caja);
+
+                Singleton.Instancia.newCaja = true;
+                Singleton.Instancia.idCaja = (int)db.Cashiers.OrderByDescending(foo => foo.Id).FirstOrDefault().Id;
             }
         }
     }

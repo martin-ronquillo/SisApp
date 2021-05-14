@@ -540,7 +540,7 @@ namespace SisApp
 
                     db.Update(producto);
 
-                    //Suma los productos ingresados al inventario del almacen correspondiente
+                    //Resta los productos vendidos del inventario del almacen correspondiente
                     var vinculo = productStore.FirstOrDefault(ps => ps.ProductId.Equals(item.Id));
 
                     if (vinculo != null)

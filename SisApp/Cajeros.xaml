@@ -12,7 +12,7 @@
 
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="15"/>
+            <RowDefinition Height="50"/>
 
         </Grid.RowDefinitions>
 
@@ -47,6 +47,20 @@
                 </ListView.View>
 
             </ListView>
+
+        </Grid>
+        
+        <Grid Grid.Row="2">
+
+            <!--<Button x:Name="btn_agregar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" ToolTip="Agregar Usuario" Click="btn_agregar_Click">
+                <Image Source="Añadir.png"/>
+            </Button>-->
+            <Button x:Name="btn_editar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" ToolTip="Editar Usuario" Click="btn_editar_Click">
+                <Image Source="Editar.png"/>
+            </Button>
+            <Button x:Name="btn_eliminar" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Width="30" Background="{x:Null}" BorderThickness="0" Margin="0,0,45,0" ToolTip="Eliminar Usuario" Click="btn_eliminar_Click">
+                <Image Source="Basura.png"/>
+            </Button>
 
         </Grid>
         

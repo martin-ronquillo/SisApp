@@ -380,5 +380,11 @@ namespace SisApp
         {
 
         }
+
+        private void almacen_Click(object sender, RoutedEventArgs e)
+        {
+            Almacenes almacenes = new Almacenes();
+            almacenes.Show();
+        }
     }
 }

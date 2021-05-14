@@ -8,6 +8,10 @@ namespace SisApp
 
         private Singleton() { }
 
+        //Si se crea un cajero
+        public bool newCaja = false;
+        public int idCaja;
+
         //Se usan para el loggin
         public bool estado = true;
         public int idUser;

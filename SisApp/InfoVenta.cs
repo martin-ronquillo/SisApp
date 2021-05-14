@@ -7,29 +7,6 @@ using System.Windows;
 
 namespace SisApp
 {
-    class InfoVenta
-    {
-        readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
-
-        public int VentaNum()
-        {
-            try
-            {
-                var venta = db.Sales.OrderByDescending(sa => sa.Id).FirstOrDefault();
-
-                int nVenta = (int)venta.Id + 1;
-
-                return nVenta;
-            }
-            catch
-            {
-                int venta = 1;
-
-                return venta;
-            }
-        }
-    }
-
     class ClienteFactura
     {
         readonly SisAppCompactDB db = new SisAppCompactDB("ConnStr");
@@ -105,13 +82,17 @@ namespace SisApp
         public string Producto { get; set; }
         public float ValorUnidad { get; set; }
         public float ValorTotal { get; set; }
-        public double CodigoBarras { get; set; }
+        public string CodigoBarras { get; set; }
 
         public List<ArticulosVenta> InsertaArticulo(List<ArticulosVenta> listaProductos, string BarCode)
         {
             try
             {
-                var producto = db.Products.First(pro => pro.BarCode.Equals(BarCode));
+                var cashier = db.Cashiers.FirstOrDefault(foo => foo.CheckerName.Equals(Environment.MachineName));
+
+                var product = db.Products.FirstOrDefault(pro => pro.BarCode.Equals(BarCode.ToUpper()));
+
+                var producto = db.ProductsStores.LoadWith(foo => foo.Product).FirstOrDefault(foo => foo.StoreId.Equals(cashier.StoreId) & foo.ProductId.Equals(product.Id));
 
                 if (producto.Stock >= 1)
                 {
@@ -119,12 +100,12 @@ namespace SisApp
                     listaProductos.Add(
                         new ArticulosVenta()
                         {
-                            Id = (int)producto.Id,
+                            Id = (int)producto.Product.Id,
                             Cantidad = 1,
-                            Producto = producto.ProductName,
-                            ValorUnidad = (float)producto.SalePrice,
-                            ValorTotal = Cantidad * (float)producto.SalePrice,
-                            CodigoBarras = double.Parse(producto.BarCode)
+                            Producto = producto.Product.ProductName,
+                            ValorUnidad = (float)producto.PriceByUnit,
+                            ValorTotal = Cantidad * (float)producto.PriceByUnit,
+                            CodigoBarras = producto.Product.BarCode
                         }
                     );
                 }
@@ -135,7 +116,7 @@ namespace SisApp
             }
             catch
             {
-                MessageBox.Show("Producto no encontrado");
+                MessageBox.Show("Producto no disponible en este almacen");
             }
 
             return listaProductos;
@@ -143,38 +124,29 @@ namespace SisApp
 
         public List<ArticulosVenta> AumentaArticulo(List<ArticulosVenta> listaProductos, string BarCode)
         {
-            foreach (ArticulosVenta articulo in listaProductos)
+            try
             {
-                if (articulo.CodigoBarras == double.Parse(BarCode))
+                var cashier = db.Cashiers.FirstOrDefault(foo => foo.CheckerName.Equals(Environment.MachineName));
+
+                var product = db.Products.FirstOrDefault(pro => pro.BarCode.Equals(BarCode.ToUpper()));
+
+                var producto = db.ProductsStores.LoadWith(foo => foo.Product).FirstOrDefault(foo => foo.StoreId.Equals(cashier.StoreId) & foo.ProductId.Equals(product.Id));
+
+                var found = listaProductos.FirstOrDefault(foo => foo.CodigoBarras == BarCode);
+
+                if (producto.Stock >= found.Cantidad + 1)
                 {
-                    try
-                    {
-                        var producto = db.Products.First(pro => pro.BarCode.Equals(BarCode));
-
-                        int cantidadProvisional = articulo.Cantidad + 1;
-
-                        if (producto.Stock >= cantidadProvisional)
-                        {
-                            Cantidad = cantidadProvisional;
-
-                            var found = listaProductos.FirstOrDefault(fo => fo.Id == producto.Id);
-
-                            found.Cantidad = cantidadProvisional;
-                            found.ValorTotal = Cantidad * (float)producto.SalePrice;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Producto sin stock");
-                        }
-
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Producto no encontrado");
-                    }
-
-                    break;
+                    found.Cantidad = found.Cantidad + 1;
+                    found.ValorTotal = found.Cantidad * (float)found.ValorUnidad;
                 }
+                else
+                {
+                    MessageBox.Show("Producto sin stock");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
 
             return listaProductos;
@@ -182,37 +154,24 @@ namespace SisApp
 
         public List<ArticulosVenta> ReduceArticulo(int selectedProducto, List<ArticulosVenta> listaProductos)
         {
-            foreach (ArticulosVenta articulo in listaProductos)
+            try
             {
-                if (articulo.Id == selectedProducto)
+                var found = listaProductos.FirstOrDefault(foo => foo.Id == selectedProducto);
+
+                found.Cantidad = found.Cantidad - 1;
+
+                if (found.Cantidad <= 0)
                 {
-                    try
-                    {
-                        var producto = db.Products.First(pro => pro.Id.Equals(selectedProducto));
-
-                        int cantidadProvisional = articulo.Cantidad - 1;
-
-                        Cantidad = cantidadProvisional;
-
-                        if (cantidadProvisional <= 0)
-                        {
-                            listaProductos.Remove(articulo);
-                        }
-                        else
-                        {
-                            var found = listaProductos.FirstOrDefault(fo => fo.Id == producto.Id);
-
-                            found.Cantidad = cantidadProvisional;
-                            found.ValorTotal = Cantidad * (float)producto.SalePrice;
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Producto no encontrado");
-                    }
-
-                    break;
+                    listaProductos.Remove(found);
                 }
+                else
+                {
+                    found.ValorTotal = found.Cantidad * (float)found.ValorUnidad;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
 
             return listaProductos;
@@ -238,12 +197,12 @@ namespace SisApp
 
             foreach (ArticulosVenta articulo in articulos)
             {
-                SubTotal += (articulo.ValorTotal - (articulo.ValorTotal * 0.12));
-                Iva += articulo.ValorTotal * 0.12;
-                Total += articulo.ValorTotal;
+                SubTotal += Math.Round(articulo.ValorTotal - (articulo.ValorTotal * 0.12), 2);
+                Iva += Math.Round(articulo.ValorTotal * 0.12, 2);
+                Total += Math.Round(articulo.ValorTotal, 2);
             }
 
-            TotalAnterior = Total;
+            TotalAnterior = Math.Round(Total, 2);
         }
 
         public void DescuentoFactura(int descuento)
@@ -253,7 +212,7 @@ namespace SisApp
             double aPorcentaje = 100;
             Descuento = descuento / aPorcentaje;
 
-            Total -= (TotalAnterior * (descuento / aPorcentaje));
+            Total -= Math.Round(TotalAnterior * (descuento / aPorcentaje), 2);
         }
 
         public void PagaEfectivo(double efectivo)
@@ -287,11 +246,12 @@ namespace SisApp
         private double Total { get; set; }
         private double Efectivo { get; set; }
         private double Cambio { get; set; }
+        private string CodeFactura { get; set; }
         private List<ArticulosVenta> Articulos { get; set; }
 
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
-        public Facturar(int User, string Cliente, string Fecha, List<ArticulosVenta> Articulos, double[] Valores)
+        public Facturar(int User, string Cliente, string Fecha, List<ArticulosVenta> Articulos, double[] Valores, string CodeFactura)
         {
             this.User = User;
             this.Cliente = Cliente;
@@ -303,6 +263,17 @@ namespace SisApp
             this.Total = Valores[3];
             this.Efectivo = Valores[4];
             this.Cambio = Valores[5];
+            this.Caja = (int)db.Cashiers.FirstOrDefault(foo => foo.CheckerName.Equals(Environment.MachineName)).Id;
+
+            if (CodeFactura == "")
+            {
+                Random r = new Random();
+                this.CodeFactura = r.Next(1000, 9999999).ToString("D7");
+            }
+            else
+            {
+                this.CodeFactura = CodeFactura;
+            }
         }
 
         public void RegistraVenta()
@@ -311,29 +282,7 @@ namespace SisApp
             {
                 //Encuentra al cliente segun la ID
                 var cliente = db.Customers.First(cli => cli.Id.Equals(Singleton.Instancia.selectedCliente));
-
-                //Encuentra la caja segun el nombre y obtiene su ID. Si no existe, se crea
-                try
-                {
-                    var caja = db.Cashiers.First(caj => caj.CheckerName.Equals(Environment.MachineName));
-
-                    this.Caja = (int)caja.Id;
-                }
-                catch
-                {
-                    Cashier caja = new Cashier
-                    {
-                        CheckerName = Environment.MachineName,
-                        Direction = "Undefined",
-                        StoreId = 0,
-                    };
-
-                    db.Insert(caja);
-
-                    var Caja = db.Cashiers.First(caj => caj.CheckerName.Equals(Environment.MachineName));
-
-                    this.Caja = (int)Caja.Id;
-                }
+                var store = db.Cashiers.LoadWith(foo => foo.Store).FirstOrDefault(foo => foo.CheckerName.Equals(Environment.MachineName));
 
                 Sale Venta = new Sale
                 {
@@ -347,18 +296,20 @@ namespace SisApp
                     Cash = Efectivo,
                     RemainingCash = Cambio,
                     CashierId = Caja,
+                    StoreId = store != null ? store.Store.Id : 1,
+                    SaleCode = CodeFactura
                 };
 
                 db.Insert(Venta);
-
-                var venta = db.Sales.OrderByDescending(vent => vent.Id).FirstOrDefault();
-
-                this.Id = (int)venta.Id;
             }
             catch
             {
                 MessageBox.Show("No se pudo generar la venta");
             }
+
+            var venta = db.Sales.OrderByDescending(vent => vent.Id).FirstOrDefault();
+
+            this.Id = (int)venta.Id;
         }
 
         public void RegistraFactura()
@@ -367,25 +318,24 @@ namespace SisApp
             {
                 foreach (ArticulosVenta articulo in Articulos)
                 {
-                    var producto = db.Products.First(pro => pro.Id.Equals(articulo.Id));
+                    var cashier = db.Cashiers.FirstOrDefault(foo => foo.CheckerName.Equals(Environment.MachineName));
 
-                    if (producto.Stock >= articulo.Cantidad)
+                    var product = db.Products.First(pro => pro.Id.Equals(articulo.Id));
+
+                    var producto = db.ProductsStores.LoadWith(foo => foo.Product).FirstOrDefault(foo => foo.StoreId.Equals(cashier.StoreId) & foo.ProductId.Equals(product.Id));
+
+                    if (product.Stock >= articulo.Cantidad)
                     {
                         ProductsSale ventaProducto = new ProductsSale
                         {
                             SaleId = this.Id,
                             ProductId = articulo.Id,
                             Amount = articulo.Cantidad,
-                            SalePrice = articulo.ValorUnidad,
-                            TotalPrice = articulo.ValorTotal,
+                            SalePrice = Math.Round(articulo.ValorUnidad, 2),
+                            TotalPrice = Math.Round(articulo.ValorTotal, 2),
                         };
 
                         db.Insert(ventaProducto);
-
-                        //Reduce el stock total del producto en la tabla "Products"
-                        producto.Stock = producto.Stock - articulo.Cantidad;
-
-                        db.Update(producto);
                     }
                     else
                     {
@@ -395,6 +345,13 @@ namespace SisApp
 
                         db.Delete(venta);
                     }
+
+                    //Reduce el stock total del producto en la tabla "Products"
+                    product.Stock = product.Stock - articulo.Cantidad;
+                    db.Update(product);
+
+                    producto.Stock = producto.Stock - articulo.Cantidad;
+                    db.Update(producto);
                 }
             }
             catch

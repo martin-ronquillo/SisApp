@@ -13,11 +13,13 @@ namespace SisApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        SisAppCompactDB db = new SisAppCompactDB("ConnStr");
+        Random r = new Random();
+        string saleCode;
+
         public MainWindow()
         {
             InitializeComponent();
-
-            SisAppCompactDB db = new SisAppCompactDB("ConnStr");
 
             //True: Muestra el loggin
             if (Singleton.Instancia.estado)
@@ -27,6 +29,17 @@ namespace SisApp
                 Application.Current.MainWindow = loggin;
 
                 loggin.ShowDialog();
+
+                if (Singleton.Instancia.newCaja)
+                {
+                    MessageBox.Show("Se ha creado un nuevo cajero. Por favor seleccione " +
+                        "el almacen en el que se encuentra y agregue una direccion");
+
+                    CajerosCRUD cajerosCRUD = new CajerosCRUD(Singleton.Instancia.idCaja);
+                    cajerosCRUD.ShowDialog();
+
+                    Singleton.Instancia.newCaja = false;
+                }
 
                 //Devuelve el Mainfocus al formulario
                 Application.Current.MainWindow = this;
@@ -206,13 +219,15 @@ namespace SisApp
                 {
                     double[] valoresFactura = new double[] { InfoFactura.SubTotal, InfoFactura.Iva, InfoFactura.Descuento, InfoFactura.Total, InfoFactura.Efectivo, InfoFactura.Cambio };
 
-                    Facturar facturar = new Facturar(Singleton.Instancia.idUser, txt_cedula.Text, date_fecha.Text, listaProductos, valoresFactura);
+                    Facturar facturar = new Facturar(Singleton.Instancia.idUser, txt_cedula.Text, date_fecha.Text, listaProductos, valoresFactura, txt_nVenta.Text.ToUpper());
 
                     facturar.RegistraVenta();
 
                     facturar.RegistraFactura();
 
                     LimpiaForm();
+
+                    listaProductos.Clear();
                 }
                 else
                 {
@@ -252,49 +267,42 @@ namespace SisApp
 
         public void AgregaElemento()
         {
-            if (Regex.IsMatch(txt_cod_producto.Text, "[^0-9]") | string.IsNullOrEmpty(txt_cod_producto.Text))
-            {
-                MessageBox.Show("Solo numeros enteros");
-            }
-            else
-            {
-                double idProducto = double.Parse(txt_cod_producto.Text);
+            //double idProducto = double.Parse(txt_cod_producto.Text);
 
-                if (listaProductos.FirstOrDefault(pro => pro.CodigoBarras.Equals(idProducto)) == null)
+            if (listaProductos.FirstOrDefault(pro => pro.CodigoBarras.Equals(txt_cod_producto.Text.ToUpper())) == null)
+            {
+                lv_facturar.ItemsSource = null;
+
+                listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, txt_cod_producto.Text);
+
+                lv_facturar.ItemsSource = listaProductos;
+
+                //Si no existen elementos en el listView, desactiva el boton Facturar
+                if (listaProductos.Count <= 0)
                 {
-                    lv_facturar.ItemsSource = null;
-
-                    listaProductos = ArticulosVenta.InsertaArticulo(listaProductos, txt_cod_producto.Text);
-
-                    lv_facturar.ItemsSource = listaProductos;
-
-                    //Si no existen elementos en el listView, desactiva el boton Facturar
-                    if (listaProductos.Count <= 0)
-                    {
-                        btn_facturar.IsEnabled = false;
-                    }
-                    else
-                    {
-                        btn_facturar.IsEnabled = true;
-                    }
+                    btn_facturar.IsEnabled = false;
                 }
                 else
                 {
-                    lv_facturar.ItemsSource = null;
+                    btn_facturar.IsEnabled = true;
+                }
+            }
+            else
+            {
+                lv_facturar.ItemsSource = null;
 
-                    listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, txt_cod_producto.Text);
+                listaProductos = ArticulosVenta.AumentaArticulo(listaProductos, txt_cod_producto.Text.ToUpper());
 
-                    lv_facturar.ItemsSource = listaProductos;
+                lv_facturar.ItemsSource = listaProductos;
 
-                    //Si no existen elementos en el listView, desactiva el boton Facturar
-                    if (listaProductos.Count <= 0)
-                    {
-                        btn_facturar.IsEnabled = false;
-                    }
-                    else
-                    {
-                        btn_facturar.IsEnabled = true;
-                    }
+                //Si no existen elementos en el listView, desactiva el boton Facturar
+                if (listaProductos.Count <= 0)
+                {
+                    btn_facturar.IsEnabled = false;
+                }
+                else
+                {
+                    btn_facturar.IsEnabled = true;
                 }
             }
 
@@ -366,11 +374,6 @@ namespace SisApp
             //Obtener el nombre del equipo en el que se esta ejecutando la venta
             txt_caja.Text = Environment.MachineName;
 
-            //Numero de Venta
-            InfoVenta infoVenta = new InfoVenta();
-
-            txt_nVenta.Text = infoVenta.VentaNum().ToString("D7");
-
             //Establece por defecto al cliente "Consumidor Final" paraa facturar
             ClienteFactura clienteFactura = new ClienteFactura();
 
@@ -389,6 +392,9 @@ namespace SisApp
             txt_efectivo.Text = null;
             txt_cambio.Text = null;
             btn_facturar.IsEnabled = false;
+
+            saleCode = r.Next(1000, 9999999).ToString("D7");
+            txt_nVenta.Text = saleCode;
         }
     }
 }

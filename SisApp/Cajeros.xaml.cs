@@ -22,10 +22,7 @@ namespace SisApp
     public partial class Cajeros : Window
     {
         SisAppCompactDB db = new SisAppCompactDB("ConnStr");
-        List<Cajeros> listaCajeros = new List<Cajeros>();
-        public string CheckerName { get; set; }
-        public string Direction { get; set; }
-        public string Store { get; set; }
+        List<CajerosController> listaCajeros = new List<CajerosController>();
 
         public Cajeros()
         {
@@ -42,6 +39,59 @@ namespace SisApp
 
         private void cbBox_almacen_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            LlenaLista();
+        }
+
+        private void btn_agregar_Click(object sender, RoutedEventArgs e)
+        {
+            CajerosCRUD cajerosCRUD = new CajerosCRUD();
+            cajerosCRUD.ShowDialog();
+            LlenaLista();
+        }
+
+        private void btn_editar_Click(object sender, RoutedEventArgs e)
+        {
+            CajerosController selectedItem = (CajerosController)lv_cajeros.SelectedItem;
+
+            if (selectedItem != null)
+            {
+                CajerosCRUD cajerosCRUD = new CajerosCRUD(selectedItem.Id);
+                cajerosCRUD.ShowDialog();
+            }
+            LlenaLista();
+        }
+
+        private void btn_eliminar_Click(object sender, RoutedEventArgs e)
+        {
+            CajerosController selectedItem = (CajerosController)lv_cajeros.SelectedItem;
+
+            if (selectedItem != null)
+            {
+                Confirmar confirmar = new Confirmar(selectedItem.CheckerName);
+
+                confirmar.ShowDialog();
+
+                if (Singleton.Instancia.confirma)
+                {
+                    var cashier = db.Cashiers.First(cas => cas.Id.Equals(selectedItem.Id));
+
+                    if (cashier.CheckerName != Environment.MachineName)
+                    {
+                        db.Delete(cashier);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Actualmente se esta usando el cajero " + cashier.CheckerName + " por lo que no es posible eliminarlo.");
+                    }
+
+                    Singleton.Instancia.confirma = false;
+                }
+            }
+            LlenaLista();
+        }
+
+        public void LlenaLista()
+        {
             listaCajeros.Clear();
             lv_cajeros.ItemsSource = null;
 
@@ -50,8 +100,9 @@ namespace SisApp
             foreach (var item in cajeros)
             {
                 listaCajeros.Add(
-                    new Cajeros
+                    new CajerosController
                     {
+                        Id = (int)item.Id,
                         CheckerName = item.CheckerName,
                         Direction = item.Direction,
                         Store = item.Store.StoreName
@@ -61,5 +112,13 @@ namespace SisApp
 
             lv_cajeros.ItemsSource = listaCajeros;
         }
+    }
+
+    public class CajerosController
+    {
+        public int Id { get; set; }
+        public string CheckerName { get; set; }
+        public string Direction { get; set; }
+        public string Store { get; set; }
     }
 }

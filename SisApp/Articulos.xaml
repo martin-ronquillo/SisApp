@@ -47,10 +47,16 @@
                                 <Image Source="Agrega_usuario.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
-
+                        
                         <MenuItem Header="Cajeros" Name="agregaCajero" Click="agregaCajero_Click">
                             <MenuItem.Icon>
                                 <Image Source="Recibo.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        
+                        <MenuItem Header="Almacen" Name="almacen" Click="almacen_Click">
+                            <MenuItem.Icon>
+                                <Image Source="Tienda.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         

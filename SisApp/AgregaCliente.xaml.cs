@@ -167,15 +167,15 @@ namespace SisApp
             }
 
             //Valida Email
-            if (!Regex.IsMatch(txt_email_cliente.Text, "[^0-9]"))
+            if (!txt_email_cliente.Text.Contains("@") & !txt_email_cliente.Text.Contains(".com"))
             {
-                if (string.IsNullOrEmpty(txt_email_cliente.Text))
+                if (txt_email_cliente.Text == "")
                 {
 
                 }
                 else
                 {
-                    MessageBox.Show("El campo 'Email' solo puede contener letras");
+                    MessageBox.Show("El email debe tener el siguiente formato: \nExample@email.com");
 
                     validacion = false;
                 }

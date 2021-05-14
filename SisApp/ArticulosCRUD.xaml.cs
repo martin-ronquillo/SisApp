@@ -26,6 +26,7 @@ namespace SisApp
 
         bool Validacion = true;
         bool Edit = false;
+        bool inventarioAlmacen = false;
         Product Producto;
 
         public ArticulosCRUD()
@@ -158,7 +159,7 @@ namespace SisApp
         {
             try
             {
-                if (cbBox_almacen.SelectedItem != null)
+                if (cbBox_almacen.SelectedItem != null & inventarioAlmacen)
                 {
                     Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
                     ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
@@ -167,6 +168,9 @@ namespace SisApp
                     productsStore.SalePricePercent = Math.Round(float.Parse(txt_porcentajeGanancia.Text), 2);
 
                     db.Update(productsStore);
+
+                    Producto.SalePricePercent = Math.Round(float.Parse(txt_porcentajeGanancia.Text), 2);
+                    Producto.SalePrice = Math.Round(float.Parse(txt_precioVenta.Text), 2);
                 }
 
                 if (Edit)
@@ -175,9 +179,6 @@ namespace SisApp
                     Producto.CategoryId = db.Categories.FirstOrDefault(cat => cat.CategoryName.Equals(cbBox_categoria.SelectedItem)).Id;
                     Producto.ProductName = txt_descripcionArticulo.Text.ToUpper();
                     Producto.TradeMarkId = db.TradeMarks.FirstOrDefault(tm => tm.MarkName.Equals(cbBox_marca.SelectedItem)).Id;
-                    Producto.SalePricePercent = Math.Round(float.Parse(txt_porcentajeGanancia.Text), 2);
-                    Producto.SalePrice = Math.Round(float.Parse(txt_precioVenta.Text), 2);
-
 
                     db.Update(Producto);
                 }
@@ -218,6 +219,8 @@ namespace SisApp
         {
             try
             {
+                inventarioAlmacen = true;
+
                 Store store = db.Stores.FirstOrDefault(sto => sto.StoreName.Equals(cbBox_almacen.SelectedItem.ToString()));
                 ProductsStore productsStore = db.ProductsStores.FirstOrDefault(pro => pro.StoreId.Equals(store.Id) & pro.ProductId.Equals(Producto.Id));
 
@@ -232,11 +235,15 @@ namespace SisApp
             {
                 MessageBox.Show("El producto no posee inventario en el almacen seleccionado");
                 txt_precioCompra.Text = "0";
-                txt_precioVenta.Text = "";
-                txt_porcentajeGanancia.Text = "";
+                txt_precioVenta.Text = "0";
+                txt_porcentajeGanancia.Text = "0";
 
                 txt_porcentajeGanancia.IsEnabled = false;
                 txt_precioVenta.IsEnabled = false;
+
+                //Se usa para ejecutar o no la accion de guardar la info del almacen relacionada al producto, en caso de no existir
+                //una relacion entre el producto y el almacen seleccionado en el comboBox, entonces pasa a false y no se ejecuta la accion.
+                inventarioAlmacen = false;
             }
         }
 
