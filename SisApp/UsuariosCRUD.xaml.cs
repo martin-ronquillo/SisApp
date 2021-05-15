@@ -47,32 +47,32 @@ namespace SisApp
         {
             if (Valida())
             {
-                if (Id == 0)
+                try
                 {
-                    User user = new User
+                    if (Id == 0)
                     {
-                        Ci = txt_cedula.Text,
-                        Name = txt_name.Text.ToUpper(),
-                        LastName = txt_lastname.Text.ToUpper(),
-                        LogUser = txt_perfil.Text.ToUpper(),
-                        Password = txt_password.Password,
-                        RoleId = db.Rols.First(foo => foo.RolColumn.Equals(cbBox_role.SelectedItem.ToString())).Id
-                    };
+                        User user = new User
+                        {
+                            Ci = txt_cedula.Text,
+                            Name = txt_name.Text.ToUpper(),
+                            LastName = txt_lastname.Text.ToUpper(),
+                            LogUser = txt_perfil.Text,
+                            Password = txt_password.Password,
+                            RoleId = db.Rols.First(foo => foo.RolColumn.Equals(cbBox_role.SelectedItem.ToString())).Id
+                        };
 
-                    db.Insert(user);
+                        db.Insert(user);
 
-                    this.Close();
-                }
-                else
-                {
-                    try
+                        this.Close();
+                    }
+                    else
                     {
                         var usuario = db.Users.LoadWith(t => t.Role).FirstOrDefault(foo => foo.Id.Equals(Id));
 
                         usuario.Ci = txt_cedula.Text;
                         usuario.Name = txt_name.Text.ToUpper();
                         usuario.LastName = txt_lastname.Text.ToUpper();
-                        usuario.LogUser = txt_perfil.Text.ToUpper();
+                        usuario.LogUser = txt_perfil.Text;
                         usuario.Password = txt_password.Password;
                         usuario.RoleId = db.Rols.First(foo => foo.RolColumn.Equals(cbBox_role.SelectedItem.ToString())).Id;
 
@@ -80,10 +80,10 @@ namespace SisApp
 
                         this.Close();
                     }
-                    catch (Exception exc)
-                    {
-                        MessageBox.Show("No se pudo actualizar los datos. \nExcepcion controlada: \n" + exc);
-                    }
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show("No se pudo guardar los datos. \nExcepcion controlada: \n" + exc);
                 }
             }
         }
